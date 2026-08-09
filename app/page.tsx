@@ -3,7 +3,6 @@ import { LiveActionCenter } from "@/components/product/live-action-center";
 import { LiveEdward } from "@/components/product/live-edward";
 import { LiveReadiness } from "@/components/product/live-readiness";
 import { LiveStudentJourney } from "@/components/product/live-student-journey";
-import { ReadinessOverview } from "@/components/product/mocks";
 import { JourneyRail } from "@/components/journey-rail";
 import { Tabs } from "@/components/tabs";
 import {
@@ -321,29 +320,28 @@ export default function HomePage() {
               Audentra augments your technology environment rather than requiring you to replace your
               CRM or SIS. Start with one workflow and one cohort, then expand as the value is proven.
             </p>
-            <CheckList
-              items={[
-                {
-                  title: "Works alongside your CRM and SIS",
-                  body: "Existing systems remain the systems of record.",
-                },
-                {
-                  title: "Role-aware access by design",
-                  body: "Students, staff, leaders, and executives see what their role permits.",
-                },
-                {
-                  title: "Institutional data isolation",
-                  body: "Each institution's information remains logically separated.",
-                },
-              ]}
-            />
             <div className="au-btn-row">
               <Btn href="/trust" variant="light" icon={<ArrowRight />}>
                 Read about trust and governance
               </Btn>
             </div>
           </div>
-          <ReadinessOverview />
+          <CheckList
+            items={[
+              {
+                title: "Works alongside your CRM and SIS",
+                body: "Existing systems remain the systems of record.",
+              },
+              {
+                title: "Role-aware access by design",
+                body: "Students, staff, leaders, and executives see what their role permits.",
+              },
+              {
+                title: "Institutional data isolation",
+                body: "Each institution's information remains logically separated.",
+              },
+            ]}
+          />
         </div>
       </Section>
 

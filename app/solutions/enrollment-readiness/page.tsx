@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { JourneyRail } from "@/components/journey-rail";
-import { ActionCenter, ReadinessOverview, StudentJourney } from "@/components/product/mocks";
+import { ActionCenter, StudentJourney } from "@/components/product/mocks";
 import {
   ArrowRight,
   Chart,
@@ -72,7 +72,6 @@ export default function EnrollmentReadinessPage() {
             </Btn>
           </>
         }
-        aside={<ReadinessOverview />}
       />
 
       {/* Problem */}
