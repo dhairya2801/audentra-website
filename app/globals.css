@@ -1905,7 +1905,8 @@ a.au-list__row:hover .au-list__go {
   margin-top: 1.5rem;
 }
 
-.au-footer__social a {
+.au-footer__social a,
+.au-footer__social span {
   display: grid;
   place-items: center;
   width: 2.25rem;
@@ -1919,6 +1920,10 @@ a.au-list__row:hover .au-list__go {
 .au-footer__social a:hover {
   border-color: rgb(255 255 255 / 32%);
   background: rgb(255 255 255 / 8%);
+}
+
+.au-footer__social span {
+  color: rgb(255 255 255 / 55%);
 }
 
 .au-footer h4 {

@@ -17,16 +17,18 @@ export function SiteFooter() {
               height={257}
             />
             <p>{site.tagline}</p>
-            <div className="au-footer__social">
-              <a href="https://www.linkedin.com/company/audentra" aria-label="Audentra on LinkedIn">
+            {/* Marks only — the accounts are not claimed yet, so these do not
+                link anywhere. Wrap each in an <a> once the handles exist. */}
+            <div className="au-footer__social" aria-hidden="true">
+              <span>
                 <LinkedIn />
-              </a>
-              <a href="https://x.com/audentra" aria-label="Audentra on X">
+              </span>
+              <span>
                 <XSocial />
-              </a>
-              <a href="https://www.instagram.com/audentra" aria-label="Audentra on Instagram">
+              </span>
+              <span>
                 <Instagram />
-              </a>
+              </span>
             </div>
           </div>
 

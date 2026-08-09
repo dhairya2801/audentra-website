@@ -219,7 +219,9 @@ These are deliberate placeholders, not oversights:
    AA target without claiming validated conformance.
 5. **Resources** — every card shows "Coming soon" per the brief's instruction not
    to imply the library already exists.
-6. **Social links** in the footer point at unclaimed handles.
+6. **Social marks** in the footer render as icons only — the accounts are not
+   claimed, so nothing links out. Wrap each in an `<a>` once the handles exist
+   (`components/site-footer.tsx`).
 7. **No careers page.** There is no hiring content; add one when there are roles
    to list, and restore the Company nav and footer entries alongside it.
 

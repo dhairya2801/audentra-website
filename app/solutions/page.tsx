@@ -8,9 +8,7 @@ import {
   Compass,
   Doc,
   Heart,
-  Route,
   Target,
-  Users,
   Wallet,
 } from "@/components/icons";
 import {
@@ -30,50 +28,6 @@ export const metadata: Metadata = {
 };
 
 const solutions = [
-  {
-    id: "enrollment-management",
-    icon: Chart,
-    title: "Enrollment Management",
-    lede: "Know what is happening across the enrollment journey and where intervention is needed.",
-    points: [
-      { title: "Complete visibility across the funnel", body: "See which deposited students are not enrollment-ready and why." },
-      { title: "Barriers, not just numbers", body: "Identify the administrative friction behind each at-risk cohort." },
-      { title: "Coordinated response", body: "Direct staff action before friction turns into summer melt." },
-    ],
-  },
-  {
-    id: "admissions",
-    icon: Users,
-    title: "Admissions",
-    lede: "Give counselors better context and clearer priorities.",
-    points: [
-      { title: "One ranked queue", body: "Replace report-pulling with a prioritized list of students who need attention." },
-      { title: "Student context attached", body: "Requirements, documents, and history without switching systems." },
-      { title: "Assisted outreach", body: "Drafted messages grounded in the student's actual status." },
-    ],
-  },
-  {
-    id: "financial-aid",
-    icon: Wallet,
-    title: "Financial Aid",
-    lede: "Improve visibility around unresolved requirements and cross-office handoffs.",
-    points: [
-      { title: "Verification backlog in view", body: "Know which packages are paused and what is blocking each one." },
-      { title: "Handoffs that close", body: "Track work that moves between Aid, Admissions, and Student Accounts." },
-      { title: "Deadline-aware prioritization", body: "Surface the students whose aid gap threatens enrollment." },
-    ],
-  },
-  {
-    id: "enrollment-operations",
-    icon: Route,
-    title: "Enrollment Operations",
-    lede: "Coordinate work that crosses systems, teams, and processes.",
-    points: [
-      { title: "Shared operating picture", body: "One queue across offices instead of five disconnected ones." },
-      { title: "Service levels you can manage", body: "Know how long work waits and where it stalls." },
-      { title: "Escalation paths", body: "Items past target surface to a leader automatically." },
-    ],
-  },
   {
     id: "institutional-leadership",
     icon: Building,

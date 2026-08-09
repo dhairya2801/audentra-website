@@ -24,22 +24,6 @@ export const nav: NavItem[] = [
     label: "Platform",
     columns: [
       {
-        title: "The platform",
-        links: [
-          {
-            label: "Enrollment Intelligence",
-            href: "/solutions/enrollment-readiness",
-            description: "Risk signals across the admit-to-enrolled journey.",
-          },
-          {
-            label: "Trust & Responsible AI",
-            href: "/trust",
-            description: "Governance, oversight, and role-based access.",
-          },
-        ],
-      },
-      {
-        title: "Products",
         links: [
           {
             label: "EDward",
@@ -69,32 +53,6 @@ export const nav: NavItem[] = [
     label: "Solutions",
     columns: [
       {
-        title: "By team",
-        links: [
-          {
-            label: "Enrollment Management",
-            href: "/solutions#enrollment-management",
-            description: "See the journey and where intervention is needed.",
-          },
-          {
-            label: "Admissions",
-            href: "/solutions#admissions",
-            description: "Better context and clearer priorities for counselors.",
-          },
-          {
-            label: "Financial Aid",
-            href: "/solutions#financial-aid",
-            description: "Visibility into unresolved requirements and handoffs.",
-          },
-          {
-            label: "Enrollment Operations",
-            href: "/solutions#enrollment-operations",
-            description: "Coordinate work across systems and teams.",
-          },
-        ],
-      },
-      {
-        title: "By outcome",
         links: [
           {
             label: "Enrollment Readiness",
@@ -147,10 +105,8 @@ export const footerColumns: { title: string; links: NavLink[] }[] = [
     title: "Solutions",
     links: [
       { label: "Enrollment Readiness", href: "/solutions/enrollment-readiness" },
-      { label: "Enrollment Management", href: "/solutions#enrollment-management" },
-      { label: "Admissions", href: "/solutions#admissions" },
-      { label: "Financial Aid", href: "/solutions#financial-aid" },
       { label: "Institutional Leadership", href: "/solutions#institutional-leadership" },
+      { label: "Students", href: "/solutions#students" },
     ],
   },
   {
