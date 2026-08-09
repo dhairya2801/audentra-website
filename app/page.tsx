@@ -226,9 +226,8 @@ export default function HomePage() {
       {/* ---------- Platform operating model ---------- */}
       <Section>
         <SectionHead
-          eyebrow="Platform operating model"
-          title="Insight is only worth anything if it has somewhere to go."
-          lede="Most higher-ed technology stops after the first two steps and hands you a dashboard. Audentra runs all five, so what the data says turns into work someone owns."
+          title="The platform operating model"
+          lede="Most higher-ed technology stops after the first two steps and hands you a dashboard. Audentra runs all five, so insight turns into work someone owns."
         />
         <Cols items={operatingModel} numbered />
       </Section>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowRight, Check, Chart, Doc, Route, Target, Users } from "@/components/icons";
+import { ArrowRight, Chart, Target } from "@/components/icons";
 import {
   ArrowLink,
   Btn,
@@ -8,7 +8,6 @@ import {
   CtaBand,
   PageHero,
   Section,
-  SectionHead,
 } from "@/components/ui";
 
 export const metadata: Metadata = {
@@ -24,15 +23,6 @@ const pilotIncludes = [
   { title: "Implementation and configuration", body: "Audentra configured around your actual process." },
   { title: "Success measures", body: "Criteria agreed in advance, not defined after the fact." },
   { title: "Executive review", body: "A readout with your sponsor at the end of the cycle." },
-];
-
-const expansion = [
-  { icon: Target, title: "Enrollment" },
-  { icon: Doc, title: "Financial Aid" },
-  { icon: Chart, title: "Registrar" },
-  { icon: Users, title: "Advising" },
-  { icon: Route, title: "Student Affairs" },
-  { icon: Check, title: "Institutional Research" },
 ];
 
 export default function PricingPage() {
@@ -57,7 +47,7 @@ export default function PricingPage() {
       <Section>
         <div className="au-container--narrow" style={{ textAlign: "center" }}>
           <span className="au-eyebrow">How we price</span>
-          <h2 className="au-h2">No tier table, because no two institutions scope this the same way.</h2>
+          <h2 className="au-h2">Scoped first, then priced.</h2>
           <p className="au-lede" style={{ marginInline: "auto" }}>
             Scope depends on the size of the population you want to cover, how many workflows and
             departments participate, and what has to be configured to fit your existing environment.
@@ -92,26 +82,6 @@ export default function PricingPage() {
             <CheckList items={pilotIncludes} />
           </div>
         </div>
-      </Section>
-
-      {/* Expansion */}
-      <Section>
-        <SectionHead
-          eyebrow="After the pilot"
-          title="Prove value. Then expand."
-          lede="The same operating model applies wherever institutional work crosses departmental boundaries."
-        />
-        <ul className="au-chips">
-          {expansion.map((area) => (
-            <li key={area.title}>
-              <area.icon size={17} />
-              {area.title}
-            </li>
-          ))}
-        </ul>
-        <p className="au-body" style={{ marginTop: "2rem", textAlign: "center" }}>
-          Other institutional workflows are scoped case by case.
-        </p>
       </Section>
 
       <Section tone="navy" mesh tight>
