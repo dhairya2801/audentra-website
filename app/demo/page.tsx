@@ -1,0 +1,49 @@
+import type { Metadata } from "next";
+import { DemoForm } from "@/components/demo-form";
+import { Container, CampusPhoto, Waves } from "@/components/ui";
+
+export const metadata: Metadata = {
+  title: "Request a Demo",
+  description:
+    "Tell us about your institution and what you're trying to improve. We'll tailor the conversation around your workflows rather than giving you a generic product tour.",
+};
+
+export default function DemoPage() {
+  return (
+    <>
+      <section className="au-pagehero au-mesh" style={{ paddingBottom: "clamp(4rem, 8vw, 7rem)" }}>
+        <Waves />
+        <Container>
+          <div className="au-pagehero__grid" style={{ alignItems: "start" }}>
+            <div>
+              <span className="au-eyebrow au-eyebrow--light">Request a Demo</span>
+              <h1 className="au-h1">Let&rsquo;s see what&rsquo;s possible&mdash;together.</h1>
+              <p className="au-lede">
+                Tell us about your institution and what you&rsquo;re trying to improve. We&rsquo;ll
+                tailor the conversation around your workflows rather than giving you a generic product
+                tour.
+              </p>
+
+              <div style={{ marginTop: "2.5rem" }}>
+                <CampusPhoto
+                  priority
+                  alt="A university campus building on a clear morning"
+                  title="What to expect"
+                  items={[
+                    "Conversation tailored to your institution",
+                    "Review of your current workflow",
+                    "Relevant Audentra capabilities",
+                    "Clear next steps",
+                    "No-pressure conversation",
+                  ]}
+                />
+              </div>
+            </div>
+
+            <DemoForm />
+          </div>
+        </Container>
+      </section>
+    </>
+  );
+}

@@ -1,0 +1,2171 @@
+@import "tailwindcss";
+
+/* Satoshi is loaded from a <link> in app/layout.tsx. A remote @import here is
+   stripped by the Tailwind/PostCSS pipeline, so the link tag is the only
+   reliable place for it. */
+
+/* ==========================================================================
+   Audentra design system
+   Values from Brand Identity Guidelines v1 (§04 Color, §05 Typography).
+   ========================================================================== */
+
+:root {
+  /* Primary — §04 */
+  --au-purple: #6a38ff; /* intelligence, imagination, possibility */
+  --au-blue: #1e5bff; /* clarity, energy, confident action */
+  --au-teal: #00c49a; /* progress, connection, resolution */
+  --au-navy: #0a1f44; /* trust, institutional credibility, depth */
+
+  /* Shades and tints — §04, for hierarchy without new hues */
+  --au-purple-deep: #502abf;
+  --au-purple-soft: #9e7eff;
+  --au-purple-pale: #d2c3ff;
+  --au-blue-deep: #1744bf;
+  --au-blue-soft: #6d94ff;
+  --au-blue-pale: #bccdff;
+  --au-teal-deep: #009374;
+  --au-teal-soft: #59d9bd;
+  --au-teal-pale: #b3ede1;
+
+  /* Neutrals — §04 */
+  --au-surface: #ffffff; /* White */
+  --au-paper: #f2f4f7; /* Cloud */
+  --au-line: #eaecf0; /* Mist */
+  --au-line-soft: #f2f4f7; /* Cloud */
+  --au-ink: #101828; /* Ink */
+  --au-ink-soft: #667085; /* Graphite */
+  --au-ink-faint: #98a2b3; /* Slate */
+
+  /* Extended navy for the dark grounds the brand leans on */
+  --au-navy-deep: #06152f;
+  --au-midnight: #030b1c;
+
+  /* Functional / status — §04 */
+  --au-red: #b42318;
+  --au-amber: #b54708;
+
+  /* Effects */
+  --au-shadow-sm: 0 1px 2px rgb(10 31 68 / 6%), 0 8px 24px rgb(10 31 68 / 5%);
+  --au-shadow-md: 0 18px 55px rgb(10 31 68 / 9%);
+  --au-shadow-lg: 0 40px 90px rgb(6 21 47 / 22%);
+  --au-radius: 16px;
+  --au-radius-lg: 22px;
+
+  --au-gradient: linear-gradient(115deg, var(--au-purple) 0%, var(--au-blue) 62%, #14a5d6 100%);
+  --au-gradient-soft: linear-gradient(115deg, #7a4dff 0%, #2f6bff 55%, #16b8ae 100%);
+
+  --au-header-h: 4.5rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* §05: Satoshi is the brand typeface for headlines and key messages; Inter is
+   the system companion for body copy, UI, tables, and data-heavy layouts. */
+:root {
+  --au-font-display: Satoshi, var(--au-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --au-font-body: var(--au-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--au-surface);
+  color: var(--au-ink);
+  font-family: var(--au-font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--au-blue);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: rgb(106 56 255 / 18%);
+}
+
+/* ---------- Skip link ---------- */
+
+.au-skip {
+  position: absolute;
+  z-index: 200;
+  top: 0.5rem;
+  left: 0.5rem;
+  padding: 0.7rem 1.1rem;
+  transform: translateY(-160%);
+  border-radius: 10px;
+  background: var(--au-navy);
+  color: #fff;
+  font-weight: 600;
+  transition: transform 0.18s ease;
+}
+
+.au-skip:focus {
+  transform: translateY(0);
+}
+
+/* Visually hidden but available to assistive technology. */
+.au-sr {
+  position: absolute;
+  overflow: hidden;
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   Layout
+   ========================================================================== */
+
+.au-container {
+  width: min(100% - 2.5rem, 1240px);
+  margin-inline: auto;
+}
+
+.au-container--narrow {
+  width: min(100% - 2.5rem, 900px);
+  margin-inline: auto;
+}
+
+.au-section {
+  padding-block: clamp(4.5rem, 7.5vw, 7.5rem);
+}
+
+.au-section--tight {
+  padding-block: clamp(3rem, 5vw, 4.5rem);
+}
+
+.au-section--paper {
+  background: var(--au-paper);
+}
+
+.au-section--line {
+  border-top: 1px solid var(--au-line);
+}
+
+.au-section--navy {
+  position: relative;
+  overflow: hidden;
+  background: var(--au-navy-deep);
+  color: #fff;
+}
+
+.au-section--navy .au-lede,
+.au-section--navy .au-body {
+  color: rgb(226 234 249 / 82%);
+}
+
+/* Deep-space background used behind hero + dark bands. */
+.au-mesh::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background:
+    radial-gradient(58rem 34rem at 12% -12%, rgb(106 56 255 / 55%), transparent 62%),
+    radial-gradient(46rem 30rem at 88% 6%, rgb(30 91 255 / 42%), transparent 60%),
+    radial-gradient(38rem 26rem at 70% 108%, rgb(0 196 154 / 22%), transparent 62%);
+    content: "";
+    pointer-events: none;
+}
+
+.au-mesh > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Faint contour lines that echo the brand "wave" motif. */
+.au-waves {
+  position: absolute;
+  z-index: 0;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: auto;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+.au-eyebrow {
+  display: block;
+  margin: 0 0 1rem;
+  color: var(--au-blue);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.au-eyebrow--light {
+  color: #6ce0d0;
+}
+
+/* §05 hierarchy — Display 44-60px, H1 36-44, H2 26-32, Subheading 18-22. */
+.au-display {
+  margin: 0;
+  font-family: var(--au-font-display);
+  font-size: clamp(2.75rem, 4.6vw, 3.75rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.06;
+}
+
+.au-h1 {
+  margin: 0;
+  font-family: var(--au-font-display);
+  font-size: clamp(2.25rem, 3.6vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.028em;
+  line-height: 1.12;
+}
+
+.au-h2 {
+  margin: 0;
+  font-family: var(--au-font-display);
+  font-size: clamp(1.625rem, 2.6vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  line-height: 1.18;
+}
+
+.au-h3 {
+  margin: 0;
+  font-family: var(--au-font-display);
+  font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+  font-weight: 500;
+  letter-spacing: -0.014em;
+  line-height: 1.3;
+}
+
+.au-h4 {
+  margin: 0;
+  font-family: var(--au-font-display);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+.au-lede {
+  margin: 1.25rem 0 0;
+  max-width: 44ch;
+  color: var(--au-ink-soft);
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
+  line-height: 1.62;
+}
+
+.au-body {
+  margin: 0.75rem 0 0;
+  color: var(--au-ink-soft);
+  font-size: 0.9875rem;
+  line-height: 1.65;
+}
+
+.au-gradient-text {
+  background: linear-gradient(96deg, #8b6bff 0%, #4d8cff 52%, #35d6c0 100%);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.au-gradient-text--dark {
+  background: linear-gradient(96deg, var(--au-purple) 0%, var(--au-blue) 58%, #0aa7a0 100%);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.au-section-head {
+  max-width: 46rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.au-section-head .au-lede {
+  margin-inline: auto;
+  max-width: 40rem;
+}
+
+/* ==========================================================================
+   Buttons + links
+   ========================================================================== */
+
+.au-btn {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease,
+    background 0.16s ease,
+    border-color 0.16s ease;
+}
+
+.au-btn:hover {
+  transform: translateY(-1px);
+}
+
+.au-btn--primary {
+  background: var(--au-gradient);
+  box-shadow: 0 10px 26px rgb(63 63 255 / 30%);
+  color: #fff;
+}
+
+.au-btn--primary:hover {
+  box-shadow: 0 14px 34px rgb(63 63 255 / 38%);
+}
+
+.au-btn--dark {
+  background: var(--au-navy);
+  color: #fff;
+}
+
+.au-btn--dark:hover {
+  background: #12305f;
+}
+
+.au-btn--outline {
+  border-color: rgb(10 31 68 / 18%);
+  background: #fff;
+  color: var(--au-ink);
+}
+
+.au-btn--outline:hover {
+  border-color: var(--au-blue);
+  color: var(--au-blue);
+}
+
+.au-btn--outline-light {
+  border-color: rgb(255 255 255 / 34%);
+  background: rgb(255 255 255 / 6%);
+  color: #fff;
+}
+
+.au-btn--outline-light:hover {
+  border-color: #fff;
+  background: rgb(255 255 255 / 12%);
+}
+
+.au-btn--light {
+  background: #fff;
+  color: var(--au-navy);
+}
+
+.au-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 2rem;
+}
+
+.au-link {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+  color: var(--au-blue);
+  font-size: 0.9125rem;
+  font-weight: 650;
+}
+
+.au-link svg {
+  transition: transform 0.16s ease;
+}
+
+.au-link:hover svg {
+  transform: translateX(3px);
+}
+
+.au-link--light {
+  color: #7fd7ff;
+}
+
+/* ==========================================================================
+   Cards + grids
+   ========================================================================== */
+
+.au-grid {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 3.25rem;
+}
+
+.au-grid--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.au-grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.au-grid--4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.au-grid--5 {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.au-grid--6 {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.au-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem;
+  border: 1px solid var(--au-line);
+  border-radius: var(--au-radius);
+  background: #fff;
+  /* Explicit so a white card dropped into a dark section never inherits white
+     text. `.au-card--dark` opts back in. */
+  color: var(--au-ink);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.au-card--link:hover {
+  transform: translateY(-3px);
+  border-color: rgb(30 91 255 / 30%);
+  box-shadow: var(--au-shadow-md);
+}
+
+.au-card__foot {
+  margin-top: auto;
+  padding-top: 1.25rem;
+}
+
+.au-card--dark {
+  border-color: rgb(255 255 255 / 12%);
+  background: rgb(255 255 255 / 5%);
+  color: #fff;
+}
+
+.au-card--dark .au-body {
+  color: rgb(219 229 247 / 76%);
+}
+
+/* Icon tile — the small rounded square in front of every feature. */
+.au-icon {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: 1.15rem;
+  border-radius: 12px;
+  background: linear-gradient(140deg, rgb(106 56 255 / 12%), rgb(30 91 255 / 12%));
+  color: var(--au-purple);
+}
+
+.au-icon--dark {
+  background: rgb(255 255 255 / 10%);
+  color: #8fb6ff;
+}
+
+.au-icon--teal {
+  background: rgb(0 196 154 / 14%);
+  color: #058a6d;
+}
+
+/* ==========================================================================
+   Editorial layouts — hairline rules instead of boxes.
+   Used wherever a row of ideas would otherwise become a row of cards.
+   ========================================================================== */
+
+/* Divided columns: a rule across the top, vertical hairlines between. */
+.au-cols {
+  display: grid;
+  margin-top: clamp(2.5rem, 4vw, 3.5rem);
+  border-top: 1px solid var(--au-line);
+  grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
+}
+
+.au-col {
+  padding: 1.85rem 1.75rem 0.5rem;
+  border-left: 1px solid var(--au-line);
+}
+
+.au-col:first-child {
+  padding-inline-start: 0;
+  border-left: 0;
+}
+
+.au-col__key {
+  display: block;
+  margin-bottom: 0.9rem;
+  color: var(--au-blue);
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.16em;
+}
+
+.au-col svg {
+  display: block;
+  margin-bottom: 0.9rem;
+  color: var(--au-purple);
+}
+
+.au-col h3 {
+  margin: 0;
+  font-family: var(--au-font-display);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  line-height: 1.3;
+}
+
+.au-col p {
+  margin: 0.55rem 0 0;
+  color: var(--au-ink-soft);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+/* Dark variant */
+.au-section--navy .au-cols,
+.au-cols--dark {
+  border-top-color: rgb(255 255 255 / 16%);
+}
+
+.au-section--navy .au-col,
+.au-cols--dark .au-col {
+  border-left-color: rgb(255 255 255 / 12%);
+}
+
+.au-section--navy .au-col__key,
+.au-cols--dark .au-col__key {
+  color: #6ce0d0;
+}
+
+.au-section--navy .au-col svg,
+.au-cols--dark .au-col svg {
+  color: #8fb6ff;
+}
+
+.au-section--navy .au-col p,
+.au-cols--dark .au-col p {
+  color: rgb(219 229 247 / 78%);
+}
+
+/* Full-width list rows — the product index, solution index, and similar. */
+.au-list {
+  margin-top: clamp(2.5rem, 4vw, 3.5rem);
+  border-top: 1px solid var(--au-line);
+}
+
+.au-list__row {
+  display: grid;
+  gap: 1.5rem 2.5rem;
+  align-items: baseline;
+  padding: 1.6rem 0.75rem 1.6rem 0;
+  border-bottom: 1px solid var(--au-line);
+  grid-template-columns: 3rem minmax(0, 0.85fr) minmax(0, 1.6fr) auto;
+  transition: background 0.16s ease, padding 0.16s ease;
+}
+
+a.au-list__row:hover {
+  padding-inline-start: 0.75rem;
+  background: var(--au-paper);
+}
+
+.au-list__key {
+  color: var(--au-ink-faint);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+}
+
+.au-list__name {
+  margin: 0;
+  font-family: var(--au-font-display);
+  font-size: clamp(1.15rem, 1.7vw, 1.4rem);
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  line-height: 1.2;
+}
+
+.au-list__name span {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--au-purple);
+  font-size: 0.8125rem;
+  font-weight: 650;
+  letter-spacing: 0;
+}
+
+.au-list__body {
+  margin: 0;
+  color: var(--au-ink-soft);
+  font-size: 0.9375rem;
+  line-height: 1.62;
+}
+
+.au-list__go {
+  display: grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border: 1px solid var(--au-line);
+  border-radius: 999px;
+  color: var(--au-blue);
+  transition: background 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+}
+
+a.au-list__row:hover .au-list__go {
+  border-color: transparent;
+  background: var(--au-gradient);
+  color: #fff;
+  transform: translateX(3px);
+}
+
+/* Expansion path — §01 of the brand guide frames expansion as a sequence,
+   so it reads as one, not as six identical chips. */
+.au-path {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.au-path li {
+  position: relative;
+  display: grid;
+  gap: 0.85rem;
+  align-items: center;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid rgb(255 255 255 / 10%);
+  grid-template-columns: 1.6rem minmax(0, 1fr) auto;
+}
+
+.au-path li:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.au-path svg {
+  color: #8fb6ff;
+}
+
+.au-path b {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.au-path__stage {
+  color: rgb(219 229 247 / 55%);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.au-path li:first-child .au-path__stage {
+  color: var(--au-teal-soft);
+}
+
+.au-path li:first-child svg {
+  color: var(--au-teal-soft);
+}
+
+/* Inline chip row — a plain list of names, not a grid of boxes. */
+.au-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  margin: 3rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.au-chips li {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--au-line);
+  border-radius: 999px;
+  color: var(--au-ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.au-chips svg {
+  color: var(--au-purple);
+}
+
+.au-chips--dark {
+  justify-content: flex-start;
+  margin-top: 0;
+}
+
+.au-chips--dark li {
+  border-color: rgb(255 255 255 / 16%);
+  background: rgb(255 255 255 / 5%);
+  color: #fff;
+}
+
+.au-chips--dark svg {
+  color: #8fb6ff;
+}
+
+/* Numbered step tile */
+.au-step-num {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-bottom: 1rem;
+  border-radius: 999px;
+  background: var(--au-gradient);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Header
+   ========================================================================== */
+
+.au-announce {
+  position: relative;
+  z-index: 60;
+  background: var(--au-midnight);
+  color: rgb(226 234 249 / 90%);
+  font-size: 0.8125rem;
+}
+
+.au-announce__inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 0;
+  text-align: center;
+}
+
+.au-announce b {
+  color: #fff;
+  font-weight: 650;
+}
+
+.au-announce a {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+  color: #7fd7ff;
+  font-weight: 650;
+}
+
+.au-header {
+  position: sticky;
+  z-index: 50;
+  top: 0;
+  border-bottom: 1px solid var(--au-line);
+  background: rgb(255 255 255 / 92%);
+  backdrop-filter: blur(14px);
+}
+
+.au-header__inner {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  height: var(--au-header-h);
+}
+
+.au-logo {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.au-logo img {
+  width: auto;
+  height: 1.75rem;
+}
+
+.au-nav {
+  display: flex;
+  gap: 0.15rem;
+  align-items: center;
+  margin-inline-start: 0.75rem;
+}
+
+.au-nav__item {
+  position: relative;
+}
+
+.au-nav__trigger {
+  display: inline-flex;
+  gap: 0.3rem;
+  align-items: center;
+  padding: 0.55rem 0.8rem;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--au-ink);
+  font: inherit;
+  font-size: 0.9125rem;
+  font-weight: 550;
+  cursor: pointer;
+}
+
+.au-nav__trigger:hover,
+.au-nav__trigger[data-open="true"] {
+  background: var(--au-paper);
+  color: var(--au-blue);
+}
+
+.au-nav__chev {
+  transition: transform 0.18s ease;
+}
+
+.au-nav__trigger[data-open="true"] .au-nav__chev {
+  transform: rotate(180deg);
+}
+
+.au-header__actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin-inline-start: auto;
+}
+
+.au-header__actions .au-btn {
+  padding: 0.6rem 1.15rem;
+  font-size: 0.875rem;
+}
+
+/* Mega menu panel.
+   The wrapper is what hangs off the trigger; its top padding is an invisible
+   bridge so the pointer never crosses dead space on the way to the panel. */
+.au-mega-wrap {
+  position: absolute;
+  z-index: 40;
+  top: 100%;
+  left: 0;
+  padding-top: 0.55rem;
+}
+
+.au-mega-wrap--end {
+  right: 0;
+  left: auto;
+}
+
+.au-mega {
+  padding: 1.5rem;
+  border: 1px solid var(--au-line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: var(--au-shadow-md);
+  animation: au-fade 0.16s ease;
+}
+
+@keyframes au-fade {
+  from {
+    transform: translateY(-6px);
+    opacity: 0;
+  }
+}
+
+.au-mega__grid {
+  display: grid;
+  gap: 0.35rem 1.5rem;
+  width: max-content;
+  max-width: min(76vw, 46rem);
+  grid-template-columns: repeat(var(--cols, 1), minmax(13.5rem, 1fr));
+}
+
+.au-mega__link {
+  display: block;
+  padding: 0.7rem 0.8rem;
+  border-radius: 11px;
+  transition: background 0.14s ease;
+}
+
+.au-mega__link:hover {
+  background: var(--au-paper);
+}
+
+.au-mega__link strong {
+  display: block;
+  color: var(--au-ink);
+  font-size: 0.9125rem;
+  font-weight: 650;
+}
+
+.au-mega__link span {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--au-ink-faint);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.au-mega__title {
+  padding: 0 0.8rem 0.5rem;
+  color: var(--au-ink-faint);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Mobile */
+.au-burger {
+  display: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  align-content: center;
+  gap: 0.28rem;
+  padding: 0;
+  border: 1px solid var(--au-line);
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.au-burger span {
+  display: block;
+  width: 1.05rem;
+  height: 1.6px;
+  border-radius: 2px;
+  background: var(--au-ink);
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.au-burger[data-open="true"] span:nth-child(1) {
+  transform: translateY(0.47rem) rotate(45deg);
+}
+
+.au-burger[data-open="true"] span:nth-child(2) {
+  opacity: 0;
+}
+
+.au-burger[data-open="true"] span:nth-child(3) {
+  transform: translateY(-0.47rem) rotate(-45deg);
+}
+
+.au-drawer {
+  display: none;
+  overflow-y: auto;
+  max-height: calc(100dvh - var(--au-header-h));
+  padding: 1rem 0 2rem;
+  border-top: 1px solid var(--au-line);
+  background: #fff;
+}
+
+.au-drawer details {
+  border-bottom: 1px solid var(--au-line-soft);
+}
+
+.au-drawer summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.95rem 0.25rem;
+  font-size: 1rem;
+  font-weight: 650;
+  list-style: none;
+  cursor: pointer;
+}
+
+.au-drawer summary::-webkit-details-marker {
+  display: none;
+}
+
+.au-drawer details[open] summary .au-nav__chev {
+  transform: rotate(180deg);
+}
+
+.au-drawer__links {
+  padding-bottom: 0.75rem;
+}
+
+.au-drawer__links a {
+  display: block;
+  padding: 0.55rem 0.25rem;
+  color: var(--au-ink-soft);
+  font-size: 0.9375rem;
+}
+
+.au-drawer__flat {
+  display: block;
+  padding: 0.95rem 0.25rem;
+  border-bottom: 1px solid var(--au-line-soft);
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.au-drawer__cta {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+}
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+
+.au-hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--au-navy-deep);
+  color: #fff;
+}
+
+.au-hero__inner {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  align-items: center;
+  padding-block: clamp(3.5rem, 6.5vw, 6rem);
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+}
+
+.au-hero__inner--solo {
+  padding-block: clamp(3.25rem, 5.5vw, 5rem);
+  grid-template-columns: minmax(0, 1fr);
+  text-align: center;
+}
+
+.au-hero__inner--solo .au-lede {
+  margin-inline: auto;
+}
+
+.au-hero__inner--solo .au-btn-row {
+  justify-content: center;
+}
+
+.au-hero .au-lede {
+  color: rgb(219 229 247 / 84%);
+}
+
+.au-hero__trust {
+  padding-bottom: clamp(2rem, 3.5vw, 3rem);
+}
+
+.au-hero__trust-label {
+  color: rgb(226 234 249 / 62%);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.au-logowall {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.75rem, 4vw, 3.25rem);
+  align-items: center;
+  margin-top: 1.25rem;
+}
+
+.au-logowall span {
+  color: rgb(255 255 255 / 78%);
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.au-logowall span small {
+  display: block;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  opacity: 0.7;
+}
+
+/* Page hero for interior pages */
+.au-pagehero {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(3.5rem, 6vw, 5.5rem);
+  background: var(--au-navy-deep);
+  color: #fff;
+}
+
+.au-pagehero .au-lede {
+  color: rgb(219 229 247 / 84%);
+}
+
+.au-pagehero__grid {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: center;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+/* ==========================================================================
+   Feature rows (alternating product showcase)
+   ========================================================================== */
+
+.au-featurerow {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.au-featurerow + .au-featurerow {
+  margin-top: clamp(3.5rem, 6vw, 6rem);
+}
+
+.au-featurerow--flip > *:first-child {
+  order: 2;
+}
+
+.au-checklist {
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.au-checklist li {
+  display: grid;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.55rem 0;
+  grid-template-columns: 1.25rem 1fr;
+  font-size: 0.9375rem;
+}
+
+.au-checklist svg {
+  margin-top: 0.28rem;
+  color: var(--au-teal);
+}
+
+.au-checklist strong {
+  display: block;
+  color: var(--au-ink);
+  font-weight: 650;
+}
+
+.au-checklist span {
+  color: var(--au-ink-soft);
+}
+
+.au-section--navy .au-checklist strong {
+  color: #fff;
+}
+
+.au-section--navy .au-checklist span {
+  color: rgb(219 229 247 / 76%);
+}
+
+/* ==========================================================================
+   Tabs
+   ========================================================================== */
+
+.au-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: center;
+  margin-top: 2.5rem;
+  padding: 0.35rem;
+  border: 1px solid var(--au-line);
+  border-radius: 999px;
+  background: #fff;
+  width: fit-content;
+  margin-inline: auto;
+}
+
+.au-tab {
+  padding: 0.6rem 1.35rem;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--au-ink-soft);
+  font: inherit;
+  font-size: 0.9125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.au-tab:hover {
+  color: var(--au-ink);
+}
+
+.au-tab[aria-selected="true"] {
+  background: var(--au-gradient);
+  color: #fff;
+}
+
+.au-tabpanel {
+  margin-top: 2.5rem;
+}
+
+/* ==========================================================================
+   Stats + quote
+   ========================================================================== */
+
+.au-stats {
+  display: grid;
+  gap: 1px;
+  overflow: hidden;
+  border-radius: var(--au-radius-lg);
+  background: rgb(255 255 255 / 12%);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.au-stat {
+  padding: clamp(1.75rem, 3vw, 2.5rem);
+  background: rgb(6 21 47 / 82%);
+  text-align: center;
+}
+
+.au-stat__value {
+  display: block;
+  font-size: clamp(2.25rem, 4vw, 3.1rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.au-stat__label {
+  display: block;
+  margin-top: 0.6rem;
+  color: rgb(219 229 247 / 74%);
+  font-size: 0.875rem;
+}
+
+.au-stats--light .au-stat {
+  background: #fff;
+}
+
+.au-stats--light {
+  background: var(--au-line);
+}
+
+.au-stats--light .au-stat__value {
+  color: var(--au-purple);
+}
+
+.au-stats--light .au-stat__label {
+  color: var(--au-ink-soft);
+}
+
+.au-quote {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2.25rem, 4vw, 3.5rem);
+  border-radius: var(--au-radius-lg);
+  background: linear-gradient(118deg, #2a1a86 0%, #1a2f9c 48%, #0b3f8f 100%);
+  color: #fff;
+}
+
+.au-quote blockquote {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  max-width: 46rem;
+  font-family: var(--au-font-display);
+  font-size: clamp(1.25rem, 2.1vw, 1.7rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+
+.au-quote figcaption {
+  position: relative;
+  z-index: 1;
+  margin-top: 1.5rem;
+  color: rgb(219 229 247 / 78%);
+  font-size: 0.875rem;
+}
+
+.au-quote__mark {
+  position: absolute;
+  top: 1rem;
+  right: 1.75rem;
+  color: rgb(255 255 255 / 12%);
+  font-size: 9rem;
+  font-weight: 800;
+  line-height: 1;
+  user-select: none;
+}
+
+/* ==========================================================================
+   Flow diagram (systems -> Audentra -> people)
+   ========================================================================== */
+
+.au-flow {
+  display: grid;
+  gap: 1.25rem;
+  align-items: center;
+  margin-top: 3.25rem;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 0.8fr) auto minmax(0, 1fr);
+}
+
+.au-flow__col {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.au-flow__chip {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--au-line);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: var(--au-shadow-sm);
+  color: var(--au-ink);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.au-flow__core {
+  padding: 1.5rem 1rem;
+  border-radius: 18px;
+  background: var(--au-gradient);
+  box-shadow: 0 18px 44px rgb(63 63 255 / 30%);
+  color: #fff;
+  text-align: center;
+}
+
+.au-flow__core strong {
+  display: block;
+  font-family: var(--au-font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.au-flow__core span {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.8125rem;
+  opacity: 0.85;
+}
+
+.au-flow__arrow {
+  color: var(--au-ink-faint);
+}
+
+/* ==========================================================================
+   Journey rail — deposit through to enrolled.
+   A travelling gradient rather than a row of blocks; the arrival state is a
+   tinted plate, not a solid slab of blue.
+   ========================================================================== */
+
+.au-journey {
+  position: relative;
+  overflow-x: auto;
+  margin-top: clamp(2.5rem, 4vw, 3.5rem);
+  padding-top: 0.5rem;
+}
+
+.au-journey__track {
+  position: absolute;
+  z-index: 0;
+  top: 1.05rem;
+  right: 0;
+  left: 0;
+  overflow: hidden;
+  height: 2px;
+  min-width: 46rem;
+  margin-inline: calc(100% / 14);
+  border-radius: 2px;
+  background: var(--au-line);
+}
+
+.au-journey__track i {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--au-purple), var(--au-blue) 55%, var(--au-teal));
+  transition: width 0.6s cubic-bezier(0.3, 0.9, 0.4, 1);
+}
+
+.au-journey__steps {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  min-width: 46rem;
+  margin: 0;
+  padding: 0;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  list-style: none;
+}
+
+.au-journey__step {
+  padding: 0 0.5rem;
+  text-align: center;
+}
+
+.au-journey__dot {
+  display: block;
+  width: 0.85rem;
+  height: 0.85rem;
+  margin: 0.15rem auto 0.85rem;
+  border: 2px solid var(--au-line);
+  border-radius: 999px;
+  background: var(--au-surface);
+  transition:
+    border-color 0.28s ease,
+    background 0.28s ease,
+    box-shadow 0.28s ease,
+    transform 0.28s ease;
+}
+
+.au-journey__step strong {
+  display: block;
+  color: var(--au-ink-faint);
+  font-size: 0.875rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  transition: color 0.28s ease;
+}
+
+.au-journey__step span {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--au-ink-faint);
+  font-size: 0.75rem;
+  transition: color 0.28s ease;
+}
+
+.au-journey__step.is-done .au-journey__dot {
+  border-color: var(--au-blue);
+  background: var(--au-blue);
+}
+
+.au-journey__step.is-done strong {
+  color: var(--au-ink);
+}
+
+.au-journey__step.is-done span {
+  color: var(--au-ink-soft);
+}
+
+/* The step the signal is passing through right now. */
+.au-journey__step.is-current .au-journey__dot {
+  border-color: var(--au-purple);
+  background: var(--au-purple);
+  box-shadow: 0 0 0 5px rgb(106 56 255 / 16%);
+  transform: scale(1.1);
+}
+
+.au-journey__step.is-current strong {
+  color: var(--au-purple);
+}
+
+/* Arrival: a tinted plate under the label, not a solid block. */
+.au-journey__step.is-arrived .au-journey__dot {
+  border-color: var(--au-teal);
+  background: var(--au-teal);
+  box-shadow: 0 0 0 5px rgb(0 196 154 / 18%);
+}
+
+.au-journey__step.is-arrived strong {
+  display: inline-block;
+  padding: 0.15rem 0.7rem;
+  border-radius: 999px;
+  background: rgb(0 196 154 / 12%);
+  color: var(--au-teal-deep);
+}
+
+/* Dark ground */
+.au-journey--dark .au-journey__track {
+  background: rgb(255 255 255 / 14%);
+}
+
+.au-journey--dark .au-journey__dot {
+  border-color: rgb(255 255 255 / 24%);
+  background: var(--au-navy-deep);
+}
+
+.au-journey--dark .au-journey__step strong,
+.au-journey--dark .au-journey__step span {
+  color: rgb(219 229 247 / 55%);
+}
+
+.au-journey--dark .au-journey__step.is-done strong {
+  color: #fff;
+}
+
+.au-journey--dark .au-journey__step.is-done span {
+  color: rgb(219 229 247 / 78%);
+}
+
+.au-journey--dark .au-journey__step.is-current strong {
+  color: var(--au-purple-soft);
+}
+
+.au-journey--dark .au-journey__step.is-arrived strong {
+  background: rgb(0 196 154 / 18%);
+  color: var(--au-teal-soft);
+}
+
+/* Process chevrons: Identify -> Prioritize -> ... */
+.au-process {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 3rem;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.au-process__item {
+  padding: 1.5rem 1rem 0.5rem;
+  border-top: 2px solid var(--au-line);
+  text-align: left;
+}
+
+.au-process__item > svg {
+  display: block;
+  margin-bottom: 0.85rem;
+  color: var(--au-purple);
+}
+
+.au-process__item b {
+  display: block;
+  font-family: var(--au-font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.au-process__item span {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--au-ink-soft);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   Accessibility band
+   ========================================================================== */
+
+.au-a11y {
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+  padding: clamp(1.75rem, 3vw, 2.5rem);
+  border-radius: var(--au-radius-lg);
+  background: var(--au-navy);
+  color: #fff;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 2fr);
+}
+
+.au-a11y__items {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.au-a11y__item {
+  text-align: center;
+}
+
+.au-a11y__item svg {
+  color: #8fb6ff;
+}
+
+.au-a11y__item span {
+  display: block;
+  margin-top: 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+/* Detail variant — the band is the only place these commitments appear, so it
+   carries the descriptions too. */
+.au-a11y--detail {
+  margin-top: clamp(2.5rem, 4vw, 3.5rem);
+  padding: clamp(2rem, 3.5vw, 3rem);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.au-a11y--detail .au-a11y__items {
+  gap: 2rem 2.5rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.au-a11y--detail .au-a11y__item {
+  text-align: left;
+}
+
+.au-a11y--detail .au-a11y__item span {
+  margin-top: 0.75rem;
+  font-family: var(--au-font-display);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.au-a11y--detail .au-a11y__item small {
+  display: block;
+  margin-top: 0.35rem;
+  color: rgb(219 229 247 / 74%);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+@media (width <= 720px) {
+  .au-a11y--detail .au-a11y__items {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ==========================================================================
+   CTA band
+   ========================================================================== */
+
+.au-cta {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(112deg, #2a0f80 0%, #2340c9 52%, #0f7fb8 100%);
+  color: #fff;
+}
+
+.au-cta__inner {
+  position: relative;
+  z-index: 1;
+  padding-block: clamp(3.5rem, 6vw, 5.5rem);
+  text-align: center;
+}
+
+.au-cta .au-lede {
+  margin-inline: auto;
+  max-width: 42rem;
+  color: rgb(255 255 255 / 84%);
+}
+
+.au-cta .au-btn-row {
+  justify-content: center;
+}
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+.au-form {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.au-field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.au-field--full {
+  grid-column: 1 / -1;
+}
+
+.au-field label {
+  color: var(--au-ink);
+  font-size: 0.8125rem;
+  font-weight: 650;
+}
+
+.au-field input,
+.au-field select,
+.au-field textarea {
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--au-line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--au-ink);
+  font: inherit;
+  font-size: 0.9375rem;
+}
+
+.au-field textarea {
+  min-height: 6.5rem;
+  resize: vertical;
+}
+
+.au-field input::placeholder,
+.au-field textarea::placeholder {
+  color: var(--au-ink-faint);
+}
+
+.au-check {
+  display: flex;
+  gap: 0.6rem;
+  align-items: start;
+  grid-column: 1 / -1;
+  color: var(--au-ink-soft);
+  font-size: 0.875rem;
+}
+
+.au-check input {
+  margin-top: 0.2rem;
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: var(--au-purple);
+}
+
+/* Floating "what to expect" card over campus imagery */
+.au-photo {
+  position: relative;
+  overflow: hidden;
+  min-height: 29rem;
+  border-radius: var(--au-radius-lg);
+  background: var(--au-navy);
+  box-shadow: var(--au-shadow-md);
+}
+
+.au-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+}
+
+.au-photo::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(6 21 47 / 10%) 0%, rgb(6 21 47 / 62%) 100%);
+  content: "";
+}
+
+.au-photo__card {
+  position: absolute;
+  z-index: 2;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  padding: 1.35rem;
+  border-radius: 16px;
+  background: rgb(255 255 255 / 96%);
+  box-shadow: var(--au-shadow-md);
+  /* The card can sit inside a dark section, so ink colour is set explicitly
+     rather than inherited. */
+  color: var(--au-ink);
+  backdrop-filter: blur(6px);
+}
+
+.au-photo__card ul {
+  margin: 0.85rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.au-photo__card li {
+  display: grid;
+  gap: 0.55rem;
+  align-items: center;
+  padding: 0.25rem 0;
+  grid-template-columns: 1rem 1fr;
+  color: var(--au-ink-soft);
+  font-size: 0.875rem;
+}
+
+.au-photo__card li svg {
+  color: var(--au-teal);
+}
+
+/* ==========================================================================
+   Resource cards
+   ========================================================================== */
+
+.au-resource {
+  overflow: hidden;
+  padding: 0;
+}
+
+.au-resource__thumb {
+  position: relative;
+  overflow: hidden;
+  height: 9.5rem;
+  background: linear-gradient(128deg, #1b1064 0%, #16309a 55%, #0a6f9e 100%);
+}
+
+.au-resource__thumb svg {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.au-resource__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1.35rem;
+}
+
+.au-tag {
+  display: inline-block;
+  align-self: flex-start;
+  color: var(--au-purple);
+  font-size: 0.6875rem;
+  font-weight: 750;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.au-pill {
+  display: inline-flex;
+  align-items: center;
+  /* Cards are flex columns, so without this the pill stretches full width. */
+  align-self: flex-start;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: var(--au-paper);
+  color: var(--au-ink-faint);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.au-footer {
+  padding-top: clamp(3.5rem, 6vw, 5rem);
+  background: var(--au-midnight);
+  color: rgb(219 229 247 / 74%);
+  font-size: 0.875rem;
+}
+
+.au-footer__top {
+  display: grid;
+  gap: 2.5rem;
+  padding-bottom: 3rem;
+  grid-template-columns: minmax(0, 1.15fr) repeat(5, minmax(0, 1fr));
+}
+
+.au-footer__brand img {
+  width: auto;
+  height: 1.75rem;
+}
+
+.au-footer__brand p {
+  margin: 1rem 0 0;
+  max-width: 20rem;
+  line-height: 1.55;
+}
+
+.au-footer__social {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+}
+
+.au-footer__social a {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid rgb(255 255 255 / 14%);
+  border-radius: 10px;
+  color: rgb(255 255 255 / 80%);
+  transition: background 0.16s ease, border-color 0.16s ease;
+}
+
+.au-footer__social a:hover {
+  border-color: rgb(255 255 255 / 32%);
+  background: rgb(255 255 255 / 8%);
+}
+
+.au-footer h4 {
+  margin: 0 0 1rem;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.au-footer ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.au-footer li + li {
+  margin-top: 0.6rem;
+}
+
+.au-footer li a:hover {
+  color: #fff;
+}
+
+.au-footer__news {
+  display: grid;
+  gap: 1.25rem;
+  align-items: center;
+  padding: 2rem 0;
+  border-top: 1px solid rgb(255 255 255 / 10%);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.au-footer__news strong {
+  display: block;
+  color: #fff;
+  font-size: 1.0625rem;
+}
+
+.au-newsform {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.au-newsform input {
+  width: min(100%, 22rem);
+  padding: 0.7rem 1rem;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 6%);
+  color: #fff;
+  font: inherit;
+  font-size: 0.875rem;
+}
+
+.au-newsform input::placeholder {
+  color: rgb(219 229 247 / 55%);
+}
+
+.au-footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.75rem;
+  align-items: center;
+  padding: 1.5rem 0;
+  border-top: 1px solid rgb(255 255 255 / 10%);
+  font-size: 0.8125rem;
+}
+
+.au-footer__bottom nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-inline-start: auto;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (width <= 1100px) {
+  .au-nav,
+  .au-header__actions .au-btn--outline {
+    display: none;
+  }
+
+  .au-burger {
+    display: grid;
+    margin-inline-start: auto;
+  }
+
+  .au-header__actions {
+    margin-inline-start: 0.5rem;
+  }
+
+  .au-drawer {
+    display: block;
+  }
+
+  .au-footer__top {
+    gap: 2rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .au-footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (width <= 980px) {
+  .au-hero__inner,
+  .au-pagehero__grid,
+  .au-featurerow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .au-cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .au-col {
+    padding-inline: 1.25rem;
+  }
+
+  .au-col:nth-child(odd) {
+    padding-inline-start: 0;
+    border-left: 0;
+  }
+
+  .au-list__row {
+    gap: 0.75rem 1.5rem;
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  }
+
+  .au-list__body {
+    grid-column: 2 / -1;
+  }
+
+  .au-featurerow--flip > *:first-child {
+    order: 0;
+  }
+
+  .au-grid--4,
+  .au-grid--5,
+  .au-grid--6 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .au-process {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .au-a11y {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .au-a11y__items {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .au-flow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .au-flow__arrow {
+    transform: rotate(90deg);
+    justify-self: center;
+  }
+
+  .au-footer__news {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .au-newsform {
+    justify-content: flex-start;
+  }
+}
+
+/* Below this the logo, burger, and demo CTA no longer fit side by side. */
+@media (width <= 620px) {
+  .au-container,
+  .au-container--narrow {
+    width: min(100% - 2rem, 1240px);
+  }
+
+  .au-header__inner {
+    gap: 0.6rem;
+  }
+
+  .au-logo img {
+    height: 1.4rem;
+  }
+
+  .au-footer__brand img {
+    height: 1.5rem;
+  }
+
+  .au-header__actions .au-btn {
+    padding: 0.55rem 0.95rem;
+    font-size: 0.8125rem;
+  }
+
+  /* Long CTA labels must wrap rather than push the page sideways. */
+  .au-btn {
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+@media (width <= 720px) {
+  .au-cols {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .au-col {
+    padding: 1.5rem 0 0.75rem;
+    border-bottom: 1px solid var(--au-line);
+    border-left: 0;
+  }
+
+  .au-section--navy .au-col {
+    border-bottom-color: rgb(255 255 255 / 12%);
+  }
+
+  .au-grid--3,
+  .au-grid--2,
+  .au-grid--4,
+  .au-grid--5,
+  .au-grid--6,
+  .au-stats,
+  .au-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .au-process {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .au-footer__top {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .au-footer__bottom nav {
+    margin-inline-start: 0;
+    gap: 1rem;
+  }
+}

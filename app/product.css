@@ -1,0 +1,1043 @@
+/* ==========================================================================
+   Product UI mocks
+   Hand-built representations of the Audentra product surfaces (EDward, the
+   Action Center, Morning Brew, the readiness overview, the student journey).
+   Everything is real markup so the compositions stay crisp and translatable.
+   ========================================================================== */
+
+.pm {
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--au-shadow-lg);
+  color: var(--au-ink);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.pm--flat {
+  border-color: var(--au-line);
+  box-shadow: var(--au-shadow-md);
+}
+
+.pm__bar {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--au-line-soft);
+  background: #fbfcfe;
+  border-radius: 16px 16px 0 0;
+}
+
+.pm__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: #dfe5ef;
+}
+
+.pm__bar span:last-child {
+  margin-inline-start: auto;
+  color: var(--au-ink-faint);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pm__body {
+  padding: 1rem;
+}
+
+.pm__head {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin-bottom: 0.85rem;
+}
+
+.pm__title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.pm__more {
+  margin-inline-start: auto;
+  color: var(--au-blue);
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+/* The layered hero composition: two overlapping product panels. */
+.pm-stack {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
+  align-items: start;
+}
+
+.pm-stack > *:first-child {
+  margin-top: 2.25rem;
+}
+
+@media (width <= 640px) {
+  .pm-stack {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pm-stack > *:first-child {
+    margin-top: 0;
+  }
+}
+
+/* ---------- EDward chat ---------- */
+
+.pm-edward__head {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-radius: 16px 16px 0 0;
+  background: linear-gradient(120deg, #34199c, #1f47d6);
+  color: #fff;
+}
+
+.pm-edward__avatar {
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 18%);
+}
+
+.pm-edward__head b {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.pm-edward__head span {
+  display: block;
+  font-size: 0.6875rem;
+  opacity: 0.78;
+}
+
+.pm-edward__thread {
+  display: grid;
+  overflow-y: auto;
+  gap: 0.6rem;
+  align-content: start;
+  padding: 1rem;
+  scroll-behavior: smooth;
+}
+
+.pm-edward__thread::-webkit-scrollbar {
+  width: 0;
+}
+
+.pm-msg {
+  max-width: 92%;
+  padding: 0.7rem 0.85rem;
+  border-radius: 13px;
+}
+
+.pm-msg--user {
+  justify-self: end;
+  background: var(--au-gradient);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.pm-msg--bot {
+  border: 1px solid var(--au-line);
+  background: #f8fafd;
+  border-bottom-left-radius: 4px;
+}
+
+.pm-msg--bot b {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.75rem;
+}
+
+.pm-msg ul {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pm-msg li {
+  display: grid;
+  gap: 0.45rem;
+  align-items: start;
+  padding: 0.22rem 0;
+  grid-template-columns: 0.9rem 1fr;
+  color: var(--au-ink-soft);
+  font-size: 0.75rem;
+}
+
+.pm-msg li svg {
+  margin-top: 0.15rem;
+  color: var(--au-purple);
+}
+
+/* Live conversation: each turn eases in as it is "sent". */
+.pm-msg--enter {
+  animation: pm-msg-in 0.34s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+@keyframes pm-msg-in {
+  from {
+    transform: translateY(8px) scale(0.985);
+    opacity: 0;
+  }
+}
+
+.pm-typing {
+  display: inline-flex;
+  gap: 0.28rem;
+  align-items: center;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--au-line);
+  border-radius: 13px;
+  border-bottom-left-radius: 4px;
+  background: #f8fafd;
+  animation: pm-msg-in 0.28s ease both;
+}
+
+.pm-typing i {
+  width: 0.36rem;
+  height: 0.36rem;
+  border-radius: 999px;
+  background: var(--au-purple);
+  opacity: 0.35;
+  animation: pm-blink 1.15s ease-in-out infinite;
+}
+
+.pm-typing i:nth-child(2) {
+  animation-delay: 0.16s;
+}
+
+.pm-typing i:nth-child(3) {
+  animation-delay: 0.32s;
+}
+
+@keyframes pm-blink {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.3;
+  }
+
+  40% {
+    transform: translateY(-2px);
+    opacity: 1;
+  }
+}
+
+/* Caret in the composer while a question is being "typed". */
+.pm-caret {
+  display: inline-block;
+  width: 1.5px;
+  height: 0.85em;
+  margin-inline-start: 1px;
+  background: var(--au-blue);
+  vertical-align: text-bottom;
+  animation: pm-caret 1s steps(1) infinite;
+}
+
+@keyframes pm-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+.pm-edward__input {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0 1rem 1rem;
+  padding: 0.5rem 0.5rem 0.5rem 0.9rem;
+  border: 1px solid var(--au-line);
+  border-radius: 999px;
+  color: var(--au-ink-faint);
+  font-size: 0.75rem;
+}
+
+.pm-edward__send {
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  margin-inline-start: auto;
+  border-radius: 999px;
+  background: var(--au-gradient);
+  color: #fff;
+}
+
+/* ---------- Readiness overview ---------- */
+
+.pm-kpis {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.pm-kpi__value {
+  display: block;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.pm-kpi__label {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--au-ink-faint);
+  font-size: 0.6875rem;
+}
+
+.pm-kpi--risk .pm-kpi__value {
+  color: var(--au-red);
+}
+
+.pm-kpi--good .pm-kpi__value {
+  color: #058a6d;
+}
+
+.pm-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-bottom: 0.9rem;
+  border-radius: 10px;
+  background: #fbfcfe;
+}
+
+/* ---------- Blocker / task rows ---------- */
+
+.pm-rows {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.pm-row {
+  display: grid;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--au-line-soft);
+  border-radius: 10px;
+  background: #fff;
+  grid-template-columns: 1.6rem minmax(0, 1fr) auto;
+}
+
+.pm-row__icon {
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 7px;
+  background: rgb(30 91 255 / 9%);
+  color: var(--au-blue);
+}
+
+.pm-row__icon--purple {
+  background: rgb(106 56 255 / 10%);
+  color: var(--au-purple);
+}
+
+.pm-row__icon--teal {
+  background: rgb(0 196 154 / 12%);
+  color: #058a6d;
+}
+
+.pm-row b {
+  display: block;
+  font-size: 0.78125rem;
+  font-weight: 650;
+}
+
+.pm-row small {
+  display: block;
+  color: var(--au-ink-faint);
+  font-size: 0.6875rem;
+}
+
+.pm-count {
+  color: var(--au-ink-soft);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.pm-badge {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.625rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pm-badge--high {
+  background: #fdeceb;
+  color: var(--au-red);
+}
+
+.pm-badge--medium {
+  background: #fef3e6;
+  color: var(--au-amber);
+}
+
+.pm-badge--low {
+  background: #eaf3ff;
+  color: #1b4bb8;
+}
+
+.pm-badge--done {
+  background: #e6f8f2;
+  color: #058a6d;
+}
+
+/* ---------- Student journey rail ---------- */
+
+.pm-journey {
+  padding: 0.9rem 1rem 1rem;
+  border: 1px solid var(--au-line-soft);
+  border-radius: 12px;
+  background: #fbfcfe;
+}
+
+.pm-journey__track {
+  position: relative;
+  display: grid;
+  margin: 1.1rem 0 0.35rem;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+}
+
+.pm-journey__track::before {
+  position: absolute;
+  z-index: 0;
+  top: 0.34rem;
+  right: 8%;
+  left: 8%;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--au-line);
+  content: "";
+}
+
+.pm-journey__node {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.pm-journey__node i {
+  display: block;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin: 0 auto;
+  border: 2px solid var(--au-line);
+  border-radius: 999px;
+  background: #fff;
+}
+
+.pm-journey__node span {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--au-ink-faint);
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+
+.pm-journey__node--done i {
+  border-color: var(--au-blue);
+  background: var(--au-blue);
+}
+
+.pm-journey__node--done span {
+  color: var(--au-ink);
+}
+
+.pm-journey__node--current i {
+  border-color: var(--au-purple);
+  box-shadow: 0 0 0 4px rgb(106 56 255 / 15%);
+}
+
+.pm-journey__node--current span {
+  color: var(--au-purple);
+  font-weight: 700;
+}
+
+.pm-student {
+  display: grid;
+  gap: 0.65rem;
+  align-items: center;
+  grid-template-columns: 2.1rem minmax(0, 1fr) auto;
+}
+
+.pm-avatar {
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 999px;
+  background: linear-gradient(140deg, #6a38ff, #1e5bff);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* ---------- Morning Brew ---------- */
+
+.pm-brew__hello {
+  padding: 0.95rem 1rem;
+  border-radius: 16px 16px 0 0;
+  background: linear-gradient(120deg, #1a1063, #17307f 60%, #0d5f8c);
+  color: #fff;
+}
+
+.pm-brew__hello b {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+
+.pm-brew__hello span {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.6875rem;
+  opacity: 0.8;
+}
+
+.pm-brew__section {
+  margin-top: 0.9rem;
+}
+
+.pm-brew__section:first-child {
+  margin-top: 0;
+}
+
+.pm-brew__label {
+  display: block;
+  margin-bottom: 0.45rem;
+  color: var(--au-ink-faint);
+  font-size: 0.625rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Enrollment Pulse — the Morning Brew KPI board.
+   Mirrors the portals' pulse: timeframe pills, tickered values, sparklines,
+   and a progress bar toward target.
+   ========================================================================== */
+
+.pm-pulse__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.85rem;
+}
+
+.pm-frames {
+  display: inline-flex;
+  gap: 0.15rem;
+  padding: 0.18rem;
+  border: 1px solid var(--au-line);
+  border-radius: 999px;
+  background: #fff;
+}
+
+.pm-frame {
+  display: inline-flex;
+  gap: 0.3rem;
+  align-items: center;
+  padding: 0.28rem 0.6rem;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--au-ink-faint);
+  font: inherit;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.pm-frame:hover {
+  color: var(--au-ink);
+}
+
+.pm-frame[aria-pressed="true"] {
+  background: var(--au-gradient);
+  color: #fff;
+}
+
+.pm-livedot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--au-teal);
+  box-shadow: 0 0 0 0 rgb(0 196 154 / 60%);
+  animation: pm-pulse-dot 2s ease-out infinite;
+}
+
+@keyframes pm-pulse-dot {
+  70% {
+    box-shadow: 0 0 0 5px rgb(0 196 154 / 0%);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgb(0 196 154 / 0%);
+  }
+}
+
+.pm-frame[aria-pressed="true"] .pm-livedot {
+  background: #fff;
+}
+
+.pm-pulse__status {
+  margin: 0;
+  color: var(--au-ink-faint);
+  font-size: 0.6875rem;
+}
+
+.pm-pulse__status b {
+  color: var(--au-ink-soft);
+}
+
+/* Thin bar that empties as the auto-rotation runs. */
+.pm-pulse__progress {
+  overflow: hidden;
+  height: 2px;
+  margin-bottom: 0.85rem;
+  border-radius: 2px;
+  background: var(--au-line-soft);
+}
+
+.pm-pulse__progress i {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--au-gradient);
+  transform-origin: left;
+  animation: pm-sweep linear both;
+}
+
+@keyframes pm-sweep {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.pm-kpi-grid {
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.pm-kpi {
+  padding: 0.75rem 0.8rem;
+  border: 1px solid var(--au-line-soft);
+  border-radius: 11px;
+  background: #fff;
+}
+
+.pm-kpi__label {
+  display: block;
+  color: var(--au-ink-faint);
+  font-size: 0.625rem;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+.pm-kpi__num {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 1.3rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.pm-kpi__delta {
+  display: inline-flex;
+  gap: 0.2rem;
+  align-items: center;
+  margin-top: 0.1rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  animation: pm-msg-in 0.3s ease both;
+}
+
+.pm-kpi__delta--good {
+  color: #058a6d;
+}
+
+.pm-kpi__delta--watch {
+  color: var(--au-amber);
+}
+
+.pm-kpi__delta small {
+  color: var(--au-ink-faint);
+  font-weight: 500;
+}
+
+.pm-kpi__spark {
+  display: block;
+  width: 100%;
+  height: 1.9rem;
+  margin-top: 0.35rem;
+}
+
+.pm-kpi__spark path {
+  transition: d 0.5s ease;
+}
+
+.pm-kpi__bar {
+  display: block;
+  overflow: hidden;
+  height: 3px;
+  margin-top: 0.4rem;
+  border-radius: 3px;
+  background: var(--au-line-soft);
+}
+
+.pm-kpi__bar i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--au-gradient);
+  transition: width 0.7s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.pm-kpi__target {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.28rem;
+  color: var(--au-ink-faint);
+  font-size: 0.5625rem;
+}
+
+@media (width <= 520px) {
+  .pm-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pm-kpi:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Priorities list rows fade in as the board changes. */
+.pm-rows--stagger .pm-row {
+  animation: pm-msg-in 0.34s ease both;
+}
+
+.pm-rows--stagger .pm-row:nth-child(2) {
+  animation-delay: 0.05s;
+}
+
+.pm-rows--stagger .pm-row:nth-child(3) {
+  animation-delay: 0.1s;
+}
+
+.pm-rows--stagger .pm-row:nth-child(4) {
+  animation-delay: 0.15s;
+}
+
+/* ==========================================================================
+   Live states
+   ========================================================================== */
+
+/* A task settling into resolved. */
+.pm-row {
+  transition: background 0.4s ease, border-color 0.4s ease, opacity 0.4s ease;
+}
+
+.pm-row--resolved {
+  border-color: rgb(0 196 154 / 28%);
+  background: rgb(0 196 154 / 6%);
+}
+
+.pm-row--resolved b {
+  color: var(--au-ink-soft);
+  text-decoration: line-through;
+  text-decoration-color: rgb(102 112 133 / 45%);
+}
+
+.pm-row__meta {
+  animation: pm-msg-in 0.35s ease both;
+}
+
+.pm-foot {
+  margin: 0.75rem 0 0;
+  color: var(--au-ink-faint);
+  font-size: 0.6875rem;
+}
+
+/* Trend redraw when the cohort changes. */
+.pm-trend__line {
+  animation: pm-draw 0.75s ease both;
+  stroke-dasharray: 400;
+}
+
+@keyframes pm-draw {
+  from {
+    stroke-dashoffset: 400;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.pm-trend__area,
+.pm-trend__dot {
+  animation: pm-fade-in 0.75s ease both;
+}
+
+@keyframes pm-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- Student upload ---------- */
+
+.pm-upload {
+  display: grid;
+  gap: 0.65rem;
+  align-items: center;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--au-line);
+  border-radius: 11px;
+  background: #fff;
+  grid-template-columns: 1.8rem minmax(0, 1fr) auto;
+  transition: border-color 0.4s ease, background 0.4s ease;
+}
+
+.pm-upload--done {
+  border-color: rgb(0 196 154 / 32%);
+  background: rgb(0 196 154 / 6%);
+}
+
+.pm-upload__icon {
+  display: grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 8px;
+  background: rgb(106 56 255 / 10%);
+  color: var(--au-purple);
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+.pm-upload--done .pm-upload__icon {
+  background: rgb(0 196 154 / 14%);
+  color: var(--au-teal-deep);
+}
+
+.pm-upload__body b {
+  display: block;
+  font-size: 0.78125rem;
+  font-weight: 650;
+}
+
+.pm-upload__body small {
+  display: block;
+  color: var(--au-ink-faint);
+  font-size: 0.6875rem;
+}
+
+.pm-upload__bar {
+  display: block;
+  overflow: hidden;
+  height: 3px;
+  margin-top: 0.35rem;
+  border-radius: 3px;
+  background: var(--au-line);
+}
+
+.pm-upload__bar i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--au-gradient);
+  transition: width 2s linear;
+}
+
+.pm-upload--done .pm-upload__bar i {
+  background: var(--au-teal);
+}
+
+.pm-upload__cta {
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: var(--au-gradient);
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 650;
+}
+
+/* ---------- Workload board ---------- */
+
+.pm-load {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.pm-load__row {
+  display: grid;
+  gap: 0.75rem;
+  align-items: center;
+  grid-template-columns: 7.5rem minmax(0, 1fr) 3.2rem;
+}
+
+.pm-load__name {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.pm-load__track {
+  display: block;
+  overflow: hidden;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--au-line);
+}
+
+.pm-load__fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.9s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.pm-load__fill--ok {
+  background: var(--au-teal);
+}
+
+.pm-load__fill--watch {
+  background: #f0a13a;
+}
+
+.pm-load__fill--over {
+  background: var(--au-red);
+}
+
+.pm-load__figures {
+  text-align: right;
+}
+
+.pm-load__figures b {
+  display: block;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.pm-load__figures small {
+  display: block;
+  color: var(--au-ink-faint);
+  font-size: 0.625rem;
+}
+
+@media (width <= 520px) {
+  .pm-load__row {
+    grid-template-columns: 6rem minmax(0, 1fr) 2.8rem;
+  }
+}
+
+/* ---------- Sidebar chrome (app frame) ---------- */
+
+.pm-app {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--au-shadow-lg);
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  font-size: 0.8125rem;
+}
+
+.pm-app__side {
+  padding: 0.9rem 0.6rem;
+  background: #0c1a3a;
+  color: rgb(219 229 247 / 74%);
+}
+
+.pm-app__side b {
+  display: block;
+  padding: 0 0.45rem 0.8rem;
+  color: #fff;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.pm-app__side span {
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+  padding: 0.42rem 0.45rem;
+  border-radius: 7px;
+  font-size: 0.6875rem;
+}
+
+.pm-app__side span[data-active="true"] {
+  background: rgb(255 255 255 / 12%);
+  color: #fff;
+  font-weight: 650;
+}
+
+.pm-app__main {
+  overflow: hidden;
+  padding: 0.9rem;
+  background: #fbfcfe;
+}
+
+@media (width <= 640px) {
+  .pm-app {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pm-app__side {
+    display: none;
+  }
+}
+
+/* ---------- Small helpers ---------- */
+
+.pm-split {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (width <= 520px) {
+  .pm-split,
+  .pm-kpis {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.pm-float {
+  position: relative;
+  z-index: 2;
+}
