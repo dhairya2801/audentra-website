@@ -62,7 +62,7 @@ export default function EdwardPage() {
             <Btn href="/demo" icon={<ArrowRight />}>
               See EDward in Action
             </Btn>
-            <Btn href="/#capabilities" variant="outlineLight">
+            <Btn href="/#platform" variant="outlineLight">
               See all capabilities
             </Btn>
           </>

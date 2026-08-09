@@ -85,38 +85,33 @@ glows, or outlines to the mark.
 **Icons (§07).** Line-based, single style, 1.5–2.0px equivalent strokes —
 `components/icons.tsx` draws everything at `strokeWidth={1.7}`.
 
-### Home and platform overview are one page
+### Home is the platform overview
 
-The two pages covered the same ground, so they were merged into `app/page.tsx`.
-Why Audentra was folded in as a section too. Both old URLs 308-redirect (see
-`next.config.ts`): `/platform` → `/`, `/why-audentra` → `/#why-audentra`.
-Section order:
+The two pages covered the same ground and were merged into `app/page.tsx`.
+`/platform` 308-redirects to `/` (see `next.config.ts`); `/#platform` is the
+anchor on the capabilities section that nav, 404, and product pages point at.
 
-1. Hero
-2. Platform operating model — connect, understand, prioritize, coordinate, act
-3. The problem — systems vs. coordination, with the flow diagram
-4. Platform capabilities (tabbed, `id="capabilities"`)
-5. The capabilities that hold it together
-6. Built to integrate
-7. Enrollment readiness wedge
-8. Go deeper on any product
-9. Why Audentra (`id="why-audentra"`)
-10. Final CTA
+The homepage tells one story, in this order:
 
-The hero carries a single product panel (the interactive readiness card). The
-accessibility commitments live on `/accessibility` rather than on the home
-page.
+1. **Hero** — "Turn student intent into enrollment", with the Morning Brief
+   product surface and the connect → understand → decide → act motif
+2. **The enrollment gap** — scattered signals, late decisions, manual action,
+   resolving into one operating layer
+3. **The platform** (`id="platform"`) — Morning Brew, EDward, Action Center,
+   Student Experience, ordered as understand → decide → act → guide
+4. **Outcomes** — yield, completion, staff focus, student confidence
+5. **Enrollment readiness** — the wedge, as one concrete example
+6. **How it works** — the architecture, systems through to role-aware experiences
+7. **Enterprise trust** — the four governance principles
+8. **Final CTA** — start with one measurable enrollment problem
 
-The duplicated blocks were dropped in the merge: the old home "One platform"
-five-card section (the operating model says the same thing better), the old
-platform "Who it serves" columns (the audience tabs cover it with real
-surfaces), and the second product index. On
-`/solutions/enrollment-readiness`, the "What changes" and "In three moves"
-sections were likewise folded into one.
+"Institutional intelligence for what's next." is the enduring brand tagline and
+lives in the footer, not the hero.
 
-A note on section titles: don't restate the step names in the heading above the
-steps ("Connect. Understand. Prioritize…" over columns literally named Connect,
-Understand, Prioritize). The heading should earn its own line.
+Deliberately not on the homepage, to keep one strong statement per idea: the
+five-step operating model (now the hero motif), the "also included" capability
+list (covered on product pages), a second product index (the platform tabs link
+out directly), and the Why Audentra card set (it has its own route).
 
 ### Layout vocabulary
 
@@ -130,10 +125,12 @@ section, reach for a hairline before a box.
 `components/product/` builds the product surfaces as real markup rather than
 screenshots, so they stay crisp at any size and restyle with the tokens:
 
-- `live-readiness.tsx` — enrollment readiness filtered by cohort. Picking
-  All admitted / First-year / Transfer re-reads the board: figures count to
-  their new values, the trend redraws, the blocker list restacks. Cycles until
-  someone chooses. This is the interactive piece in the home hero.
+- `morning-brief.tsx` — the hero surface. Plays the reasoning chain the platform
+  is built around (signal → interpretation → opportunity → recommended action →
+  human approval) one step at a time, holds on the finished state, then runs
+  again. The insight block reserves its full height so nothing shifts.
+- `live-readiness.tsx` — enrollment readiness filtered by cohort. Not currently
+  placed on a page; kept because it is a complete, reusable surface.
 - `live-edward.tsx` — the briefed conversation played back turn by turn, with a
   typing indicator, autoscroll, and a loop. Used in the Meet EDward section and
   on the EDward page; the hero uses the static `EdwardChat` so the two panels
@@ -192,6 +189,13 @@ node scripts/build-logo-variants.mjs
 All are trimmed of the source canvas padding. The gradient A-mark is preserved
 untouched (§03 forbids removing the teal crossbar); only the wordmark is
 recoloured. Re-run the script if the source logo is replaced.
+
+## Illustrative data
+
+Every figure inside a product mock is demo data, the same as any product
+screenshot — the hero panel labels itself "Illustrative data" in its chrome. No
+customer results, testimonials, named institutions, or ROI claims appear
+anywhere on the site.
 
 ## Before launch
 

@@ -73,7 +73,7 @@ export const nav: NavItem[] = [
       },
     ],
   },
-  { label: "Why Audentra", href: "/#why-audentra" },
+  { label: "Why Audentra", href: "/why-audentra" },
   { label: "Resources", href: "/resources" },
   {
     label: "Company",
@@ -124,7 +124,7 @@ export const footerColumns: { title: string; links: NavLink[] }[] = [
   {
     title: "Company",
     links: [
-      { label: "Why Audentra", href: "/#why-audentra" },
+      { label: "Why Audentra", href: "/why-audentra" },
       { label: "About", href: "/about" },
       { label: "Pilot Program", href: "/pilot" },
       { label: "Pricing", href: "/pricing" },

@@ -48,7 +48,7 @@ export default function MorningBrewPage() {
             <Btn href="/demo" icon={<ArrowRight />}>
               See Morning Brew
             </Btn>
-            <Btn href="/#capabilities" variant="outlineLight">
+            <Btn href="/#platform" variant="outlineLight">
               See all capabilities
             </Btn>
           </>

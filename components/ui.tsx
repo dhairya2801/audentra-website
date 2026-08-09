@@ -367,12 +367,14 @@ export function PageHero({
 }
 
 export function CtaBand({
+  eyebrow,
   title,
   sub,
   lede,
   primary = { href: "/demo", label: "Request a Demo" },
   secondary,
 }: {
+  eyebrow?: string;
   title: ReactNode;
   sub?: ReactNode;
   lede?: ReactNode;
@@ -384,6 +386,7 @@ export function CtaBand({
       <Waves />
       <Container>
         <div className="au-cta__inner">
+          {eyebrow ? <span className="au-eyebrow au-eyebrow--light">{eyebrow}</span> : null}
           <h2 className="au-h1">{title}</h2>
           {sub ? (
             <h3 className="au-h2" style={{ marginTop: "0.5rem", opacity: 0.86 }}>

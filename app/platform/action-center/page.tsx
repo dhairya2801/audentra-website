@@ -61,7 +61,7 @@ export default function ActionCenterPage() {
             <Btn href="/demo" icon={<ArrowRight />}>
               Explore the Action Center
             </Btn>
-            <Btn href="/#capabilities" variant="outlineLight">
+            <Btn href="/#platform" variant="outlineLight">
               See all capabilities
             </Btn>
           </>

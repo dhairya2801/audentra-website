@@ -9,6 +9,7 @@ const routes = [
   "/platform/student-experience",
   "/solutions",
   "/solutions/enrollment-readiness",
+  "/why-audentra",
   "/trust",
   "/pricing",
   "/pilot",

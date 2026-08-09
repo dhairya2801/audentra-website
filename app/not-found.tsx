@@ -21,7 +21,7 @@ export default function NotFound() {
             icon={Chart}
             title="Platform"
             body="The intelligence layer for higher education."
-            href="/#capabilities"
+            href="/#platform"
             cta="Explore"
           />
           <FeatureCard

@@ -118,7 +118,7 @@ export default function AboutPage() {
       <CtaBand
         title="Let's build the next operating model together."
         lede="We're partnering with institutions that want evidence, not a product tour."
-        secondary={{ href: "/#why-audentra", label: "Why Audentra" }}
+        secondary={{ href: "/why-audentra", label: "Why Audentra" }}
       />
     </>
   );

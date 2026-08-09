@@ -1,25 +1,22 @@
+import { Architecture } from "@/components/architecture";
+import { JourneyRail } from "@/components/journey-rail";
 import { BrewPulse } from "@/components/product/brew-pulse";
 import { LiveActionCenter } from "@/components/product/live-action-center";
 import { LiveEdward } from "@/components/product/live-edward";
-import { LiveReadiness } from "@/components/product/live-readiness";
 import { LiveStudentJourney } from "@/components/product/live-student-journey";
-import { JourneyRail } from "@/components/journey-rail";
+import { MorningBrief } from "@/components/product/morning-brief";
+import { SignalFlow } from "@/components/signal-flow";
 import { Tabs } from "@/components/tabs";
 import {
   ArrowRight,
-  Bolt,
-  Chart,
-  Compass,
-  Layers,
-  Lightbulb,
-  Mail,
+  Check,
+  Clock,
+  Eye,
+  Handshake,
   Network,
   Play,
-  Pulse,
-  Puzzle,
-  Route,
   Shield,
-  Target,
+  Users,
 } from "@/components/icons";
 import {
   Btn,
@@ -27,257 +24,229 @@ import {
   Cols,
   Container,
   CtaBand,
-  LinkList,
   Section,
   SectionHead,
   Waves,
 } from "@/components/ui";
 
-const operatingModel = [
+/* -------------------------------------------------------------------------
+   The enrollment gap
+   ------------------------------------------------------------------------- */
+
+const gaps = [
   {
-    icon: Network,
-    title: "Connect",
-    body: "Bring together relevant information from existing institutional systems and approved knowledge.",
+    title: "Signals are scattered",
+    body: "Intent shows up across the SIS, the CRM, financial aid, communications, events, web activity, and conversations staff have one at a time.",
   },
   {
-    icon: Lightbulb,
-    title: "Understand",
-    body: "Translate information into context, trends, risks, and opportunities.",
+    title: "Decisions arrive late",
+    body: "Retrospective reporting explains the cycle after the window to influence it has closed.",
   },
   {
-    icon: Compass,
-    title: "Prioritize",
-    body: "Surface what deserves attention and why.",
-  },
-  {
-    icon: Route,
-    title: "Coordinate",
-    body: "Connect work across people, departments, and workflows.",
-  },
-  {
-    icon: Bolt,
-    title: "Act",
-    body: "Use human-directed and AI-assisted tools to move work forward.",
+    title: "Action stays manual",
+    body: "Even when someone spots the opportunity, prioritizing, coordinating, and reaching out happen across disconnected tools.",
   },
 ];
 
-const secondary = [
-  {
-    icon: Pulse,
-    title: "Enrollment Intelligence",
-    body: "Risk signals, cohort movement, and readiness scoring across the admit-to-enrolled journey.",
-  },
-  {
-    icon: Mail,
-    title: "Communications",
-    body: "Assisted, personalized outreach grounded in institutional information and reviewed by staff.",
-  },
-  {
-    icon: Layers,
-    title: "Institutional Knowledge",
-    body: "Approved policies, requirements, and procedures made retrievable in the moment of work.",
-  },
-  {
-    icon: Chart,
-    title: "Role-Based Dashboards",
-    body: "Staff, leader, and executive views built on the same underlying institutional truth.",
-  },
-];
-
-const products = [
-  {
-    name: "EDward",
-    kicker: "Institutional AI assistant",
-    body: "The AI assistant built around your institution.",
-    href: "/platform/edward",
-  },
-  {
-    name: "Action Center",
-    kicker: "Operational work management",
-    body: "Every important action needs an owner.",
-    href: "/platform/action-center",
-  },
-  {
-    name: "Morning Brew",
-    kicker: "Daily institutional intelligence",
-    body: "Start the day knowing what matters.",
-    href: "/platform/morning-brew",
-  },
-  {
-    name: "Student Experience",
-    kicker: "Guided enrollment journey",
-    body: "Enrollment shouldn't feel like a scavenger hunt.",
-    href: "/platform/student-experience",
-  },
-];
-
-const differentiators = [
-  {
-    icon: Puzzle,
-    title: "Built for higher education",
-    body: "Purpose-built around institutional workflows, student journeys, and cross-departmental work.",
-  },
-  {
-    icon: Layers,
-    title: "Works with your existing systems",
-    body: "Audentra augments your technology environment rather than requiring you to replace your CRM or SIS.",
-  },
-  {
-    icon: Target,
-    title: "Intelligence that leads to action",
-    body: "Move beyond reports and dashboards into prioritized, coordinated workflows.",
-  },
-  {
-    icon: Shield,
-    title: "Human-governed AI",
-    body: "Use AI to increase staff capacity while maintaining institutional permissions, oversight, and accountability.",
-  },
-];
+/* -------------------------------------------------------------------------
+   Platform — the four products, ordered as a progression
+   ------------------------------------------------------------------------- */
 
 const capabilityTabs = [
   {
+    id: "morning-brew",
+    label: "Morning Brew",
+    stage: "Understand",
+    title: "See what changed overnight.",
+    body: "Goal pacing, emerging patterns, risks, and the opportunities worth someone's morning — assembled before anyone opens a spreadsheet.",
+    items: [
+      { title: "Pacing against the goals leadership actually tracks" },
+      { title: "Patterns surfaced while there is still time to act on them" },
+      { title: "A brief shaped to the reader's role, not one report for everyone" },
+    ],
+    href: "/platform/morning-brew",
+    mock: <BrewPulse audience="staff" />,
+  },
+  {
     id: "edward",
     label: "EDward",
-    eyebrow: "Institutional AI assistant",
-    title: "Ask. Understand. Act.",
-    body: "A conversational assistant that helps staff and students understand institutional information, surface relevant context, and determine what should happen next.",
+    stage: "Decide",
+    title: "Ask what a student needs. Get a grounded answer.",
+    body: "Institution-grounded intelligence for understanding a student, a policy, a requirement, a blocker, or the next step — with the sources it drew from.",
     items: [
-      { title: "Plain-language questions about students, policies, and requirements" },
-      { title: "Answers grounded in approved institutional sources" },
-      { title: "Drafted outreach and tasks, always reviewed by a person" },
+      { title: "Answers grounded in approved institutional information" },
+      { title: "The student's own context, not a generic policy page" },
+      { title: "Drafted messages and tasks that wait for staff review" },
     ],
+    href: "/platform/edward",
     mock: <LiveEdward height="19rem" />,
   },
   {
     id: "action-center",
     label: "Action Center",
-    eyebrow: "Operational work management",
-    title: "Turn priorities into action.",
-    body: "Organize institutional work around clear owners, deadlines, statuses, priorities, and student context — across departments rather than inside one of them.",
+    stage: "Act",
+    title: "Give the work an owner and a deadline.",
+    body: "Prioritized work with the student context attached, routed to the office that can clear it, and closed with a record of what happened.",
     items: [
       { title: "Owner, due date, status, and department on every item" },
-      { title: "Dependencies across offices made explicit" },
-      { title: "Activity history for anything that needs review" },
+      { title: "Cross-office dependencies made explicit" },
+      { title: "Consequential actions gated behind a person" },
     ],
+    href: "/platform/action-center",
     mock: <LiveActionCenter />,
-  },
-  {
-    id: "morning-brew",
-    label: "Morning Brew",
-    eyebrow: "Daily institutional intelligence",
-    title: "Start the day knowing what matters.",
-    body: "Role-specific daily intelligence gives staff and leaders a focused view of priorities, risks, workload, and emerging issues — without assembling it by hand.",
-    items: [
-      { title: "Staff: today's work, priority students, deadlines, communications" },
-      { title: "Leaders: team workload, service levels, bottlenecks, escalations" },
-      { title: "Executives: funnel movement, trends, operational risk" },
-    ],
-    mock: <BrewPulse audience="staff" />,
   },
   {
     id: "student",
     label: "Student Experience",
-    eyebrow: "Guided enrollment journey",
-    title: "Give every student a clearer next step.",
-    body: "Bring enrollment requirements, documents, financial information, progress, and support into one coordinated experience.",
+    stage: "Guide",
+    title: "Turn institutional complexity into one clear next step.",
+    body: "A personalized enrollment path that shows a student what is done, what is open, and what to do next — across every office at once.",
     items: [
-      { title: "One checklist across every office" },
-      { title: "Progress students can actually see" },
-      { title: "Answers on demand, with a human handoff when needed" },
+      { title: "One checklist instead of five office websites" },
+      { title: "Progress a student can actually see" },
+      { title: "Answers on demand, with a human handoff when it matters" },
     ],
+    href: "/platform/student-experience",
     mock: <LiveStudentJourney />,
+  },
+];
+
+/* -------------------------------------------------------------------------
+   Outcomes
+   ------------------------------------------------------------------------- */
+
+const outcomes = [
+  {
+    title: "Improve yield",
+    body: "Find the students where timely, specific support can still move an offer to a deposit.",
+    from: "Offer",
+    to: "Deposit",
+  },
+  {
+    title: "Accelerate completion",
+    body: "Surface enrollment friction and missing requirements while there is runway to clear them.",
+    from: "Intent",
+    to: "Completion",
+  },
+  {
+    title: "Focus staff effort",
+    body: "Rank conversations and cases by likely impact and urgency rather than by arrival order.",
+    from: "Queue",
+    to: "Impact",
+  },
+  {
+    title: "Build student confidence",
+    body: "Replace an administrative maze with a personalized path and fewer unanswered questions.",
+    from: "Question",
+    to: "Clarity",
+  },
+];
+
+/* -------------------------------------------------------------------------
+   Trust — stated as the principles the platform is designed around
+   ------------------------------------------------------------------------- */
+
+const trust = [
+  {
+    icon: Users,
+    title: "Role-based access",
+    body: "People see only the student information and capabilities appropriate to their role.",
+  },
+  {
+    icon: Handshake,
+    title: "Human approval",
+    body: "Institution-defined approval gates separate a recommendation from a consequential action.",
+  },
+  {
+    icon: Eye,
+    title: "Auditability",
+    body: "Recommendations, decisions, and actions are designed to be traceable after the fact.",
+  },
+  {
+    icon: Shield,
+    title: "AI governance",
+    body: "Institutions define the policies, boundaries, and appropriate uses of AI on their own terms.",
   },
 ];
 
 export default function HomePage() {
   return (
     <>
-      {/* ---------- Hero ---------- */}
+      {/* ---------- 1. Hero + intelligence demonstration ---------- */}
       <header className="au-hero au-mesh">
         <Waves />
         <Container>
           <div className="au-hero__inner">
             <div>
-              <span className="au-eyebrow au-eyebrow--light">Higher Education Intelligence Platform</span>
+              <span className="au-eyebrow au-eyebrow--light">Higher Education Intelligence</span>
               <h1 className="au-display">
-                Institutional intelligence
+                Turn student intent
                 <br />
-                for <span className="au-gradient-text">what&rsquo;s next.</span>
+                into <span className="au-gradient-text">enrollment.</span>
               </h1>
               <p className="au-lede">
-                Audentra connects institutional data, workflows, and people so colleges and
-                universities can see what matters, coordinate action, and move work forward.
+                Audentra gives enrollment teams one intelligent operating layer to connect student
+                signals, understand what matters now, and move each student toward the right next
+                step &mdash; with people in control.
               </p>
               <div className="au-btn-row">
                 <Btn href="/demo" icon={<ArrowRight />}>
-                  Request a Demo
+                  Request a Pilot
                 </Btn>
-                <Btn href="#capabilities" variant="outlineLight" icon={<Play />}>
+                <Btn href="#platform" variant="outlineLight" icon={<Play />}>
                   Explore the Platform
                 </Btn>
               </div>
+
+              <ul className="au-hero__points">
+                <li>
+                  <Network size={16} />
+                  Unified student journey
+                </li>
+                <li>
+                  <Clock size={16} />
+                  Timely next-best action
+                </li>
+                <li>
+                  <Check size={16} />
+                  Human approval where it matters
+                </li>
+              </ul>
             </div>
 
-            <LiveReadiness />
+            <MorningBrief />
           </div>
+
+          <SignalFlow tone="dark" />
         </Container>
       </header>
 
-      {/* ---------- Platform operating model ---------- */}
-      <Section>
-        <SectionHead
-          title="The platform operating model"
-          lede="Most higher-ed technology stops after the first two steps and hands you a dashboard. Audentra runs all five, so insight turns into work someone owns."
-        />
-        <Cols items={operatingModel} numbered />
-      </Section>
-
-      {/* ---------- The problem ---------- */}
+      {/* ---------- 2. The enrollment gap ---------- */}
       <Section tone="paper">
         <SectionHead
-          eyebrow="The problem"
-          title={
-            <>
-              Your systems hold the data.
-              <br />
-              Your people still connect the dots.
-            </>
-          }
-          lede="Higher education has invested heavily in CRMs, student information systems, financial aid platforms, communication tools, and analytics. But the work between those systems still depends on people searching, reconciling, interpreting, and coordinating information manually."
+          eyebrow="The enrollment gap"
+          title="Your teams have the data. Audentra turns it into momentum."
+          lede="Institutions already know what happened last cycle. What enrollment teams need is what is changing now, which students deserve attention today, and where an intervention can still change the outcome."
         />
 
-        <div className="au-flow">
-          <div className="au-flow__col">
-            <span className="au-flow__chip">CRM</span>
-            <span className="au-flow__chip">Student Information System</span>
-            <span className="au-flow__chip">Financial Aid</span>
-            <span className="au-flow__chip">Email &amp; communications</span>
-          </div>
-          <span className="au-flow__arrow" aria-hidden="true">
-            <ArrowRight size={26} />
-          </span>
-          <div className="au-flow__core">
-            <strong>Audentra</strong>
-            <span>The intelligence layer between information and action</span>
-          </div>
-          <span className="au-flow__arrow" aria-hidden="true">
-            <ArrowRight size={26} />
-          </span>
-          <div className="au-flow__col">
-            <span className="au-flow__chip">Staff</span>
-            <span className="au-flow__chip">Leaders</span>
-            <span className="au-flow__chip">Executives</span>
-            <span className="au-flow__chip">Students</span>
-          </div>
+        <Cols items={gaps} numbered />
+
+        <div className="au-resolve">
+          <strong>Audentra</strong>
+          <span>One intelligent operating layer</span>
+          <p>
+            Connect the signals, reveal the next best move, and execute it inside
+            institution-defined controls.
+          </p>
         </div>
       </Section>
 
-      {/* ---------- Platform capabilities ---------- */}
-      <Section id="capabilities">
+      {/* ---------- 3. The platform ---------- */}
+      <Section id="platform">
         <SectionHead
-          eyebrow="Platform capabilities"
-          title="Four surfaces where the work actually happens."
-          lede="Each capability is a different entry point into the same institutional truth."
+          eyebrow="The Audentra platform"
+          title="Four experiences. One shared understanding of the student."
+          lede="Understand, decide, act, guide. Each surface reads from the same institutional context, so a leader's brief, a counselor's answer, and a student's checklist never disagree."
         />
         <Tabs
           label="Platform capabilities"
@@ -287,10 +256,17 @@ export default function HomePage() {
             content: (
               <div className="au-featurerow">
                 <div>
-                  <span className="au-eyebrow">{tab.eyebrow}</span>
+                  <span className="au-eyebrow">
+                    {tab.stage} &mdash; {tab.label}
+                  </span>
                   <h3 className="au-h3">{tab.title}</h3>
                   <p className="au-lede">{tab.body}</p>
                   <CheckList items={tab.items} />
+                  <div className="au-btn-row">
+                    <Btn href={tab.href} variant="outline" icon={<ArrowRight />}>
+                      Explore {tab.label}
+                    </Btn>
+                  </div>
                 </div>
                 {tab.mock}
               </div>
@@ -299,57 +275,33 @@ export default function HomePage() {
         />
       </Section>
 
-      {/* ---------- Secondary capabilities ---------- */}
-      <Section tone="paper">
+      {/* ---------- 4. Outcomes ---------- */}
+      <Section tone="paper" tight>
         <SectionHead
-          eyebrow="Also included"
-          title="The capabilities that hold it together."
-          lede="Supporting layers that make the four core surfaces work as one system."
+          eyebrow="Measurable by design"
+          title="Built around the outcomes enrollment leaders own."
+          lede="Every pilot starts by naming which of these has to move, and against which baseline."
         />
-        <Cols items={secondary} />
-      </Section>
-
-      {/* ---------- Built to integrate ---------- */}
-      <Section tone="navy" mesh>
-        <div className="au-featurerow">
-          <div>
-            <span className="au-eyebrow au-eyebrow--light">Built to integrate</span>
-            <h2 className="au-h2">Designed to sit on top of what you already own.</h2>
-            <p className="au-lede">
-              Audentra augments your technology environment rather than requiring you to replace your
-              CRM or SIS. Start with one workflow and one cohort, then expand as the value is proven.
-            </p>
-            <div className="au-btn-row">
-              <Btn href="/trust" variant="light" icon={<ArrowRight />}>
-                Read about trust and governance
-              </Btn>
+        <div className="au-outcomes">
+          {outcomes.map((outcome, index) => (
+            <div key={outcome.title}>
+              <span className="au-outcomes__key">{String(index + 1).padStart(2, "0")}</span>
+              <h3>{outcome.title}</h3>
+              <p>{outcome.body}</p>
+              <span className="au-outcomes__shift">
+                {outcome.from} <b>&rarr;</b> {outcome.to}
+              </span>
             </div>
-          </div>
-          <CheckList
-            items={[
-              {
-                title: "Works alongside your CRM and SIS",
-                body: "Existing systems remain the systems of record.",
-              },
-              {
-                title: "Role-aware access by design",
-                body: "Students, staff, leaders, and executives see what their role permits.",
-              },
-              {
-                title: "Institutional data isolation",
-                body: "Each institution's information remains logically separated.",
-              },
-            ]}
-          />
+          ))}
         </div>
       </Section>
 
-      {/* ---------- Enrollment wedge ---------- */}
-      <Section>
+      {/* ---------- 5. Enrollment readiness example ---------- */}
+      <Section tight>
         <SectionHead
-          eyebrow="Enrollment readiness"
+          eyebrow="Where institutions start"
           title="Deposited doesn't always mean enrolled."
-          lede="Between admission and enrollment, students navigate financial aid, documents, deposits, account requirements, onboarding, deadlines, and multiple institutional offices. Audentra helps teams see where students are getting stuck before an unresolved issue becomes enrollment melt."
+          lede="A student can commit and still be blocked in three offices at once. Audentra finds those blockers early, gives every office the same context, and gives the student one clear next step."
         />
 
         <JourneyRail />
@@ -361,28 +313,33 @@ export default function HomePage() {
         </div>
       </Section>
 
-      {/* ---------- Product index ---------- */}
-      <Section>
-        <SectionHead title="Go deeper on any product." />
-        <LinkList items={products} />
-      </Section>
-
-      {/* ---------- Why Audentra ---------- */}
-      <Section tone="navy" mesh id="why-audentra">
+      {/* ---------- 6. How it works ---------- */}
+      <Section tone="navy" mesh tight>
         <SectionHead
-          eyebrow="Why Audentra"
-          title="Built differently for higher education."
-          lede="We are not selling AI for colleges. We are selling institutional intelligence that helps colleges understand what matters and move work forward."
+          eyebrow="How it works"
+          title="One context. Every decision."
+          lede="Audentra sits above the systems you already run, adds higher-education context, and delivers it in the shape each role needs."
           light
         />
-        <Cols items={differentiators} />
+        <Architecture />
       </Section>
 
-      {/* ---------- Final CTA ---------- */}
+      {/* ---------- 7. Enterprise trust ---------- */}
+      <Section tone="paper" tight>
+        <SectionHead
+          eyebrow="Enterprise trust"
+          title="Intelligence your institution can govern."
+          lede="These are the principles the platform is designed around. We review current implementation status, security documentation, and data handling directly with each institution."
+        />
+        <Cols items={trust} />
+      </Section>
+
+      {/* ---------- 8. Final pilot CTA ---------- */}
       <CtaBand
-        title="Your institution already has the information."
-        sub="Audentra helps you put it to work."
-        lede="See how connected intelligence can help your institution understand what matters, coordinate work, and move forward with greater confidence."
+        eyebrow="Start with one measurable enrollment problem"
+        title="Make the next student decision count."
+        lede="Pick one cohort and one workflow, agree what has to move, and run it for a cycle. Expansion should follow evidence, not a platform rollout plan."
+        primary={{ href: "/demo", label: "Request a Pilot" }}
         secondary={{ href: "/solutions/enrollment-readiness", label: "Explore Enrollment Readiness" }}
       />
     </>

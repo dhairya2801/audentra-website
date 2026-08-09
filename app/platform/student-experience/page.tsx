@@ -62,7 +62,7 @@ export default function StudentExperiencePage() {
             <Btn href="/demo" icon={<ArrowRight />}>
               Explore Student Experience
             </Btn>
-            <Btn href="/#capabilities" variant="outlineLight">
+            <Btn href="/#platform" variant="outlineLight">
               See all capabilities
             </Btn>
           </>
@@ -117,7 +117,7 @@ export default function StudentExperiencePage() {
       <CtaBand
         title="Show us where your students get stuck."
         lede="We'll walk through the same journey inside Audentra and show what a student would see instead."
-        secondary={{ href: "/#capabilities", label: "See all capabilities" }}
+        secondary={{ href: "/#platform", label: "See all capabilities" }}
       />
     </>
   );
