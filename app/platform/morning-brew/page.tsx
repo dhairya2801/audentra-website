@@ -40,13 +40,13 @@ export default function MorningBrewPage() {
   return (
     <>
       <PageHero
-        eyebrow="Morning Brew"
+        eyebrow="Morning Brew — Daily Institutional Intelligence"
         title="Start the day knowing what matters."
         lede="Morning Brew gives each user a focused view of the institutional activity that deserves attention today — assembled before anyone opens a spreadsheet."
         actions={
           <>
             <Btn href="/demo" icon={<ArrowRight />}>
-              See Morning Brew
+              See a Morning Brew
             </Btn>
             <Btn href="/#platform" variant="outlineLight">
               See all capabilities
@@ -60,7 +60,7 @@ export default function MorningBrewPage() {
         <SectionHead
           eyebrow="Three views"
           title="The same institution, at three altitudes."
-          lede="Everyone opens the same product. Nobody opens the same briefing."
+          lede="Everyone opens the same product. Nobody opens the same briefing. Staff need to know what requires action today. Leaders need to know where work is slowing down. Executives need to know whether the institution is moving toward its goals. Same intelligence. Different altitude."
         />
         <div className="au-grid au-grid--3">
           {views.map((view) => (
@@ -105,7 +105,7 @@ export default function MorningBrewPage() {
           </p>
           <div className="au-btn-row" style={{ justifyContent: "center" }}>
             <Btn href="/demo" variant="light" icon={<ArrowRight />}>
-              Request a Demo
+              See a Morning Brew
             </Btn>
           </div>
         </div>

@@ -4,7 +4,7 @@ export const site = {
   url: "https://www.audentra.ai",
   tagline: "Institutional intelligence for what's next.",
   description:
-    "Audentra is the Higher Education Intelligence Platform. It connects institutional data, workflows, and people so colleges and universities can see what matters, coordinate action, and move work forward.",
+    "Audentra is institutional intelligence for higher education. It connects the signals across the systems institutions already run, shows which students need attention and what is standing in their way, and coordinates the next action across offices.",
 };
 
 export type NavLink = {
@@ -24,26 +24,27 @@ export const nav: NavItem[] = [
     label: "Platform",
     columns: [
       {
+        // Ordered as the operating sequence — see, understand, act, guide.
         links: [
+          {
+            label: "Morning Brew",
+            href: "/platform/morning-brew",
+            description: "See what changed and where attention is needed.",
+          },
           {
             label: "EDward",
             href: "/platform/edward",
-            description: "The institutional AI assistant.",
+            description: "Ask what is happening with a student, and why.",
           },
           {
             label: "Action Center",
             href: "/platform/action-center",
-            description: "Operational work management.",
-          },
-          {
-            label: "Morning Brew",
-            href: "/platform/morning-brew",
-            description: "Daily institutional intelligence.",
+            description: "Turn insight into owned, coordinated work.",
           },
           {
             label: "Student Experience",
             href: "/platform/student-experience",
-            description: "A guided enrollment journey.",
+            description: "Give students one clear path forward.",
           },
         ],
       },
@@ -65,8 +66,8 @@ export const nav: NavItem[] = [
             description: "Connect operational activity to strategic outcomes.",
           },
           {
-            label: "Students",
-            href: "/solutions#students",
+            label: "Student Experience",
+            href: "/solutions#student-experience",
             description: "Clearer requirements, guidance, and support.",
           },
         ],
@@ -81,9 +82,8 @@ export const nav: NavItem[] = [
       {
         links: [
           { label: "About Audentra", href: "/about", description: "Why we're building this." },
-          { label: "Pilot Program", href: "/pilot", description: "Build the next operating model with us." },
+          { label: "Pilot Program", href: "/pilot", description: "Prove the impact in one enrollment cycle." },
           { label: "Trust", href: "/trust", description: "Security, governance, responsible AI." },
-          { label: "Contact", href: "/demo", description: "Talk with the team." },
         ],
       },
     ],
@@ -95,9 +95,9 @@ export const footerColumns: { title: string; links: NavLink[] }[] = [
   {
     title: "Platform",
     links: [
+      { label: "Morning Brew", href: "/platform/morning-brew" },
       { label: "EDward", href: "/platform/edward" },
       { label: "Action Center", href: "/platform/action-center" },
-      { label: "Morning Brew", href: "/platform/morning-brew" },
       { label: "Student Experience", href: "/platform/student-experience" },
     ],
   },
@@ -106,7 +106,7 @@ export const footerColumns: { title: string; links: NavLink[] }[] = [
     links: [
       { label: "Enrollment Readiness", href: "/solutions/enrollment-readiness" },
       { label: "Institutional Leadership", href: "/solutions#institutional-leadership" },
-      { label: "Students", href: "/solutions#students" },
+      { label: "Student Experience", href: "/solutions#student-experience" },
     ],
   },
   {
@@ -116,9 +116,9 @@ export const footerColumns: { title: string; links: NavLink[] }[] = [
     title: "Resources",
     links: [
       { label: "Insights", href: "/resources" },
-      { label: "Reports", href: "/resources" },
+      { label: "Research", href: "/resources" },
+      { label: "Enrollment Readiness Index", href: "/resources" },
       { label: "Guides", href: "/resources" },
-      { label: "Webinars", href: "/resources" },
     ],
   },
   {

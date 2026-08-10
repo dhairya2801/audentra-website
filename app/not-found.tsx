@@ -27,20 +27,20 @@ export default function NotFound() {
           <FeatureCard
             icon={Chat}
             title="EDward"
-            body="The AI assistant built around your institution."
+            body="Ask what is happening with a student, and why."
             href="/platform/edward"
             cta="Explore"
           />
           <FeatureCard
             icon={Clipboard}
             title="Enrollment Readiness"
-            body="Turn student commitment into enrollment readiness."
+            body="Deposited doesn't mean enrolled."
             href="/solutions/enrollment-readiness"
             cta="Explore"
           />
           <FeatureCard
             icon={Cap}
-            title="Request a Demo"
+            title="Request a Pilot"
             body="Tell us what you're trying to improve."
             href="/demo"
             cta="Get started"

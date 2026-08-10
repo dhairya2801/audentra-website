@@ -14,7 +14,7 @@ import {
 export const metadata: Metadata = {
   title: "Student Experience — a guided enrollment journey",
   description:
-    "Give students one clearer way to understand what they need, where they stand, and what comes next.",
+    "Students shouldn't have to understand your org chart to enroll. Audentra turns separate requirements into one personalized path showing what is complete, what is still open, and what to do next.",
 };
 
 const cards = [
@@ -54,9 +54,19 @@ export default function StudentExperiencePage() {
   return (
     <>
       <PageHero
-        eyebrow="Student Experience"
-        title="Enrollment shouldn't feel like a scavenger hunt."
-        lede="Give students one clearer way to understand what they need, where they stand, and what comes next."
+        eyebrow="Student Experience — Guide"
+        title="Students shouldn't have to understand your org chart to enroll."
+        lede={
+          <>
+            Students experience your university as one institution &mdash; even when their enrollment
+            journey crosses Admissions, Financial Aid, Student Accounts, Housing, Orientation, and
+            the Registrar.
+            <br />
+            <br />
+            Audentra turns those separate requirements into one personalized path showing what is
+            complete, what is still open, and what to do next.
+          </>
+        }
         actions={
           <>
             <Btn href="/demo" icon={<ArrowRight />}>

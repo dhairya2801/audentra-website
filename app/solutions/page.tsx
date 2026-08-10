@@ -40,10 +40,10 @@ const solutions = [
     ],
   },
   {
-    id: "students",
+    id: "student-experience",
     icon: Cap,
-    title: "Students",
-    lede: "Give students clearer requirements, guidance, and support.",
+    title: "Student Experience",
+    lede: "Students shouldn't have to understand your org chart to enroll.",
     points: [
       { title: "Frictionless onboarding", body: "Preventable holds and missing documentation identified proactively." },
       { title: "One place to look", body: "Requirements, progress, financial information, and answers together." },
@@ -72,7 +72,7 @@ export default function SolutionsPage() {
         actions={
           <>
             <Btn href="/demo" icon={<ArrowRight />}>
-              Request a Demo
+              Request a Pilot
             </Btn>
             <Btn href="/solutions/enrollment-readiness" variant="outlineLight">
               Start with Enrollment Readiness

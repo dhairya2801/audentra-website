@@ -14,14 +14,18 @@ import {
 } from "@/components/ui";
 
 export const metadata: Metadata = {
-  title: "EDward — the institutional AI assistant",
+  title: "EDward — the conversational interface to institutional intelligence",
   description:
-    "EDward gives students and staff a conversational way to interact with institutional knowledge, student context, workflows, and next actions.",
+    "Ask your institution what's happening — and what should happen next. EDward answers from approved institutional knowledge, then helps move the work forward with people still in control.",
 };
 
 const staffQuestions = [
   "What does this student still need?",
   "Why is this student in my priority queue?",
+  "Which deposited students have unresolved aid requirements?",
+  "Show me students with deadlines in the next seven days.",
+  "Why did transfer readiness decline this week?",
+  "Which students are waiting on more than one office?",
   "Summarize their enrollment status.",
   "What should happen next?",
   "Draft an outreach message.",
@@ -54,9 +58,26 @@ export default function EdwardPage() {
   return (
     <>
       <PageHero
-        eyebrow="EDward"
-        title="Meet EDward."
-        lede="The AI assistant built around your institution. EDward gives students and staff a conversational way to interact with institutional knowledge, student context, workflows, and next actions."
+        eyebrow="EDward — Understand"
+        title={
+          <>
+            Ask your institution what&rsquo;s happening &mdash;
+            <br />
+            and what should happen next.
+          </>
+        }
+        lede={
+          <>
+            EDward is the conversational interface to Audentra&rsquo;s institutional intelligence.
+            Staff can ask about a student, requirement, policy, blocker, or next step and receive an
+            answer grounded in approved institutional knowledge and the context their role allows
+            them to see.
+            <br />
+            <br />
+            And when information needs to become action, EDward can help move the work forward
+            &mdash; with people still in control.
+          </>
+        }
         actions={
           <>
             <Btn href="/demo" icon={<ArrowRight />}>
@@ -70,6 +91,37 @@ export default function EdwardPage() {
         aside={<LiveEdward height="21rem" />}
       />
 
+      {/* The competitive frame, stated before anything else. */}
+      <Section tone="navy" mesh tight>
+        <div className="au-section-head">
+          <span className="au-eyebrow au-eyebrow--light">The positioning</span>
+          <h2 className="au-h2">Not another chatbot. A path from question to action.</h2>
+          <p className="au-lede">
+            A chatbot ends the conversation with information. EDward ends it with a task, an owner,
+            and a next step &mdash; still governed by the people accountable for the outcome.
+          </p>
+        </div>
+        <Cols
+          items={[
+            {
+              icon: Shield,
+              title: "Permissions preserved",
+              body: "EDward never exposes information a person's role would not already allow.",
+            },
+            {
+              icon: Eye,
+              title: "Reviewable output",
+              body: "Drafted messages and proposed actions wait for a person before anything leaves the institution.",
+            },
+            {
+              icon: Layers,
+              title: "Auditable trail",
+              body: "Relevant actions can be tracked and reviewed after the fact.",
+            },
+          ]}
+        />
+      </Section>
+
       {/* Staff */}
       <Section>
         <div className="au-featurerow">
@@ -80,21 +132,9 @@ export default function EdwardPage() {
               The context a counselor needs is usually spread across four systems and two inboxes.
               EDward assembles it in one question.
             </p>
-            <ul style={{ margin: "1.75rem 0 0", padding: 0, listStyle: "none", display: "grid", gap: "0.6rem" }}>
+            <ul className="au-questions" style={{ gridTemplateColumns: "1fr" }}>
               {staffQuestions.map((question) => (
-                <li
-                  key={question}
-                  style={{
-                    padding: "0.8rem 1.1rem",
-                    border: "1px solid var(--au-line)",
-                    borderRadius: "999px",
-                    background: "var(--au-paper)",
-                    fontSize: "0.9375rem",
-                    fontWeight: 550,
-                  }}
-                >
-                  &ldquo;{question}&rdquo;
-                </li>
+                <li key={question}>{question}</li>
               ))}
             </ul>
           </div>
@@ -188,36 +228,6 @@ export default function EdwardPage() {
             </Btn>
           </p>
         </Container>
-      </Section>
-
-      <Section tone="navy" mesh tight>
-        <div className="au-section-head">
-          <span className="au-eyebrow au-eyebrow--light">The positioning</span>
-          <h2 className="au-h2">Intelligence that doesn&rsquo;t stop at an answer.</h2>
-          <p className="au-lede">
-            A chatbot ends the conversation with information. EDward ends it with a task, an owner, and
-            a next step &mdash; still governed by the people accountable for the outcome.
-          </p>
-        </div>
-        <Cols
-          items={[
-            {
-              icon: Shield,
-              title: "Permissions preserved",
-              body: "EDward never exposes information a person's role would not already allow.",
-            },
-            {
-              icon: Eye,
-              title: "Reviewable output",
-              body: "Drafted messages and proposed actions wait for a person before anything leaves the institution.",
-            },
-            {
-              icon: Layers,
-              title: "Auditable trail",
-              body: "Relevant actions can be tracked and reviewed after the fact.",
-            },
-          ]}
-        />
       </Section>
 
       <CtaBand

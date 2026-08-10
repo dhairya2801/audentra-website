@@ -371,7 +371,7 @@ export function CtaBand({
   title,
   sub,
   lede,
-  primary = { href: "/demo", label: "Request a Demo" },
+  primary = { href: "/demo", label: "Request a Pilot" },
   secondary,
 }: {
   eyebrow?: string;

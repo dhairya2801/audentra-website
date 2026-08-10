@@ -25,8 +25,18 @@ import {
 export const metadata: Metadata = {
   title: "Enrollment Readiness",
   description:
-    "Audentra helps enrollment teams identify unresolved barriers, prioritize outreach, and coordinate action during the critical period between admission and enrollment.",
+    "Deposited doesn't mean enrolled. Audentra helps enrollment teams identify barriers earlier, prioritize the students who need attention, and coordinate the offices that can clear the path to enrollment.",
 };
+
+/* The questions a buyer arrives with. Stated in their words, before ours. */
+const buyerQuestions = [
+  "Which deposited students are actually on track to enroll?",
+  "Where is enrollment friction accumulating?",
+  "Which students need intervention this week?",
+  "Which office owns the blocker?",
+  "Are our interventions changing the outcome?",
+  "Where are students getting stuck across departments?",
+];
 
 const process = [
   { icon: Search, title: "Identify", body: "Surface unresolved requirements and emerging risk." },
@@ -60,19 +70,41 @@ export default function EnrollmentReadinessPage() {
     <>
       <PageHero
         eyebrow="Enrollment Readiness"
-        title="Turn student commitment into enrollment readiness."
-        lede="Audentra helps enrollment teams identify unresolved barriers, prioritize outreach, and coordinate action during the critical period between admission and enrollment."
+        title="Deposited doesn't mean enrolled."
+        lede={
+          <>
+            Between admission and enrollment, unresolved financial aid, documents, accounts, housing,
+            orientation, and other requirements can quietly turn committed students into melt.
+            <br />
+            <br />
+            Audentra helps enrollment teams identify those barriers earlier, prioritize the students
+            who need attention, and coordinate the offices that can clear the path to enrollment.
+          </>
+        }
         actions={
           <>
             <Btn href="/pilot" icon={<ArrowRight />}>
               Explore an Enrollment Readiness Pilot
             </Btn>
-            <Btn href="/demo" variant="outlineLight">
-              Request a Demo
+            <Btn href="/why-audentra" variant="outlineLight">
+              See How Audentra Works
             </Btn>
           </>
         }
       />
+
+      {/* Who this is for */}
+      <Section tone="paper" tight>
+        <SectionHead
+          eyebrow="Who this is for"
+          title="Enrollment Readiness is built for institutions asking:"
+        />
+        <ul className="au-questions">
+          {buyerQuestions.map((question) => (
+            <li key={question}>{question}</li>
+          ))}
+        </ul>
+      </Section>
 
       {/* Problem */}
       <Section>
@@ -112,7 +144,7 @@ export default function EnrollmentReadinessPage() {
         <div className="au-featurerow">
           <div>
             <span className="au-eyebrow au-eyebrow--light">In the product</span>
-            <h2 className="au-h2">The melt window, with a queue attached.</h2>
+            <h2 className="au-h2">Turn the melt window into an operating workflow.</h2>
             <p className="au-lede">
               Readiness is not a dashboard number. Every percentage point resolves to named students,
               named blockers, and a named owner in the office that can clear it.
@@ -196,7 +228,8 @@ export default function EnrollmentReadinessPage() {
       <CtaBand
         title="See what enrollment readiness could look like at your institution."
         lede="Bring your melt numbers. We'll show you where Audentra would have surfaced the risk."
-        secondary={{ href: "/pricing", label: "Discuss a Pilot" }}
+        primary={{ href: "/demo", label: "Request an Enrollment Readiness Pilot" }}
+        secondary={{ href: "/pilot", label: "See How the Pilot Works" }}
       />
     </>
   );

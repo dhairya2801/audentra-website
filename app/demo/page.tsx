@@ -3,7 +3,7 @@ import { DemoForm } from "@/components/demo-form";
 import { Container, CampusPhoto, Waves } from "@/components/ui";
 
 export const metadata: Metadata = {
-  title: "Request a Demo",
+  title: "Request a Pilot",
   description:
     "Tell us about your institution and what you're trying to improve. We'll tailor the conversation around your workflows rather than giving you a generic product tour.",
 };
@@ -16,8 +16,8 @@ export default function DemoPage() {
         <Container>
           <div className="au-pagehero__grid" style={{ alignItems: "start" }}>
             <div>
-              <span className="au-eyebrow au-eyebrow--light">Request a Demo</span>
-              <h1 className="au-h1">Let&rsquo;s see what&rsquo;s possible&mdash;together.</h1>
+              <span className="au-eyebrow au-eyebrow--light">Request a Pilot</span>
+              <h1 className="au-h1">Start with the problem, not the product tour.</h1>
               <p className="au-lede">
                 Tell us about your institution and what you&rsquo;re trying to improve. We&rsquo;ll
                 tailor the conversation around your workflows rather than giving you a generic product

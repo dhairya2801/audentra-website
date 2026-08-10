@@ -14,7 +14,7 @@ import {
 export const metadata: Metadata = {
   title: "Pilot Program",
   description:
-    "Audentra is partnering with select institutions to deploy focused workflows, measure results, and shape the future of institutional intelligence.",
+    "Prove the impact in one enrollment cycle. Start with one cohort and one enrollment workflow where unresolved friction is costing your institution time, staff capacity, or students.",
 };
 
 const steps = [
@@ -31,15 +31,27 @@ export default function PilotPage() {
     <>
       <PageHero
         eyebrow="Pilot Program"
-        title="Build the next operating model with us."
-        lede="Audentra is partnering with select institutions to deploy focused workflows, measure results, and shape the future of institutional intelligence."
+        title="Prove the impact in one enrollment cycle."
+        lede={
+          <>
+            Start with one cohort and one enrollment workflow where unresolved friction is costing
+            your institution time, staff capacity, or students.
+            <br />
+            <br />
+            Together, we&rsquo;ll establish the baseline, deploy Audentra around the workflow,
+            measure what changes, and decide what comes next based on evidence.
+            <br />
+            <br />
+            Focused scope. Measurable outcome. No platform-wide rollout required.
+          </>
+        }
         actions={
           <>
             <Btn href="/demo" icon={<ArrowRight />}>
-              Become a Pilot Institution
+              Request an Enrollment Readiness Pilot
             </Btn>
-            <Btn href="/solutions/enrollment-readiness" variant="outlineLight">
-              See the enrollment use case
+            <Btn href="#how-a-pilot-runs" variant="outlineLight">
+              See How the Pilot Works
             </Btn>
           </>
         }
@@ -58,7 +70,7 @@ export default function PilotPage() {
         }
       />
 
-      <Section>
+      <Section id="how-a-pilot-runs">
         <SectionHead
           eyebrow="How a pilot runs"
           title="Six steps, one enrollment cycle."
@@ -71,11 +83,11 @@ export default function PilotPage() {
       <Section tone="paper">
         <div className="au-featurerow">
           <div>
-            <span className="au-eyebrow">What we ask of you</span>
-            <h2 className="au-h2">Partnership, not just a purchase order.</h2>
+            <span className="au-eyebrow">What makes a pilot successful</span>
+            <h2 className="au-h2">Four things that decide whether a pilot proves anything.</h2>
             <p className="au-lede">
-              Pilots work when the institution treats them as an operating change. We ask for access to
-              the people who run the workflow and honest feedback about what is not working.
+              Pilots work when the institution treats them as an operating change. The pattern is
+              consistent across the ones that produce evidence.
             </p>
             <CheckList
               items={[
@@ -102,9 +114,9 @@ export default function PilotPage() {
       </Section>
 
       <CtaBand
-        title="Shape what institutional intelligence becomes."
+        title="Prove or disprove the value in one cycle."
         lede="We're selecting a limited number of pilot institutions for the 2026–27 enrollment cycle."
-        primary={{ href: "/demo", label: "Become a Pilot Institution" }}
+        primary={{ href: "/demo", label: "Request an Enrollment Readiness Pilot" }}
         secondary={{ href: "/pricing", label: "How pricing works" }}
       />
     </>

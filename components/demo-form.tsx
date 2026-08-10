@@ -84,7 +84,7 @@ export function DemoForm() {
 
       <div className="au-btn-row">
         <button type="submit" className="au-btn au-btn--primary">
-          Request a Demo
+          Request a Pilot
           <ArrowRight />
         </button>
       </div>

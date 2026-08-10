@@ -1173,6 +1173,41 @@ a.au-list__row:hover .au-list__go {
   list-style: none;
 }
 
+/**
+ * Questions in the reader's own words — buyer questions, staff prompts to
+ * EDward. Set as quoted pills so they read as speech rather than as features.
+ */
+.au-questions {
+  display: grid;
+  gap: 0.6rem;
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+}
+
+.au-questions li {
+  padding: 0.8rem 1.1rem;
+  border: 1px solid var(--au-line);
+  border-radius: 999px;
+  background: var(--au-paper);
+  color: var(--au-ink);
+  font-size: 0.9375rem;
+  font-weight: 550;
+}
+
+.au-questions li::before {
+  content: "\201C";
+}
+
+.au-questions li::after {
+  content: "\201D";
+}
+
+.au-section--paper .au-questions li {
+  background: #fff;
+}
+
 .au-checklist li {
   display: grid;
   gap: 0.75rem;
@@ -2180,6 +2215,16 @@ a.au-list__row:hover .au-list__go {
    ========================================================================== */
 
 /* Three understated confidence lines under the hero copy. */
+/* The category line, stated once under the hero paragraph. */
+.au-hero__tagline {
+  margin: 1.25rem 0 0;
+  color: #fff;
+  font-family: var(--au-font-display);
+  font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
 .au-hero__points {
   display: flex;
   flex-wrap: wrap;

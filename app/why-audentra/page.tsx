@@ -70,7 +70,15 @@ export default function WhyAudentraPage() {
             It needs a more intelligent way to work.
           </>
         }
-        lede="Purpose-built for higher education. Designed around the coordination problem, not the reporting problem."
+        lede={
+          <>
+            Connect the systems you already have. Coordinate the work they can&rsquo;t.
+            <br />
+            <br />
+            Purpose-built for higher education, and designed around the coordination problem rather
+            than the reporting problem.
+          </>
+        }
         actions={
           <>
             <Btn href="/demo" icon={<ArrowRight />}>
@@ -96,11 +104,12 @@ export default function WhyAudentraPage() {
         <div className="au-featurerow">
           <div>
             <span className="au-eyebrow">The distinction</span>
-            <h2 className="au-h2">We are not selling AI for colleges.</h2>
+            <h2 className="au-h2">Audentra is not another AI tool for colleges.</h2>
             <p className="au-lede">
-              We are selling institutional intelligence that helps colleges understand what matters
-              and move work forward. AI is how portions of Audentra work. It is not the entire
-              Audentra story.
+              AI is part of how Audentra works. It isn&rsquo;t the Audentra story. Audentra is an
+              institutional intelligence layer designed to help colleges and universities understand
+              what matters now, coordinate what happens next, and measure whether the intervention
+              changed the outcome.
             </p>
             <CheckList
               items={[
@@ -109,12 +118,12 @@ export default function WhyAudentraPage() {
                   body: "Institutions rarely lack data. They lack a shared operating picture and a place for action to live.",
                 },
                 {
-                  title: "Existing investments stay",
-                  body: "Your CRM and SIS remain the systems of record. Audentra is the layer between them and the work.",
+                  title: "Your existing systems remain the systems of record",
+                  body: "Your CRM and SIS stay where they are. Audentra connects the intelligence and work between them.",
                 },
                 {
-                  title: "Accountability stays human",
-                  body: "Important actions remain governed by institutional permissions and approval.",
+                  title: "Your people remain accountable for consequential decisions",
+                  body: "Important actions stay governed by institutional permissions and approval.",
                 },
               ]}
             />

@@ -23,12 +23,12 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — Higher Education Intelligence Platform`,
+    default: `${site.name} — Institutional Intelligence for Higher Education`,
     template: `%s — ${site.name}`,
   },
   description: site.description,
   openGraph: {
-    title: `${site.name} — Higher Education Intelligence Platform`,
+    title: `${site.name} — Institutional Intelligence for Higher Education`,
     description: site.description,
     url: site.url,
     siteName: site.name,

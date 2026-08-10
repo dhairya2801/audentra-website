@@ -54,10 +54,10 @@ export default function AboutPage() {
         actions={
           <>
             <Btn href="/demo" icon={<ArrowRight />}>
-              Talk with our team
+              Request a Pilot
             </Btn>
-            <Btn href="/pilot" variant="outlineLight">
-              Pilot Program
+            <Btn href="/why-audentra" variant="outlineLight">
+              See How Audentra Works
             </Btn>
           </>
         }

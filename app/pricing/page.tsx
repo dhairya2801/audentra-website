@@ -13,8 +13,16 @@ import {
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Audentra pricing is based on institutional scope, participating workflows, implementation requirements, and platform capabilities.",
+    "Start with the problem. Scope the investment around it. Audentra pricing reflects the institutional workflow being addressed, the population in scope, participating departments, required integrations, and implementation needs.",
 };
+
+const priceShape = [
+  { title: "Student population in scope" },
+  { title: "Number of workflows" },
+  { title: "Participating offices" },
+  { title: "Integration requirements" },
+  { title: "Implementation and support" },
+];
 
 const pilotIncludes = [
   { title: "Defined cohort", body: "One population, agreed before configuration begins." },
@@ -30,30 +38,40 @@ export default function PricingPage() {
     <>
       <PageHero
         eyebrow="Pricing"
-        title="Start with a problem worth solving."
-        lede="Audentra pricing is based on institutional scope, participating workflows, implementation requirements, and platform capabilities."
+        title={
+          <>
+            Start with the problem.
+            <br />
+            Scope the investment around it.
+          </>
+        }
+        lede={
+          <>
+            Audentra pricing reflects the institutional workflow being addressed, the population in
+            scope, participating departments, required integrations, and implementation needs.
+            <br />
+            <br />
+            Most institutions begin with a focused pilot tied to a measurable enrollment outcome.
+            We&rsquo;ll define the scope together before proposing the investment.
+          </>
+        }
         actions={
           <>
             <Btn href="/demo" icon={<ArrowRight />}>
-              Request Pricing
+              Discuss a Pilot
             </Btn>
             <Btn href="/pilot" variant="outlineLight">
-              See the Pilot Program
+              See How the Pilot Works
             </Btn>
           </>
         }
       />
 
       <Section>
-        <div className="au-container--narrow" style={{ textAlign: "center" }}>
-          <span className="au-eyebrow">How we price</span>
-          <h2 className="au-h2">Scoped first, then priced.</h2>
-          <p className="au-lede" style={{ marginInline: "auto" }}>
-            Scope depends on the size of the population you want to cover, how many workflows and
-            departments participate, and what has to be configured to fit your existing environment.
-            We would rather quote the real thing than publish a number that changes in the first
-            meeting.
-          </p>
+        <div className="au-container--narrow">
+          <span className="au-eyebrow">What shapes pricing</span>
+          <h2 className="au-h2">Five variables, agreed before any number.</h2>
+          <CheckList items={priceShape} />
         </div>
       </Section>
 
@@ -120,7 +138,8 @@ export default function PricingPage() {
       <CtaBand
         title="Tell us what you're trying to improve."
         lede="We'll come back with a scope and a price rather than a tier."
-        secondary={{ href: "/pilot", label: "Become a Pilot Institution" }}
+        primary={{ href: "/demo", label: "Discuss a Pilot" }}
+        secondary={{ href: "/pilot", label: "See How the Pilot Works" }}
       />
     </>
   );

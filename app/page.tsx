@@ -49,15 +49,18 @@ const gaps = [
 ];
 
 /* -------------------------------------------------------------------------
-   Platform — the four products, ordered as a progression
+   Platform — the four products, ordered as a progression.
+
+   The stage verb leads; the product name sits under it. A first-time buyer
+   should be able to read the architecture before learning four brand names.
    ------------------------------------------------------------------------- */
 
 const capabilityTabs = [
   {
     id: "morning-brew",
     label: "Morning Brew",
-    stage: "Understand",
-    title: "See what changed overnight.",
+    stage: "See",
+    promise: "Know what changed and where attention is needed.",
     body: "Goal pacing, emerging patterns, risks, and the opportunities worth someone's morning — assembled before anyone opens a spreadsheet.",
     items: [
       { title: "Pacing against the goals leadership actually tracks" },
@@ -70,8 +73,8 @@ const capabilityTabs = [
   {
     id: "edward",
     label: "EDward",
-    stage: "Decide",
-    title: "Ask what a student needs. Get a grounded answer.",
+    stage: "Understand",
+    promise: "Ask what is happening with a student, and why.",
     body: "Institution-grounded intelligence for understanding a student, a policy, a requirement, a blocker, or the next step — with the sources it drew from.",
     items: [
       { title: "Answers grounded in approved institutional information" },
@@ -85,7 +88,7 @@ const capabilityTabs = [
     id: "action-center",
     label: "Action Center",
     stage: "Act",
-    title: "Give the work an owner and a deadline.",
+    promise: "Turn insight into owned, coordinated work.",
     body: "Prioritized work with the student context attached, routed to the office that can clear it, and closed with a record of what happened.",
     items: [
       { title: "Owner, due date, status, and department on every item" },
@@ -99,7 +102,7 @@ const capabilityTabs = [
     id: "student",
     label: "Student Experience",
     stage: "Guide",
-    title: "Turn institutional complexity into one clear next step.",
+    promise: "Give students one clear path forward.",
     body: "A personalized enrollment path that shows a student what is done, what is open, and what to do next — across every office at once.",
     items: [
       { title: "One checklist instead of five office websites" },
@@ -178,34 +181,38 @@ export default function HomePage() {
         <Container>
           <div className="au-hero__inner">
             <div>
-              <span className="au-eyebrow au-eyebrow--light">Higher Education Intelligence</span>
+              <span className="au-eyebrow au-eyebrow--light">
+                Institutional Intelligence for Higher Education
+              </span>
               <h1 className="au-display">
                 Turn student intent
                 <br />
                 into <span className="au-gradient-text">enrollment.</span>
               </h1>
               <p className="au-lede">
-                Audentra gives enrollment teams one intelligent operating layer to connect student
-                signals, understand what matters now, and move each student toward the right next
-                step &mdash; with people in control.
+                Audentra helps enrollment teams see which students need attention, understand what is
+                standing in their way, and coordinate the next action across Admissions, Financial
+                Aid, Student Accounts, and Student Services &mdash; before enrollment opportunities
+                are lost.
               </p>
+              <p className="au-hero__tagline">Institutional intelligence for what&rsquo;s next.</p>
               <div className="au-btn-row">
                 <Btn href="/demo" icon={<ArrowRight />}>
                   Request a Pilot
                 </Btn>
-                <Btn href="#platform" variant="outlineLight" icon={<Play />}>
-                  Explore the Platform
+                <Btn href="/why-audentra" variant="outlineLight" icon={<Play />}>
+                  See How Audentra Works
                 </Btn>
               </div>
 
               <ul className="au-hero__points">
                 <li>
                   <Network size={16} />
-                  Unified student journey
+                  Works with the systems you already have
                 </li>
                 <li>
                   <Clock size={16} />
-                  Timely next-best action
+                  Coordinated next action across offices
                 </li>
                 <li>
                   <Check size={16} />
@@ -226,16 +233,16 @@ export default function HomePage() {
         <SectionHead
           eyebrow="The enrollment gap"
           title="Your teams have the data. Audentra turns it into momentum."
-          lede="Institutions already know what happened last cycle. What enrollment teams need is what is changing now, which students deserve attention today, and where an intervention can still change the outcome."
+          lede="The signals are already there. They live across the SIS, CRM, financial aid, communications, events, web activity, and conversations with students. The challenge is seeing those signals together, early enough to know which students need attention, what is standing in their way, and which office can change the outcome."
         />
 
         <Cols items={gaps} numbered />
 
         <div className="au-resolve">
           <strong>Audentra</strong>
-          <span>One intelligent operating layer</span>
+          <span>Fragmented signals, one coordinated response</span>
           <p>
-            Connect the signals, reveal the next best move, and execute it inside
+            Audentra turns fragmented institutional signals into coordinated action &mdash; inside
             institution-defined controls.
           </p>
         </div>
@@ -246,7 +253,7 @@ export default function HomePage() {
         <SectionHead
           eyebrow="The Audentra platform"
           title="Four experiences. One shared understanding of the student."
-          lede="Understand, decide, act, guide. Each surface reads from the same institutional context, so a leader's brief, a counselor's answer, and a student's checklist never disagree."
+          lede="See, understand, act, guide. Each surface reads from the same institutional context, so a leader's brief, a counselor's answer, and a student's checklist never disagree."
         />
         <Tabs
           label="Platform capabilities"
@@ -256,11 +263,11 @@ export default function HomePage() {
             content: (
               <div className="au-featurerow">
                 <div>
-                  <span className="au-eyebrow">
-                    {tab.stage} &mdash; {tab.label}
-                  </span>
-                  <h3 className="au-h3">{tab.title}</h3>
-                  <p className="au-lede">{tab.body}</p>
+                  <span className="au-eyebrow">{tab.stage}</span>
+                  <h3 className="au-h3">{tab.label}</h3>
+                  <p className="au-lede">
+                    <strong>{tab.promise}</strong> {tab.body}
+                  </p>
                   <CheckList items={tab.items} />
                   <div className="au-btn-row">
                     <Btn href={tab.href} variant="outline" icon={<ArrowRight />}>
@@ -279,8 +286,8 @@ export default function HomePage() {
       <Section tone="paper" tight>
         <SectionHead
           eyebrow="Measurable by design"
-          title="Built around the outcomes enrollment leaders own."
-          lede="Every pilot starts by naming which of these has to move, and against which baseline."
+          title="Measure Audentra by what changes — not how often people log in."
+          lede="Every pilot starts by naming which of these outcomes has to move, and against which baseline."
         />
         <div className="au-outcomes">
           {outcomes.map((outcome, index) => (
@@ -301,7 +308,7 @@ export default function HomePage() {
         <SectionHead
           eyebrow="Where institutions start"
           title="Deposited doesn't always mean enrolled."
-          lede="A student can commit and still be blocked in three offices at once. Audentra finds those blockers early, gives every office the same context, and gives the student one clear next step."
+          lede="A student can deposit and still be blocked by financial aid, missing documents, student accounts, housing, orientation, or another unresolved requirement. Audentra identifies those barriers early, connects the offices that can resolve them, and gives the student one clear next step."
         />
 
         <JourneyRail />
@@ -317,8 +324,14 @@ export default function HomePage() {
       <Section tone="navy" mesh tight>
         <SectionHead
           eyebrow="How it works"
-          title="One context. Every decision."
-          lede="Audentra sits above the systems you already run, adds higher-education context, and delivers it in the shape each role needs."
+          title={
+            <>
+              Keep your systems.
+              <br />
+              Connect the work between them.
+            </>
+          }
+          lede="Your SIS, CRM, LMS, financial aid systems, communications platforms, and institutional knowledge remain where they are. Audentra connects the signals across them, adds institutional context, and turns that understanding into the next appropriate action. No rip-and-replace strategy. No new system of record."
           light
         />
         <Architecture />
@@ -329,7 +342,7 @@ export default function HomePage() {
         <SectionHead
           eyebrow="Enterprise trust"
           title="Intelligence your institution can govern."
-          lede="These are the principles the platform is designed around. We review current implementation status, security documentation, and data handling directly with each institution."
+          lede="AI should increase institutional capacity without reducing institutional accountability. These are the principles the platform is designed around. We review current implementation status, security documentation, and data handling directly with each institution."
         />
         <Cols items={trust} />
       </Section>
@@ -339,7 +352,7 @@ export default function HomePage() {
         eyebrow="Start with one measurable enrollment problem"
         title="Make the next student decision count."
         lede="Pick one cohort and one workflow, agree what has to move, and run it for a cycle. Expansion should follow evidence, not a platform rollout plan."
-        primary={{ href: "/demo", label: "Request a Pilot" }}
+        primary={{ href: "/demo", label: "Request an Enrollment Readiness Pilot" }}
         secondary={{ href: "/solutions/enrollment-readiness", label: "Explore Enrollment Readiness" }}
       />
     </>

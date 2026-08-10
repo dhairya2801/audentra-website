@@ -15,7 +15,7 @@ const STEPS = [
 export function SignalFlow({ tone = "light" }: { tone?: "light" | "dark" }) {
   return (
     <div className={tone === "dark" ? "au-signal au-signal--dark" : "au-signal"}>
-      <span className="au-signal__label">From signal to student action</span>
+      <span className="au-signal__label">From institutional signal to coordinated action</span>
       <ol className="au-signal__steps">
         {STEPS.map((step) => (
           <li key={step.label}>

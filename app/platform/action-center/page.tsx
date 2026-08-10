@@ -25,9 +25,9 @@ import {
 } from "@/components/ui";
 
 export const metadata: Metadata = {
-  title: "Action Center — operational work management",
+  title: "Action Center — coordinated institutional work",
   description:
-    "The Audentra Action Center converts student needs, institutional priorities, messages, and operational signals into clear, trackable work.",
+    "Insight becomes valuable when someone owns the next step. Action Center identifies what needs attention, attaches the student context, assigns the right office, tracks the deadline, and records what happened.",
 };
 
 const fields = [
@@ -53,9 +53,19 @@ export default function ActionCenterPage() {
   return (
     <>
       <PageHero
-        eyebrow="Action Center"
-        title="Every important action needs an owner."
-        lede="The Audentra Action Center converts student needs, institutional priorities, messages, and operational signals into clear, trackable work."
+        eyebrow="Action Center — Act"
+        title="Insight becomes valuable when someone owns the next step."
+        lede={
+          <>
+            Audentra turns institutional intelligence into coordinated work. Action Center identifies
+            what needs attention, attaches the student context, assigns the right office, tracks the
+            deadline, and records what happened.
+            <br />
+            <br />
+            So the institution doesn&rsquo;t just know where students are stuck. Someone knows what
+            to do about it.
+          </>
+        }
         actions={
           <>
             <Btn href="/demo" icon={<ArrowRight />}>

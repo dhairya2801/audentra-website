@@ -47,10 +47,19 @@ export default function TrustPage() {
       <PageHero
         eyebrow="Trust, security, and responsible AI"
         title="Institutional intelligence requires institutional trust."
-        lede="Audentra is designed around responsible access, institutional governance, human oversight, and traceability."
+        lede={
+          <>
+            Audentra is designed for environments where student information, institutional policy,
+            AI-assisted recommendations, and consequential decisions require clear boundaries.
+            <br />
+            <br />
+            Our approach is built around a simple principle: AI can increase institutional capacity
+            without reducing institutional accountability.
+          </>
+        }
         actions={
           <Btn href="/demo" icon={<ArrowRight />}>
-            Talk with our team
+            Request a Pilot
           </Btn>
         }
       />

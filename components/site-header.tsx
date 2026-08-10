@@ -178,11 +178,11 @@ export function SiteHeader() {
             </button>
 
             <div className="au-header__actions">
-              <Link href="/pricing" className="au-btn au-btn--outline">
-                Talk to Sales
+              <Link href="/why-audentra" className="au-btn au-btn--outline">
+                See How Audentra Works
               </Link>
               <Link href="/demo" className="au-btn au-btn--primary">
-                Request a Demo
+                Request a Pilot
               </Link>
             </div>
           </div>
@@ -214,10 +214,10 @@ export function SiteHeader() {
               )}
               <div className="au-drawer__cta">
                 <Link href="/demo" className="au-btn au-btn--primary">
-                  Request a Demo
+                  Request a Pilot
                 </Link>
-                <Link href="/pricing" className="au-btn au-btn--outline">
-                  Talk to Sales
+                <Link href="/why-audentra" className="au-btn au-btn--outline">
+                  See How Audentra Works
                 </Link>
               </div>
             </Container>
