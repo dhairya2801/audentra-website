@@ -99,7 +99,7 @@ export default function EnrollmentReadinessPage() {
           eyebrow="Who this is for"
           title="Enrollment Readiness is built for institutions asking:"
         />
-        <ul className="au-questions">
+        <ul className="au-questions au-questions--center">
           {buyerQuestions.map((question) => (
             <li key={question}>{question}</li>
           ))}

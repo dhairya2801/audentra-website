@@ -91,37 +91,6 @@ export default function EdwardPage() {
         aside={<LiveEdward height="21rem" />}
       />
 
-      {/* The competitive frame, stated before anything else. */}
-      <Section tone="navy" mesh tight>
-        <div className="au-section-head">
-          <span className="au-eyebrow au-eyebrow--light">The positioning</span>
-          <h2 className="au-h2">Not another chatbot. A path from question to action.</h2>
-          <p className="au-lede">
-            A chatbot ends the conversation with information. EDward ends it with a task, an owner,
-            and a next step &mdash; still governed by the people accountable for the outcome.
-          </p>
-        </div>
-        <Cols
-          items={[
-            {
-              icon: Shield,
-              title: "Permissions preserved",
-              body: "EDward never exposes information a person's role would not already allow.",
-            },
-            {
-              icon: Eye,
-              title: "Reviewable output",
-              body: "Drafted messages and proposed actions wait for a person before anything leaves the institution.",
-            },
-            {
-              icon: Layers,
-              title: "Auditable trail",
-              body: "Relevant actions can be tracked and reviewed after the fact.",
-            },
-          ]}
-        />
-      </Section>
-
       {/* Staff */}
       <Section>
         <div className="au-featurerow">
@@ -228,6 +197,37 @@ export default function EdwardPage() {
             </Btn>
           </p>
         </Container>
+      </Section>
+
+      {/* The competitive frame, stated once the product has been shown. */}
+      <Section tone="navy" mesh tight>
+        <div className="au-section-head">
+          <span className="au-eyebrow au-eyebrow--light">The positioning</span>
+          <h2 className="au-h2">Not another chatbot. A path from question to action.</h2>
+          <p className="au-lede">
+            A chatbot ends the conversation with information. EDward ends it with a task, an owner,
+            and a next step &mdash; still governed by the people accountable for the outcome.
+          </p>
+        </div>
+        <Cols
+          items={[
+            {
+              icon: Shield,
+              title: "Permissions preserved",
+              body: "EDward never exposes information a person's role would not already allow.",
+            },
+            {
+              icon: Eye,
+              title: "Reviewable output",
+              body: "Drafted messages and proposed actions wait for a person before anything leaves the institution.",
+            },
+            {
+              icon: Layers,
+              title: "Auditable trail",
+              body: "Relevant actions can be tracked and reviewed after the fact.",
+            },
+          ]}
+        />
       </Section>
 
       <CtaBand

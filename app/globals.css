@@ -859,6 +859,7 @@ a.au-list__row:hover .au-list__go {
   font: inherit;
   font-size: 0.9125rem;
   font-weight: 550;
+  white-space: nowrap;
   cursor: pointer;
 }
 
@@ -1194,6 +1195,10 @@ a.au-list__row:hover .au-list__go {
   color: var(--au-ink);
   font-size: 0.9375rem;
   font-weight: 550;
+}
+
+.au-questions--center li {
+  text-align: center;
 }
 
 .au-questions li::before {

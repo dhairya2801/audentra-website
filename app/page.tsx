@@ -259,11 +259,10 @@ export default function HomePage() {
           label="Platform capabilities"
           tabs={capabilityTabs.map((tab) => ({
             id: tab.id,
-            label: tab.label,
+            label: tab.stage,
             content: (
               <div className="au-featurerow">
                 <div>
-                  <span className="au-eyebrow">{tab.stage}</span>
                   <h3 className="au-h3">{tab.label}</h3>
                   <p className="au-lede">
                     <strong>{tab.promise}</strong> {tab.body}
