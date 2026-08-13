@@ -668,56 +668,6 @@ a.au-list__row:hover .au-list__go {
   transform: translateX(3px);
 }
 
-/* Expansion path — §01 of the brand guide frames expansion as a sequence,
-   so it reads as one, not as six identical chips. */
-.au-path {
-  display: grid;
-  gap: 0.9rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.au-path li {
-  position: relative;
-  display: grid;
-  gap: 0.85rem;
-  align-items: center;
-  padding-bottom: 0.9rem;
-  border-bottom: 1px solid rgb(255 255 255 / 10%);
-  grid-template-columns: 1.6rem minmax(0, 1fr) auto;
-}
-
-.au-path li:last-child {
-  padding-bottom: 0;
-  border-bottom: 0;
-}
-
-.au-path svg {
-  color: #8fb6ff;
-}
-
-.au-path b {
-  font-size: 0.9375rem;
-  font-weight: 600;
-}
-
-.au-path__stage {
-  color: rgb(219 229 247 / 55%);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.au-path li:first-child .au-path__stage {
-  color: var(--au-teal-soft);
-}
-
-.au-path li:first-child svg {
-  color: var(--au-teal-soft);
-}
-
 /* Inline chip row — a plain list of names, not a grid of boxes. */
 .au-chips {
   display: flex;

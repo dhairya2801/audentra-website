@@ -4,12 +4,6 @@ import {
   ArrowRight,
   Building,
   Cap,
-  Chart,
-  Compass,
-  Doc,
-  Heart,
-  Target,
-  Wallet,
 } from "@/components/icons";
 import {
   ArrowLink,
@@ -50,16 +44,6 @@ const solutions = [
       { title: "Support that finds them", body: "Outreach before a deadline passes, not after." },
     ],
   },
-];
-
-/* Expansion sequence per the brand guide: enrollment first, then outward. */
-const expansion = [
-  { icon: Target, title: "Enrollment" },
-  { icon: Wallet, title: "Financial Aid" },
-  { icon: Compass, title: "Advising" },
-  { icon: Doc, title: "Registrar" },
-  { icon: Heart, title: "Student Affairs" },
-  { icon: Chart, title: "Institutional Research" },
 ];
 
 export default function SolutionsPage() {
@@ -109,30 +93,6 @@ export default function SolutionsPage() {
           </div>
         </Section>
       ))}
-
-      <Section tone="navy" mesh tight>
-        <div className="au-featurerow">
-          <div>
-            <span className="au-eyebrow au-eyebrow--light">Expansion</span>
-            <h2 className="au-h2">Prove value in enrollment. Then expand.</h2>
-            <p className="au-lede">
-              The same operating model applies wherever institutional work crosses departmental
-              boundaries. Most institutions start with one cohort and one workflow.
-            </p>
-          </div>
-          <ol className="au-path">
-            {expansion.map((area, index) => (
-              <li key={area.title}>
-                <area.icon size={19} />
-                <b>{area.title}</b>
-                <span className="au-path__stage">
-                  {index === 0 ? "Start here" : `Stage ${index + 1}`}
-                </span>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </Section>
 
       <CtaBand
         title="Start where the pressure is highest."
