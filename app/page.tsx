@@ -286,7 +286,6 @@ export default function HomePage() {
         <SectionHead
           eyebrow="Measurable by design"
           title="Measure Audentra by what changes — not how often people log in."
-          lede="Every pilot starts by naming which of these outcomes has to move, and against which baseline."
         />
         <div className="au-outcomes">
           {outcomes.map((outcome, index) => (
@@ -306,8 +305,8 @@ export default function HomePage() {
       <Section tight>
         <SectionHead
           eyebrow="Where institutions start"
-          title="Deposited doesn't always mean enrolled."
-          lede="A student can deposit and still be blocked by financial aid, missing documents, student accounts, housing, orientation, or another unresolved requirement. Audentra identifies those barriers early, connects the offices that can resolve them, and gives the student one clear next step."
+          title="The journey after deposit"
+          lede="The enrollment journey continues after the deposit. From financial aid and student accounts to housing and orientation, important milestones remain. Audentra brings those milestones into one connected view so teams can coordinate support and students can move toward enrollment with confidence."
         />
 
         <JourneyRail />
@@ -349,8 +348,8 @@ export default function HomePage() {
       {/* ---------- 8. Final pilot CTA ---------- */}
       <CtaBand
         eyebrow="Start with one measurable enrollment problem"
-        title="Make the next student decision count."
-        lede="Pick one cohort and one workflow, agree what has to move, and run it for a cycle. Expansion should follow evidence, not a platform rollout plan."
+        title="Start with a student journey that matters."
+        lede="Focus Audentra on a priority cohort and a meaningful point in the student journey. Give your teams greater visibility and coordination, create a clearer experience for students, and use what you learn to guide what comes next."
         primary={{ href: "/demo", label: "Request an Enrollment Readiness Pilot" }}
         secondary={{ href: "/solutions/enrollment-readiness", label: "Explore Enrollment Readiness" }}
       />

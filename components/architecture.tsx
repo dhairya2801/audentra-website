@@ -9,7 +9,7 @@ import { Cap, Chart, Layers, Lightbulb, Shield, Users } from "./icons";
 const SYSTEMS = ["SIS", "CRM", "LMS", "Financial Aid", "Email & communications", "Web activity"];
 
 const INPUTS = [
-  { icon: Shield, title: "Institutional rules", note: "Policies, requirements, and approved knowledge" },
+  { icon: Shield, title: "Institutional practice", note: "Policies, requirements, and approved knowledge" },
   { icon: Layers, title: "Student context", note: "History, milestones, and open requirements" },
   { icon: Lightbulb, title: "Reasoning", note: "What changed, what it means, what to do next" },
 ];

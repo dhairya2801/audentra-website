@@ -85,10 +85,10 @@ export function SiteHeader() {
           <div className="au-header__inner">
             <Link href="/" className="au-logo" aria-label="Audentra home">
               <Image
-                src="/audentra-logo-dark-text.png"
+                src="/audentra-main-logo.png"
                 alt="Audentra"
-                width={1745}
-                height={257}
+                width={1177}
+                height={287}
                 priority
               />
             </Link>

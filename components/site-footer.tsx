@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { footerColumns, site } from "@/lib/site";
-import { ArrowRight, Instagram, LinkedIn, XSocial } from "./icons";
+import { Instagram, LinkedIn } from "./icons";
+import { NewsletterForm } from "./newsletter-form";
 import { Container } from "./ui";
 
 export function SiteFooter() {
@@ -11,24 +12,28 @@ export function SiteFooter() {
         <div className="au-footer__top">
           <div className="au-footer__brand">
             <Image
-              src="/audentra-logo-light.png"
+              src="/audentra-main-logo.png"
               alt="Audentra"
-              width={1745}
-              height={257}
+              width={1177}
+              height={287}
             />
-            <p>{site.tagline}</p>
-            {/* Marks only — the accounts are not claimed yet, so these do not
-                link anywhere. Wrap each in an <a> once the handles exist. */}
-            <div className="au-footer__social" aria-hidden="true">
-              <span>
+            <div className="au-footer__social">
+              <a
+                href="https://www.linkedin.com/company/audentra-ai/"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Audentra on LinkedIn"
+              >
                 <LinkedIn />
-              </span>
-              <span>
-                <XSocial />
-              </span>
-              <span>
+              </a>
+              <a
+                href="https://www.instagram.com/audentra.ai"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Audentra on Instagram"
+              >
                 <Instagram />
-              </span>
+              </a>
             </div>
           </div>
 
@@ -53,21 +58,7 @@ export function SiteFooter() {
               Occasional insights on enrollment operations and institutional intelligence.
             </p>
           </div>
-          <form className="au-newsform" action="/demo">
-            <label htmlFor="footer-email" className="au-sr">
-              Work email
-            </label>
-            <input
-              id="footer-email"
-              name="email"
-              type="email"
-              placeholder="Work email address"
-              aria-label="Work email address"
-            />
-            <button type="submit" className="au-btn au-btn--primary" aria-label="Subscribe">
-              <ArrowRight />
-            </button>
-          </form>
+          <NewsletterForm />
         </div>
 
         <div className="au-footer__bottom">

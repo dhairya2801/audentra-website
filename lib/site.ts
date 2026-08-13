@@ -75,7 +75,6 @@ export const nav: NavItem[] = [
     ],
   },
   { label: "Why Audentra", href: "/why-audentra" },
-  { label: "Resources", href: "/resources" },
   {
     label: "Company",
     columns: [
@@ -107,18 +106,6 @@ export const footerColumns: { title: string; links: NavLink[] }[] = [
       { label: "Enrollment Readiness", href: "/solutions/enrollment-readiness" },
       { label: "Institutional Leadership", href: "/solutions#institutional-leadership" },
       { label: "Student Experience", href: "/solutions#student-experience" },
-    ],
-  },
-  {
-    // The library is a single page today and every item is marked "coming
-    // soon", so these all resolve there rather than to anchors that
-    // do not exist. Split them out when the resources ship.
-    title: "Resources",
-    links: [
-      { label: "Insights", href: "/resources" },
-      { label: "Research", href: "/resources" },
-      { label: "Enrollment Readiness Index", href: "/resources" },
-      { label: "Guides", href: "/resources" },
     ],
   },
   {

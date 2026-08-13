@@ -1,19 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { ArrowRight, Check } from "./icons";
 
-/**
- * Not wired to a backend yet. Point `onSubmit` at your CRM/marketing endpoint
- * (HubSpot, Salesforce Web-to-Lead, a route handler, …) before launch — see the
- * README. Until then it validates in the browser and confirms locally.
- */
-export function DemoForm() {
-  const [submitted, setSubmitted] = useState(false);
+type SubmitState = "idle" | "submitting" | "success" | "error";
 
-  if (submitted) {
+export function DemoForm() {
+  const [state, setState] = useState<SubmitState>("idle");
+  const [error, setError] = useState("");
+  const confirmationRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (state === "success") confirmationRef.current?.focus();
+  }, [state]);
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setState("submitting");
+    setError("");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        body: new FormData(event.currentTarget),
+      });
+      const result = (await response.json()) as { error?: string };
+
+      if (!response.ok) throw new Error(result.error);
+
+      setState("success");
+    } catch (submissionError) {
+      setState("error");
+      setError(
+        submissionError instanceof Error && submissionError.message
+          ? submissionError.message
+          : "We could not send your request. Email us at hello@audentra.ai.",
+      );
+    }
+  }
+
+  if (state === "success") {
     return (
-      <div className="au-card" style={{ padding: "2.5rem", textAlign: "center", alignItems: "center" }}>
+      <div
+        ref={confirmationRef}
+        className="au-card"
+        style={{ padding: "2.5rem", textAlign: "center", alignItems: "center" }}
+        role="status"
+        tabIndex={-1}
+      >
         <span className="au-icon au-icon--teal" style={{ margin: "0 auto 1.25rem" }}>
           <Check size={22} />
         </span>
@@ -30,11 +65,15 @@ export function DemoForm() {
     <form
       className="au-card"
       style={{ padding: "2rem" }}
-      onSubmit={(event) => {
-        event.preventDefault();
-        setSubmitted(true);
-      }}
+      action="/api/contact"
+      method="post"
+      onSubmit={submit}
     >
+      <input type="hidden" name="source" value="pilot" />
+      <div className="au-honeypot" aria-hidden="true">
+        <label htmlFor="pilot-website">Website</label>
+        <input id="pilot-website" name="website" tabIndex={-1} autoComplete="off" />
+      </div>
       <div className="au-form">
         <div className="au-field">
           <label htmlFor="first-name">First name</label>
@@ -82,9 +121,20 @@ export function DemoForm() {
         </label>
       </div>
 
+      <p className="au-form-note">
+        By submitting this form, you agree that Audentra may use your information to respond to
+        your request. See our <Link href="/legal/privacy">Privacy Policy</Link>.
+      </p>
+
+      {state === "error" ? (
+        <p className="au-form-message au-form-message--error" role="alert">
+          {error}
+        </p>
+      ) : null}
+
       <div className="au-btn-row">
-        <button type="submit" className="au-btn au-btn--primary">
-          Request a Pilot
+        <button type="submit" className="au-btn au-btn--primary" disabled={state === "submitting"}>
+          {state === "submitting" ? "Sending…" : "Request a Pilot"}
           <ArrowRight />
         </button>
       </div>

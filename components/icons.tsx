@@ -338,15 +338,6 @@ export const LinkedIn = (p: IconProps) => (
   </Svg>
 );
 
-export const XSocial = (p: IconProps) => (
-  <Svg size={16} strokeWidth={0} {...p}>
-    <path
-      fill="currentColor"
-      d="M17.2 3.4h3.1l-6.8 7.8 8 10.6h-6.3l-4.9-6.4-5.6 6.4H1.6l7.3-8.3-7.7-10.1h6.5l4.5 5.9 5-5.9Zm-1.1 16.5h1.7L7.9 5.1H6.1l10 14.8Z"
-    />
-  </Svg>
-);
-
 export const Instagram = (p: IconProps) => (
   <Svg size={17} {...p}>
     <rect x="3.5" y="3.5" width="17" height="17" rx="4.6" />

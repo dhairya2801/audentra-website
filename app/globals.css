@@ -833,7 +833,7 @@ a.au-list__row:hover .au-list__go {
 
 .au-logo img {
   width: auto;
-  height: 1.75rem;
+  height: 2.6rem;
 }
 
 .au-nav {
@@ -1793,6 +1793,46 @@ a.au-list__row:hover .au-list__go {
   accent-color: var(--au-purple);
 }
 
+.au-honeypot {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.au-form-note,
+.au-form-message {
+  margin: 1rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.au-form-note {
+  color: var(--au-ink-soft);
+}
+
+.au-form-note a {
+  color: var(--au-blue-deep);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.au-form-message {
+  color: currentcolor;
+}
+
+.au-form-message--error {
+  color: var(--au-red);
+}
+
+.au-btn:disabled {
+  cursor: wait;
+  opacity: 0.68;
+}
+
 /* Floating "what to expect" card over campus imagery */
 .au-photo {
   position: relative;
@@ -1925,12 +1965,15 @@ a.au-list__row:hover .au-list__go {
   display: grid;
   gap: 2.5rem;
   padding-bottom: 3rem;
-  grid-template-columns: minmax(0, 1.15fr) repeat(5, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.15fr) repeat(4, minmax(0, 1fr));
 }
 
 .au-footer__brand img {
   width: auto;
-  height: 1.75rem;
+  height: 3rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: 10px;
+  background: #fff;
 }
 
 .au-footer__brand p {
@@ -1945,8 +1988,7 @@ a.au-list__row:hover .au-list__go {
   margin-top: 1.5rem;
 }
 
-.au-footer__social a,
-.au-footer__social span {
+.au-footer__social a {
   display: grid;
   place-items: center;
   width: 2.25rem;
@@ -1960,10 +2002,6 @@ a.au-list__row:hover .au-list__go {
 .au-footer__social a:hover {
   border-color: rgb(255 255 255 / 32%);
   background: rgb(255 255 255 / 8%);
-}
-
-.au-footer__social span {
-  color: rgb(255 255 255 / 55%);
 }
 
 .au-footer h4 {
@@ -2008,6 +2046,20 @@ a.au-list__row:hover .au-list__go {
   display: flex;
   gap: 0.5rem;
   justify-content: flex-end;
+}
+
+.au-newsform-wrap {
+  justify-self: end;
+  width: min(100%, 28rem);
+}
+
+.au-newsform-wrap .au-form-message {
+  margin-top: 0.55rem;
+  text-align: end;
+}
+
+.au-newsform-wrap .au-form-message--success {
+  color: var(--au-teal-soft);
 }
 
 .au-newsform input {
@@ -2142,6 +2194,14 @@ a.au-list__row:hover .au-list__go {
   .au-newsform {
     justify-content: flex-start;
   }
+
+  .au-newsform-wrap {
+    justify-self: start;
+  }
+
+  .au-newsform-wrap .au-form-message {
+    text-align: start;
+  }
 }
 
 /* Below this the logo, burger, and demo CTA no longer fit side by side. */
@@ -2156,11 +2216,11 @@ a.au-list__row:hover .au-list__go {
   }
 
   .au-logo img {
-    height: 1.4rem;
+    height: 2rem;
   }
 
   .au-footer__brand img {
-    height: 1.5rem;
+    height: 2.5rem;
   }
 
   .au-header__actions .au-btn {

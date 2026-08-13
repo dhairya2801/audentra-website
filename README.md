@@ -43,7 +43,8 @@ app/
   page.tsx                  home — also serves as the platform overview (see below)
   platform/                 EDward, Action Center, Morning Brew, Student Experience
   solutions/                solutions index + enrollment-readiness (the wedge page)
-  trust/ pricing/ pilot/ resources/ about/ demo/
+  trust/ pricing/ pilot/ about/ demo/
+  api/contact/               server-side form delivery to hello@audentra.ai
   accessibility/ legal/     accessibility statement, privacy, terms
 components/
   site-header.tsx           sticky header, mega menu, mobile drawer
@@ -175,20 +176,9 @@ edits:
 
 ## Assets
 
-`public/audentra-logo.png` is the approved horizontal logo. Two web variants are
-derived from it:
-
-```bash
-node scripts/build-logo-variants.mjs
-```
-
-- `audentra-logo-dark-text.png` — navy wordmark, transparent, for light surfaces
-- `audentra-logo-light.png` — white wordmark, transparent, for the dark footer
-- `audentra-mark.png` — the A-mark alone, squared, used as the favicon
-
-All are trimmed of the source canvas padding. The gradient A-mark is preserved
-untouched (§03 forbids removing the teal crossbar); only the wordmark is
-recoloured. Re-run the script if the source logo is replaced.
+`public/audentra-main-logo.png` is a transparent-padding-trimmed copy of the
+approved `../Main Logo.png` artwork. It is used in both the header and footer.
+`public/audentra-mark.png` remains the squared favicon.
 
 ## Illustrative data
 
@@ -199,12 +189,9 @@ anywhere on the site.
 
 ## Before launch
 
-These are deliberate placeholders, not oversights:
+Items that still require a business decision or external approval:
 
-1. **Demo form** (`components/demo-form.tsx`) confirms in the browser and posts
-   nowhere. Point it at your CRM endpoint (HubSpot, Salesforce Web-to-Lead, or a
-   route handler). The footer newsletter form needs the same treatment.
-2. **No results claims anywhere.** The site carries no outcome statistics, no
+1. **No results claims anywhere.** The site carries no outcome statistics, no
    testimonials, and no named customers, because none have been verified. The
    design comps in `../[251] Brand & Design/` show an 18% / 2.6x / 250+ stat
    band, a VP quote, and a Pace/NSU/NYIT/Webster logo wall — all of it was
@@ -212,21 +199,16 @@ These are deliberate placeholders, not oversights:
    institution has approved being named; there are natural slots on the home
    page (after the audience tabs) and on `/solutions/enrollment-readiness`
    (the "What changes" section).
-3. **Photography** — `public/images/campus-quad.jpg` is a placeholder borrowed
+2. **Photography** — `public/images/campus-quad.jpg` is a placeholder borrowed
    from the portals repo. Guidelines §06 calls for four territories — campus
    operations, people doing the work, connected information, student momentum —
    with generous negative space and one focal point, and explicitly rules out
    staged corporate stock and "AI" clichés. Commission or license that before
    launch.
-4. **Legal** — `/legal/privacy` and `/legal/terms` state the approach and are
-   marked as placeholders pending counsel. `/accessibility` states the WCAG 2.2
-   AA target without claiming validated conformance.
-5. **Resources** — every card shows "Coming soon" per the brief's instruction not
-   to imply the library already exists.
-6. **Social marks** in the footer render as icons only — the accounts are not
-   claimed, so nothing links out. Wrap each in an `<a>` once the handles exist
-   (`components/site-footer.tsx`).
-7. **No careers page.** There is no hiring content; add one when there are roles
+3. **Legal** — `/legal/privacy` and `/legal/terms` state the current approach and
+   are marked as placeholders pending counsel. `/accessibility` states the WCAG
+   2.2 AA target without claiming validated conformance.
+4. **No careers page.** There is no hiring content; add one when there are roles
    to list, and restore the Company nav and footer entries alongside it.
 
 ## Accessibility
@@ -239,7 +221,9 @@ information conveyed by colour alone. Verify with an audit before launch — the
 
 ## Deploying
 
-Static output, so any Next-capable host works. For Vercel: import the directory,
-framework preset Next.js, no environment variables required. Update `site.url`
-in `lib/site.ts` if the production domain differs from `www.audentra.ai` — it
-feeds canonical metadata, `sitemap.xml`, and `robots.txt`.
+The marketing pages prerender, while `/api/contact` runs as a serverless route.
+For Vercel: import the directory, use the Next.js framework preset, verify the
+`audentra.ai` sending domain in Resend, and set `RESEND_API_KEY` plus
+`CONTACT_FROM_EMAIL` from `.env.example`. Update `site.url` in `lib/site.ts` if
+the production domain differs from `www.audentra.ai`; it feeds metadata,
+`sitemap.xml`, and `robots.txt`.

@@ -16,7 +16,7 @@ import {
 export const metadata: Metadata = {
   title: "EDward — the conversational interface to institutional intelligence",
   description:
-    "Ask your institution what's happening — and what should happen next. EDward answers from approved institutional knowledge, then helps move the work forward with people still in control.",
+    "Ask your institution's data what's happening — and what should happen next. EDward answers from approved institutional knowledge, then helps move the work forward with people still in control.",
 };
 
 const staffQuestions = [
@@ -61,9 +61,9 @@ export default function EdwardPage() {
         eyebrow="EDward — Understand"
         title={
           <>
-            Ask your institution what&rsquo;s happening &mdash;
+            Ask your institution&rsquo;s data what&rsquo;s happening?
             <br />
-            and what should happen next.
+            And what should happen next.
           </>
         }
         lede={
