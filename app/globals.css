@@ -1971,9 +1971,6 @@ a.au-list__row:hover .au-list__go {
 .au-footer__brand img {
   width: auto;
   height: 3rem;
-  padding: 0.45rem 0.6rem;
-  border-radius: 10px;
-  background: #fff;
 }
 
 .au-footer__brand p {

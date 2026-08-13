@@ -176,9 +176,11 @@ edits:
 
 ## Assets
 
-`public/audentra-main-logo.png` is a transparent-padding-trimmed copy of the
-approved `../Main Logo.png` artwork. It is used in both the header and footer.
-`public/audentra-mark.png` remains the squared favicon.
+`public/audentra-main-logo.png` and `public/audentra-footer-logo.png` are
+transparent-padding-trimmed copies of the approved `../Main Logo.png` and
+`../White Letter Logo.png` artwork. The dark-letter version is used in the
+header and the white-letter version in the footer. `public/audentra-mark.png`
+remains the squared favicon.
 
 ## Illustrative data
 

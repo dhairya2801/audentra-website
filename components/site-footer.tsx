@@ -12,10 +12,10 @@ export function SiteFooter() {
         <div className="au-footer__top">
           <div className="au-footer__brand">
             <Image
-              src="/audentra-main-logo.png"
+              src="/audentra-footer-logo.png"
               alt="Audentra"
-              width={1177}
-              height={287}
+              width={1181}
+              height={280}
             />
             <div className="au-footer__social">
               <a
