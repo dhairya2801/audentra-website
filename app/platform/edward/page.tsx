@@ -22,10 +22,10 @@ export const metadata: Metadata = {
 const staffQuestions = [
   "What does this student still need?",
   "Why is this student in my priority queue?",
-  "Which deposited students have unresolved aid requirements?",
+  "Which deposited students have an upcoming aid milestone?",
   "Show me students with deadlines in the next seven days.",
-  "Why did transfer readiness decline this week?",
-  "Which students are waiting on more than one office?",
+  "What changed in transfer readiness this week?",
+  "Which students have next steps across more than one office?",
   "Summarize their enrollment status.",
   "What should happen next?",
   "Draft an outreach message.",
@@ -61,15 +61,15 @@ export default function EdwardPage() {
         eyebrow="EDward — Understand"
         title={
           <>
-            Ask your institution&rsquo;s data what&rsquo;s happening?
+            Ask your institution what&rsquo;s happening
             <br />
-            And what should happen next.
+            &mdash; and what should happen next.
           </>
         }
         lede={
           <>
             EDward is the conversational interface to Audentra&rsquo;s institutional intelligence.
-            Staff can ask about a student, requirement, policy, blocker, or next step and receive an
+            Staff can ask about a student, requirement, policy, milestone, or next step and receive an
             answer grounded in approved institutional knowledge and the context their role allows
             them to see.
             <br />
@@ -96,10 +96,10 @@ export default function EdwardPage() {
         <div className="au-featurerow">
           <div>
             <span className="au-eyebrow">For staff</span>
-            <h2 className="au-h2">Spend less time searching. More time helping.</h2>
+            <h2 className="au-h2">Start with the full picture. Spend more time helping.</h2>
             <p className="au-lede">
-              The context a counselor needs is usually spread across four systems and two inboxes.
-              EDward assembles it in one question.
+              EDward assembles the context a counselor needs across approved systems and institutional
+              knowledge in one question.
             </p>
             <ul className="au-questions" style={{ gridTemplateColumns: "1fr" }}>
               {staffQuestions.map((question) => (
@@ -114,15 +114,14 @@ export default function EdwardPage() {
               <span className="pm__more">Open profile</span>
             </div>
             <div className="pm-rows">
-              <Row icon={<Doc size={13} />} tone="purple" title="Verification documents" meta="Requested 12 days ago · no response" priority="high" />
+              <Row icon={<Doc size={13} />} tone="purple" title="Verification documents" meta="Current next step · guidance ready" priority="high" />
               <Row icon={<Check size={13} />} title="Deposit received" meta="Confirmed May 1" priority="done" />
               <Row icon={<Users size={13} />} tone="teal" title="Assigned counselor" meta="M. Alvarez · Financial Aid" priority="low" />
             </div>
             <div className="pm-msg pm-msg--bot" style={{ marginTop: "0.75rem", maxWidth: "100%" }}>
               <b>EDward summary</b>
-              Sarah is one document short of financial clearance. Aid packaging is paused, and the
-              housing deadline is in six days. Recommended next action: request the missing verification
-              form with a deadline-aware message.
+              Sarah&rsquo;s next milestone is one verification document. Housing selection begins in six
+              days. Recommended next action: share the approved form link with clear, date-aware guidance.
             </div>
           </Panel>
         </div>
@@ -133,7 +132,7 @@ export default function EdwardPage() {
         <div className="au-featurerow au-featurerow--flip">
           <div>
             <span className="au-eyebrow">For students</span>
-            <h2 className="au-h2">Answers without the institutional maze.</h2>
+            <h2 className="au-h2">One clear answer, grounded in the institution.</h2>
             <p className="au-lede">
               Students use EDward to better understand requirements, policies, financial information,
               enrollment steps, and available support. When an answer requires human expertise, EDward
@@ -146,7 +145,7 @@ export default function EdwardPage() {
                   body: "Policy language translated into what the student actually needs to do.",
                 },
                 {
-                  title: "Their own status, not a generic FAQ",
+                  title: "A personal status and clear next step",
                   body: "Requirements, deadlines, and progress specific to that student.",
                 },
                 {
@@ -162,7 +161,7 @@ export default function EdwardPage() {
               <div className="pm-msg pm-msg--user">Why is my financial aid still pending?</div>
               <div className="pm-msg pm-msg--bot">
                 <b>EDward</b>
-                Your aid package is waiting on one verification form. Once the Financial Aid office
+                Your next aid milestone is one verification form. Once the Financial Aid office
                 receives it, packaging typically completes within three business days.
                 <ul>
                   <li>
@@ -203,7 +202,7 @@ export default function EdwardPage() {
       <Section tone="navy" mesh tight>
         <div className="au-section-head">
           <span className="au-eyebrow au-eyebrow--light">The positioning</span>
-          <h2 className="au-h2">Not another chatbot. A path from question to action.</h2>
+          <h2 className="au-h2">A clear path from question to coordinated action.</h2>
           <p className="au-lede">
             A chatbot ends the conversation with information. EDward ends it with a task, an owner,
             and a next step &mdash; still governed by the people accountable for the outcome.
@@ -214,7 +213,7 @@ export default function EdwardPage() {
             {
               icon: Shield,
               title: "Permissions preserved",
-              body: "EDward never exposes information a person's role would not already allow.",
+              body: "EDward respects the information boundaries defined for each person's role.",
             },
             {
               icon: Eye,

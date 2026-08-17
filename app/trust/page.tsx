@@ -12,7 +12,7 @@ const pillars = [
   {
     icon: Layers,
     title: "Institutional knowledge",
-    body: "AI responses are designed to be grounded in approved institutional information rather than open-ended generation.",
+    body: "AI responses are designed to stay grounded in approved institutional information and clearly defined sources.",
   },
   {
     icon: Handshake,
@@ -41,6 +41,39 @@ const pillars = [
   },
 ];
 
+const cioQuestions = [
+  {
+    icon: Layers,
+    title: "What data does Audentra access?",
+    body: "The approved sources, data categories, student information, and minimum-necessary access are documented with each institution before configuration.",
+  },
+  {
+    icon: Lock,
+    title: "Where does institutional data go?",
+    body: "Hosting, storage, encryption, retention, and deletion paths are reviewed in writing as part of implementation and procurement.",
+  },
+  {
+    icon: Shield,
+    title: "What information can AI use?",
+    body: "Model providers, approved data paths, source grounding, and model boundaries are made explicit for institutional review.",
+  },
+  {
+    icon: Handshake,
+    title: "What can AI do?",
+    body: "Institutions define permitted actions and human approval gates, with people accountable for consequential decisions and communications.",
+  },
+  {
+    icon: Users,
+    title: "Who can access what?",
+    body: "Authentication, SSO requirements, role mapping, administrative controls, and permissions are aligned with institutional responsibilities.",
+  },
+  {
+    icon: Eye,
+    title: "Can we reconstruct what happened?",
+    body: "Activity history, recommendations, approvals, and completed actions are designed to provide a clear, reviewable record.",
+  },
+];
+
 export default function TrustPage() {
   return (
     <>
@@ -54,12 +87,12 @@ export default function TrustPage() {
             <br />
             <br />
             Our approach is built around a simple principle: AI can increase institutional capacity
-            without reducing institutional accountability.
+            while preserving institutional accountability.
           </>
         }
         actions={
-          <Btn href="/demo" icon={<ArrowRight />}>
-            Request a Pilot
+          <Btn href="#cio-questions" icon={<ArrowRight />}>
+            Explore Our Trust Approach
           </Btn>
         }
       />
@@ -74,20 +107,28 @@ export default function TrustPage() {
         <Cols items={pillars.slice(3)} />
       </Section>
 
-      <Section tone="paper">
+      <Section id="cio-questions" tone="paper">
+        <SectionHead
+          eyebrow="The CIO view"
+          title="Six questions every institution should be able to answer."
+          lede="Audentra makes the data path, AI boundaries, permissions, approval model, and activity history part of the implementation conversation from the beginning."
+        />
+        <Cols items={cioQuestions.slice(0, 3)} />
+        <Cols items={cioQuestions.slice(3)} />
+      </Section>
+
+      <Section>
         <div className="au-container--narrow">
           <span className="au-eyebrow">A note on certifications</span>
-          <h2 className="au-h2">We publish what we have achieved, and nothing else.</h2>
+          <h2 className="au-h2">We publish each achievement with precision.</h2>
           <p className="au-lede" style={{ maxWidth: "none" }}>
-            Audentra does not display compliance badges the company has not earned. Security and
-            privacy commitments, current certification status, data handling practices, and
-            subprocessor details are reviewed directly with each institution during procurement and
-            security review.
+            Audentra publishes certifications when they are achieved. Security and privacy
+            commitments, current certification status, data handling practices, and subprocessor
+            details are reviewed directly with each institution during procurement and security review.
           </p>
           <p className="au-body">
             If your institution has a specific security questionnaire, data protection addendum, or
-            accessibility conformance requirement, we would rather answer it in writing than gesture at
-            a logo.
+            accessibility conformance requirement, we will answer it precisely and in writing.
           </p>
           <div className="au-btn-row">
             <Btn href="/demo" variant="dark" icon={<ArrowRight />}>
@@ -103,22 +144,21 @@ export default function TrustPage() {
             <span className="au-eyebrow au-eyebrow--light">Responsible AI</span>
             <h2 className="au-h2">AI increases capacity. People keep accountability.</h2>
             <p className="au-lede">
-              Audentra uses AI to help staff work through more of the right things, not to make
-              institutional decisions on their behalf. Every consequential action has a person attached
-              to it.
+              Audentra uses AI to help staff move more of the right work forward. Institutional
+              permissions and people remain attached to every consequential decision and action.
             </p>
           </div>
           <Cols
             items={[
               {
                 icon: Shield,
-                title: "Nothing leaves without review",
+                title: "Human review is built in",
                 body: "Communication drafted by EDward is reviewed by staff before it reaches a student.",
               },
               {
                 icon: Eye,
                 title: "Explainable by design",
-                body: "Prioritization shows the signals behind it, so staff can disagree with it.",
+                body: "Prioritization shows the signals behind it, so staff can evaluate and confirm it.",
               },
             ]}
           />
@@ -126,8 +166,8 @@ export default function TrustPage() {
       </Section>
 
       <CtaBand
-        title="Bring your security review to the first conversation."
-        lede="We would rather answer the hard questions early than discover them at contracting."
+        title="Bring your security and governance team into the first conversation."
+        lede="We will review the data path, AI boundaries, permissions, and documentation together from the start."
         secondary={{ href: "/accessibility", label: "Accessibility commitment" }}
       />
     </>

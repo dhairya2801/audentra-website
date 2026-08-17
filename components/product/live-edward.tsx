@@ -11,18 +11,18 @@ type Turn = {
 
 /** The exchange from the copy brief, played back one turn at a time. */
 const SCRIPT: Turn[] = [
-  { role: "user", text: "Which deposited students need attention today?" },
+  { role: "user", text: "Which deposited students have a next step today?" },
   {
     role: "bot",
     text: (
       <>
-        18 students have outstanding enrollment actions. Five have time-sensitive requirements.
-        I&rsquo;ve prioritized them by open items and upcoming deadlines.
+        18 students have enrollment actions ready to move forward. Five have time-sensitive
+        milestones. I&rsquo;ve organized them by timing and student context.
       </>
     ),
     bullets: [
-      { icon: <Doc size={13} />, text: "7 missing verification documents — aid packaging paused" },
-      { icon: <Wallet size={13} />, text: "6 unresolved account holds before the housing deadline" },
+      { icon: <Doc size={13} />, text: "7 verification document milestones — guidance ready" },
+      { icon: <Wallet size={13} />, text: "6 account milestones before housing selection" },
       { icon: <Clock size={13} />, text: "5 orientation registrations closing in 3 days" },
     ],
   },
@@ -31,8 +31,8 @@ const SCRIPT: Turn[] = [
     role: "bot",
     text: (
       <>
-        Jordan has two unresolved enrollment requirements. I can summarize the issue and prepare an
-        outreach message for your review.
+        Jordan has two enrollment milestones in progress. I can summarize the current picture and
+        prepare guidance for your review.
       </>
     ),
   },

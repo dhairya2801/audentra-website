@@ -69,7 +69,7 @@ export function DemoForm() {
       method="post"
       onSubmit={submit}
     >
-      <input type="hidden" name="source" value="pilot" />
+      <input type="hidden" name="source" value="product-walkthrough" />
       <div className="au-honeypot" aria-hidden="true">
         <label htmlFor="pilot-website">Website</label>
         <input id="pilot-website" name="website" tabIndex={-1} autoComplete="off" />
@@ -134,7 +134,7 @@ export function DemoForm() {
 
       <div className="au-btn-row">
         <button type="submit" className="au-btn au-btn--primary" disabled={state === "submitting"}>
-          {state === "submitting" ? "Sending…" : "Request a Pilot"}
+          {state === "submitting" ? "Sending…" : "Schedule a Walkthrough"}
           <ArrowRight />
         </button>
       </div>

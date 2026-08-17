@@ -13,14 +13,14 @@ import {
 export const metadata: Metadata = {
   title: "About",
   description:
-    "We're building the intelligence layer higher education has been missing — helping institutions turn existing information into clearer decisions and better execution.",
+    "We're building the intelligence layer that helps higher education turn existing information into clearer decisions and coordinated execution.",
 };
 
 const values = [
   {
     icon: Heart,
     title: "Student dignity",
-    body: "Build technology that supports students as people — not simply data points.",
+    body: "Build technology that supports students as people and honors their individual context.",
   },
   {
     icon: Shield,
@@ -30,17 +30,17 @@ const values = [
   {
     icon: Target,
     title: "Speed to evidence",
-    body: "Solve real operational problems and measure what changes.",
+    body: "Strengthen meaningful operations and measure what changes.",
   },
   {
     icon: Handshake,
     title: "Institutional partnership",
-    body: "Build with institutions, not just for them.",
+    body: "Build alongside institutions and their teams.",
   },
   {
     icon: Compass,
     title: "Founder discipline",
-    body: "Stay focused on meaningful problems and measurable value.",
+    body: "Stay focused on meaningful priorities and measurable value.",
   },
 ];
 
@@ -49,12 +49,12 @@ export default function AboutPage() {
     <>
       <PageHero
         eyebrow="About Audentra"
-        title="We're building the intelligence layer higher education has been missing."
-        lede="Higher education has no shortage of technology, information, or talented people. The challenge is connecting them."
+        title="We're building the intelligence layer for more connected higher education."
+        lede="Higher education brings together powerful technology, rich information, and talented people. Audentra helps them work as one around the student journey."
         actions={
           <>
             <Btn href="/demo" icon={<ArrowRight />}>
-              Request a Pilot
+              See Audentra in Action
             </Btn>
             <Btn href="/why-audentra" variant="outlineLight">
               See How Audentra Works
@@ -69,7 +69,7 @@ export default function AboutPage() {
             items={[
               "Founded by higher-ed operators",
               "Built around enrollment first",
-              "Designed with pilot institutions, not for them",
+              "Designed alongside pilot institutions",
             ]}
           />
         }
@@ -80,8 +80,8 @@ export default function AboutPage() {
           <p className="au-lede" style={{ maxWidth: "none", fontSize: "1.25rem", color: "var(--au-ink)" }}>
             Audentra was created to help institutions turn existing information into clearer decisions,
             more coordinated workflows, and better execution. We started with enrollment because the
-            deadline is fixed, the cost of friction is measurable, and the people doing the work are
-            already stretched.
+            timeline is clear, the measures are concrete, and coordinated support can make a visible
+            difference for students and teams.
           </p>
         </div>
       </Section>
@@ -117,7 +117,7 @@ export default function AboutPage() {
 
       <CtaBand
         title="Let's build the next operating model together."
-        lede="We're partnering with institutions that want evidence, not a product tour."
+        lede="We're partnering with institutions that value evidence, shared learning, and measurable progress."
         secondary={{ href: "/why-audentra", label: "Why Audentra" }}
       />
     </>

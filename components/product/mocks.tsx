@@ -101,19 +101,19 @@ export function EdwardChat() {
       </div>
 
       <div className="pm-edward__thread">
-        <div className="pm-msg pm-msg--user">Which deposited students need attention today?</div>
+        <div className="pm-msg pm-msg--user">Which deposited students have a next step today?</div>
         <div className="pm-msg pm-msg--bot">
           <b>EDward</b>
-          18 students have outstanding enrollment actions. Five have time-sensitive requirements.
-          I&rsquo;ve prioritized them by open items and upcoming deadlines.
+          18 students have enrollment actions ready to move forward. Five have time-sensitive
+          milestones. I&rsquo;ve organized them by timing and student context.
           <ul>
             <li>
               <Doc size={13} />
-              <span>7 missing verification documents &mdash; aid packaging paused</span>
+              <span>7 verification document milestones &mdash; guidance ready</span>
             </li>
             <li>
               <Wallet size={13} />
-              <span>6 unresolved account holds before the housing deadline</span>
+              <span>6 account milestones before housing selection</span>
             </li>
             <li>
               <Clock size={13} />
@@ -147,7 +147,7 @@ export function ReadinessOverview() {
         </span>
         <span className="pm-kpi--risk">
           <span className="pm-kpi__value">18%</span>
-          <span className="pm-kpi__label">At risk &middot; 386</span>
+          <span className="pm-kpi__label">In progress &middot; 386</span>
         </span>
         <span className="pm-kpi--good">
           <span className="pm-kpi__value">82%</span>
@@ -158,7 +158,7 @@ export function ReadinessOverview() {
       <ReadinessChart />
 
       <div className="pm__head">
-        <span className="pm__title">Top blockers</span>
+        <span className="pm__title">Top next milestones</span>
         <span className="pm__more">View all</span>
       </div>
 
@@ -167,7 +167,7 @@ export function ReadinessOverview() {
         <Row
           icon={<Doc size={13} />}
           tone="purple"
-          title="Missing documents"
+          title="Verification documents"
           meta="Admissions"
           count={87}
         />
@@ -201,7 +201,7 @@ export function ReadinessChart() {
       viewBox={`0 0 ${width} ${height}`}
       preserveAspectRatio="none"
       role="img"
-      aria-label="At-risk share of the admitted cohort trending down over twelve weeks"
+      aria-label="Share of the admitted cohort progressing toward enrollment readiness over twelve weeks"
     >
       <defs>
         <linearGradient id="pm-fill" x1="0" x2="0" y1="0" y2="1">
@@ -252,7 +252,7 @@ export function ActionCenter({ title = "My prioritized tasks" }: { title?: strin
         <Row
           icon={<Doc size={13} />}
           tone="purple"
-          title="Collect missing documents"
+          title="Complete verification documents"
           meta="Devin Patel &middot; due in 2 days &middot; Admissions"
           priority="high"
         />
@@ -303,7 +303,7 @@ export function StudentJourney() {
           <b style={{ fontSize: "0.875rem" }}>Jordan Lee</b>
           <small style={{ color: "var(--au-ink-faint)" }}>Admitted &middot; deposit phase</small>
         </span>
-        <span className="pm-badge pm-badge--high">At risk</span>
+        <span className="pm-badge pm-badge--high">In progress</span>
       </div>
 
       <div className="pm-journey">
@@ -332,7 +332,7 @@ export function StudentJourney() {
         <span className="pm__more">View profile</span>
       </div>
       <div className="pm-rows">
-        <Row icon={<Doc size={13} />} tone="purple" title="Upload verification documents" meta="Blocks aid packaging" priority="high" />
+        <Row icon={<Doc size={13} />} tone="purple" title="Upload verification documents" meta="Next step for aid packaging" priority="high" />
         <Row icon={<Wallet size={13} />} title="Confirm housing deposit" meta="Deadline in 6 days" priority="medium" />
         <Row icon={<Check size={13} />} tone="teal" title="Complete immunization record" meta="Health Services" priority="low" />
       </div>

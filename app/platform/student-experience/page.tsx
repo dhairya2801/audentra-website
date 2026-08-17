@@ -14,7 +14,7 @@ import {
 export const metadata: Metadata = {
   title: "Student Experience — a guided enrollment journey",
   description:
-    "Students shouldn't have to understand your org chart to enroll. Audentra turns separate requirements into one personalized path showing what is complete, what is still open, and what to do next.",
+    "Give every student one personalized enrollment path showing completed milestones, upcoming steps, and available support across the institution.",
 };
 
 const cards = [
@@ -55,7 +55,7 @@ export default function StudentExperiencePage() {
     <>
       <PageHero
         eyebrow="Student Experience — Guide"
-        title="Students shouldn't have to understand your org chart to enroll."
+        title="Give every student one clear path to enrollment."
         lede={
           <>
             Students experience your university as one institution &mdash; even when their enrollment
@@ -84,7 +84,7 @@ export default function StudentExperiencePage() {
         <SectionHead
           eyebrow="What students see"
           title="Everything the institution needs, organized around the student."
-          lede="Not six portals and a PDF. One place where requirements, progress, and support live together."
+          lede="One place where requirements, progress, guidance, and support live together across every participating office."
         />
         <Cols items={cards.slice(0, 3)} />
         <Cols items={cards.slice(3)} />
@@ -100,9 +100,8 @@ export default function StudentExperiencePage() {
               More &ldquo;I know what to do next.&rdquo;
             </h2>
             <p className="au-lede">
-              Most enrollment melt is not a change of heart. It is an unresolved administrative step
-              that nobody surfaced in time. Clarity for the student is risk reduction for the
-              institution.
+              Clear milestones help students move forward with confidence. That same clarity gives
+              institutional teams a shared view of where timely support can strengthen progress.
             </p>
             <div className="au-btn-row">
               <Btn href="/solutions/enrollment-readiness" variant="dark" icon={<ArrowRight />}>
@@ -125,8 +124,8 @@ export default function StudentExperiencePage() {
       </Section>
 
       <CtaBand
-        title="Show us where your students get stuck."
-        lede="We'll walk through the same journey inside Audentra and show what a student would see instead."
+        title="Show us a student journey you want to strengthen."
+        lede="We'll walk through that journey inside Audentra and show the coordinated view for students and teams."
         secondary={{ href: "/#platform", label: "See all capabilities" }}
       />
     </>

@@ -64,7 +64,7 @@ export function LiveStudentJourney() {
             <small style={{ color: "var(--au-ink-faint)" }}>Admitted &middot; deposit phase</small>
           </span>
           <span className={`pm-badge pm-badge--${cleared ? "done" : "high"}`}>
-            {cleared ? "On track" : "At risk"}
+            {cleared ? "On track" : "In progress"}
           </span>
         </div>
 
@@ -124,7 +124,7 @@ export function LiveStudentJourney() {
           <Row
             icon={<Wallet size={13} />}
             title="Confirm housing deposit"
-            meta={cleared ? "Now unblocked · due in 6 days" : "Waiting on financial aid"}
+            meta={cleared ? "Ready for housing · due in 6 days" : "Financial Aid coordinating next step"}
             priority={cleared ? "medium" : "low"}
           />
         </div>

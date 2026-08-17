@@ -2663,3 +2663,195 @@ a.au-list__row:hover .au-list__go {
   line-height: 1.55;
   opacity: 0.82;
 }
+
+/* A concrete, time-stamped walkthrough that reads like a short product demo. */
+.au-story {
+  display: grid;
+  overflow: hidden;
+  margin-top: clamp(2.5rem, 4vw, 3.5rem);
+  border: 1px solid var(--au-line);
+  border-radius: var(--au-radius-lg);
+  background: #fff;
+  box-shadow: var(--au-shadow-sm);
+  grid-template-columns: minmax(15rem, 0.7fr) minmax(0, 1.7fr);
+}
+
+.au-story__summary {
+  padding: clamp(1.75rem, 3vw, 2.5rem);
+  background: var(--au-navy-deep);
+  color: #fff;
+}
+
+.au-story__summary > span {
+  color: var(--au-teal-soft);
+  font-size: 0.6875rem;
+  font-weight: 750;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.au-story__summary strong {
+  display: block;
+  margin-top: 1rem;
+  font-family: var(--au-font-display);
+  font-size: clamp(1.5rem, 2.5vw, 2.15rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+}
+
+.au-story__summary p {
+  margin: 1.1rem 0 0;
+  color: rgb(219 229 247 / 72%);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.au-story__steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.au-story__steps li {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  align-items: start;
+  padding: 1.25rem 3.25rem 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--au-line-soft);
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.au-story__steps li:last-child {
+  border-bottom: 0;
+}
+
+.au-story__marker {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 10px;
+  background: var(--au-paper);
+  color: var(--au-purple);
+  place-items: center;
+}
+
+.au-story__time {
+  display: block;
+  color: var(--au-blue);
+  font-size: 0.6875rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.au-story h3 {
+  margin: 0.2rem 0 0;
+  font-family: var(--au-font-display);
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.au-story__steps p {
+  margin: 0.3rem 0 0;
+  color: var(--au-ink-soft);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.au-story__number {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  color: var(--au-line);
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+}
+
+/* Explicitly illustrative measures make an early-stage proof model tangible. */
+.au-measures {
+  display: grid;
+  margin-top: clamp(2.5rem, 4vw, 3.5rem);
+  border-top: 1px solid rgb(255 255 255 / 14%);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.au-measures > div {
+  display: grid;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.5rem;
+  border-right: 1px solid rgb(255 255 255 / 14%);
+  border-bottom: 1px solid rgb(255 255 255 / 14%);
+  grid-template-columns: minmax(8rem, 1fr) minmax(6rem, auto) auto minmax(6rem, auto);
+}
+
+.au-measures > div:nth-child(even) {
+  border-right: 0;
+}
+
+.au-measures > div > span {
+  color: #fff;
+  font-family: var(--au-font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.au-measures p {
+  margin: 0;
+}
+
+.au-measures small,
+.au-measures strong {
+  display: block;
+}
+
+.au-measures small {
+  color: rgb(219 229 247 / 58%);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.au-measures strong {
+  margin-top: 0.2rem;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.au-measures > div > b {
+  color: var(--au-teal-soft);
+}
+
+@media (width <= 980px) {
+  .au-story {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .au-measures {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .au-measures > div {
+    border-right: 0;
+  }
+}
+
+@media (width <= 640px) {
+  .au-measures > div {
+    gap: 0.65rem;
+    padding-inline: 0;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .au-measures > div > span {
+    grid-column: 1 / -1;
+  }
+
+  .au-story__steps li {
+    padding-inline: 1rem 2.75rem;
+  }
+}

@@ -14,24 +14,24 @@ import {
 export const metadata: Metadata = {
   title: "Why Audentra",
   description:
-    "Higher education doesn't need another disconnected system. It needs a more intelligent way to work.",
+    "Connect the systems higher education already has and coordinate the work between them with institutional intelligence.",
 };
 
 const differentiators = [
   {
     icon: Puzzle,
-    title: "Augment, don't replace",
+    title: "Build on existing investments",
     body: "Keep the technology investments that already work. Audentra sits on top of your CRM and SIS rather than asking you to migrate off them.",
   },
   {
     icon: Chart,
-    title: "Move beyond dashboards",
-    body: "Understand what is happening — and what needs to happen next. Insight that has nowhere to go is just another report.",
+    title: "Move from insight to action",
+    body: "Understand what is happening, choose the next step, and coordinate the people who can move it forward.",
   },
   {
     icon: Route,
     title: "Connect institutional work",
-    body: "Bring people, information, and workflows together across departmental boundaries, where most enrollment work actually breaks.",
+    body: "Bring people, information, and workflows together across departmental boundaries around one shared student journey.",
   },
   {
     icon: Shield,
@@ -44,7 +44,7 @@ const builtFor = [
   {
     icon: Layers,
     title: "Institutional workflows",
-    body: "Modeled around requirements, holds, deadlines, and cross-office handoffs — not generic project tasks.",
+    body: "Modeled around requirements, milestones, dates, and cross-office handoffs in higher education.",
   },
   {
     icon: Users,
@@ -65,9 +65,9 @@ export default function WhyAudentraPage() {
         eyebrow="Why Audentra"
         title={
           <>
-            Higher education doesn&rsquo;t need another disconnected system.
+            Connect the systems you already have.
             <br />
-            It needs a more intelligent way to work.
+            Coordinate the work between them.
           </>
         }
         lede={
@@ -75,14 +75,14 @@ export default function WhyAudentraPage() {
             Connect the systems you already have. Coordinate the work they can&rsquo;t.
             <br />
             <br />
-            Purpose-built for higher education, and designed around the coordination problem rather
-            than the reporting problem.
+            Institutional intelligence purpose-built for higher education and the people guiding each
+            student journey.
           </>
         }
         actions={
           <>
             <Btn href="/demo" icon={<ArrowRight />}>
-              Request a Pilot
+              See Audentra in Action
             </Btn>
             <Btn href="/#platform" variant="outlineLight">
               Explore the Platform
@@ -93,9 +93,9 @@ export default function WhyAudentraPage() {
 
       <Section>
         <SectionHead
-          eyebrow="The reality"
-          title="The systems exist. The coordination does not."
-          lede="Admissions, Financial Aid, Student Accounts, and the Registrar often work from different systems and queues. Staff reconcile status through reports, spreadsheets, and email — and students absorb the gap."
+          eyebrow="The opportunity"
+          title="The systems exist. Audentra connects their intelligence and work."
+          lede="Admissions, Financial Aid, Student Accounts, and the Registrar each contribute essential information and expertise. Audentra brings their signals and next actions into one institutional picture."
         />
         <Cols items={differentiators} />
       </Section>
@@ -104,7 +104,7 @@ export default function WhyAudentraPage() {
         <div className="au-featurerow">
           <div>
             <span className="au-eyebrow">The distinction</span>
-            <h2 className="au-h2">Audentra is not another AI tool for colleges.</h2>
+            <h2 className="au-h2">Institutional intelligence, with AI in service of the work.</h2>
             <p className="au-lede">
               AI is part of how Audentra works. It isn&rsquo;t the Audentra story. Audentra is an
               institutional intelligence layer designed to help colleges and universities understand
@@ -114,8 +114,8 @@ export default function WhyAudentraPage() {
             <CheckList
               items={[
                 {
-                  title: "The problem is coordination, not computation",
-                  body: "Institutions rarely lack data. They lack a shared operating picture and a place for action to live.",
+                  title: "Coordination creates the value",
+                  body: "Institutional data becomes more useful in a shared operating picture with a clear place for action to live.",
                 },
                 {
                   title: "Your existing systems remain the systems of record",
@@ -135,7 +135,7 @@ export default function WhyAudentraPage() {
       <Section tone="navy" mesh>
         <SectionHead
           eyebrow="Built for the institution"
-          title="Purpose-built where general-purpose tools stop."
+          title="Purpose-built for the institution."
           light
         />
         <Cols items={builtFor} />
@@ -152,9 +152,9 @@ export default function WhyAudentraPage() {
       </Section>
 
       <CtaBand
-        title="Bring your hardest coordination problem."
-        lede="We'd rather talk about the workflow that keeps failing than run a generic product tour."
-        primary={{ href: "/demo", label: "Request a Pilot" }}
+        title="Bring an enrollment workflow you want to strengthen."
+        lede="We'll connect the people, signals, actions, and measures that shape it."
+        primary={{ href: "/demo", label: "See Audentra in Action" }}
         secondary={{ href: "/trust", label: "How we handle trust" }}
       />
     </>

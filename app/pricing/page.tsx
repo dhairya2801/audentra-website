@@ -13,7 +13,7 @@ import {
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Start with the problem. Scope the investment around it. Audentra pricing reflects the institutional workflow being addressed, the population in scope, participating departments, required integrations, and implementation needs.",
+    "Start with the priority. Scope the investment around it. Audentra pricing reflects the workflow, population, participating departments, integrations, and implementation support in scope.",
 };
 
 const priceShape = [
@@ -26,8 +26,8 @@ const priceShape = [
 
 const pilotIncludes = [
   { title: "Defined cohort", body: "One population, agreed before configuration begins." },
-  { title: "Selected workflows", body: "The requirements driving the most measurable friction." },
-  { title: "Participating departments", body: "The offices that must coordinate to clear them." },
+  { title: "Selected workflows", body: "The milestones with the greatest opportunity for measurable progress." },
+  { title: "Participating departments", body: "The offices coordinating around those milestones." },
   { title: "Implementation and configuration", body: "Audentra configured around your actual process." },
   { title: "Success measures", body: "Criteria agreed in advance, not defined after the fact." },
   { title: "Executive review", body: "A readout with your sponsor at the end of the cycle." },
@@ -40,7 +40,7 @@ export default function PricingPage() {
         eyebrow="Pricing"
         title={
           <>
-            Start with the problem.
+            Start with the priority.
             <br />
             Scope the investment around it.
           </>
@@ -52,7 +52,8 @@ export default function PricingPage() {
             <br />
             <br />
             Most institutions begin with a focused pilot tied to a measurable enrollment outcome.
-            We&rsquo;ll define the scope together before proposing the investment.
+            We&rsquo;ll define the scope together in a 30-minute conversation before proposing the
+            investment.
           </>
         }
         actions={
@@ -108,7 +109,7 @@ export default function PricingPage() {
             <span className="au-eyebrow au-eyebrow--light">What to expect from the conversation</span>
             <h2 className="au-h2">A scope, a timeline, and a number you can take to a budget owner.</h2>
             <p className="au-lede">
-              We will ask about your melt window, the offices involved, the systems in play, and how
+              We will ask about your enrollment cycle, the offices involved, the systems in play, and how
               your institution measures success. You will leave with a written scope rather than a
               proposal to be continued.
             </p>

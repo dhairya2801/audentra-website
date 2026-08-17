@@ -83,8 +83,8 @@ const BOARDS: Record<
         label: "Today's priorities",
         rows: (
           <>
-            <Row icon={<Wallet size={13} />} title="Financial clearance" meta="12 students · aid packaging paused" priority="high" />
-            <Row icon={<Doc size={13} />} tone="purple" title="Missing documents" meta="7 students · verification queue" priority="medium" />
+            <Row icon={<Wallet size={13} />} title="Financial clearance" meta="12 students · next steps ready" priority="high" />
+            <Row icon={<Doc size={13} />} tone="purple" title="Verification documents" meta="7 students · guidance prepared" priority="medium" />
             <Row icon={<Clock size={13} />} title="Deadlines in 72 hours" meta="5 students · orientation closes Friday" priority="medium" />
             <Row icon={<Mail size={13} />} tone="teal" title="3 drafts awaiting review" meta="Prepared by EDward overnight" priority="low" />
           </>
@@ -133,8 +133,8 @@ const BOARDS: Record<
         label: "Needs a decision",
         rows: (
           <>
-            <Row icon={<Users size={13} />} title="Financial Aid queue" meta="312 open · 3.1 days median · staffing gap" priority="high" />
-            <Row icon={<Clock size={13} />} tone="purple" title="2 cases past 5 days" meta="Cross-office handoff stalled" priority="high" />
+            <Row icon={<Users size={13} />} title="Financial Aid workflow" meta="312 active · 3.1 days median · capacity view" priority="high" />
+            <Row icon={<Clock size={13} />} tone="purple" title="2 cases ready for coordination" meta="Cross-office handoff highlighted" priority="high" />
             <Row icon={<Users size={13} />} tone="teal" title="Admissions queue" meta="87 open · 1.2 days median" priority="low" />
           </>
         ),
@@ -167,7 +167,7 @@ const BOARDS: Record<
         },
       },
       {
-        label: "Projected melt",
+        label: "Enrollment opportunity",
         format: "pct",
         frames: {
           day: { value: 6.1, delta: "−0.2", dir: "down", good: true, points: [8.4, 8, 7.7, 7.3, 7, 6.6, 6.3, 6.1], target: "Ceiling 7%", progress: 100 },

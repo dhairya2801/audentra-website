@@ -7,7 +7,7 @@ import { Panel, Row } from "./mocks";
 /**
  * Enrollment readiness, filtered by cohort. Picking a cohort re-reads the
  * board: the headline figures count to their new values, the trend redraws,
- * and the blocker list restacks. Cycles on its own until someone chooses.
+ * and the milestone list restacks. Cycles on its own until someone chooses.
  */
 
 type Cohort = {
@@ -17,7 +17,7 @@ type Cohort = {
   atRisk: number;
   ready: number;
   trend: number[];
-  blockers: { icon: "wallet" | "doc" | "layers" | "check"; label: string; office: string; count: number }[];
+  milestones: { icon: "wallet" | "doc" | "layers" | "check"; label: string; office: string; count: number }[];
 };
 
 const COHORTS: Cohort[] = [
@@ -28,9 +28,9 @@ const COHORTS: Cohort[] = [
     atRisk: 18,
     ready: 82,
     trend: [46, 42, 44, 38, 34, 36, 30, 26, 27, 22, 18, 15],
-    blockers: [
+    milestones: [
       { icon: "wallet", label: "Financial clearance", office: "Financial Aid", count: 312 },
-      { icon: "doc", label: "Missing documents", office: "Admissions", count: 87 },
+      { icon: "doc", label: "Verification documents", office: "Admissions", count: 87 },
       { icon: "layers", label: "Housing deposit", office: "Student Accounts", count: 45 },
       { icon: "check", label: "Immunization record", office: "Health Services", count: 28 },
     ],
@@ -42,10 +42,10 @@ const COHORTS: Cohort[] = [
     atRisk: 14,
     ready: 86,
     trend: [38, 36, 34, 31, 29, 27, 24, 22, 20, 18, 16, 12],
-    blockers: [
+    milestones: [
       { icon: "wallet", label: "Financial clearance", office: "Financial Aid", count: 198 },
       { icon: "layers", label: "Housing deposit", office: "Student Accounts", count: 41 },
-      { icon: "doc", label: "Missing documents", office: "Admissions", count: 39 },
+      { icon: "doc", label: "Verification documents", office: "Admissions", count: 39 },
       { icon: "check", label: "Immunization record", office: "Health Services", count: 24 },
     ],
   },
@@ -56,7 +56,7 @@ const COHORTS: Cohort[] = [
     atRisk: 27,
     ready: 73,
     trend: [52, 50, 51, 47, 45, 44, 41, 38, 37, 34, 31, 28],
-    blockers: [
+    milestones: [
       { icon: "doc", label: "Transcript evaluation", office: "Registrar", count: 114 },
       { icon: "wallet", label: "Financial clearance", office: "Financial Aid", count: 88 },
       { icon: "check", label: "Credit articulation", office: "Advising", count: 52 },
@@ -128,7 +128,7 @@ function Trend({ points }: { points: number[] }) {
       viewBox={`0 0 ${width} ${height}`}
       preserveAspectRatio="none"
       role="img"
-      aria-label="Share of the cohort not yet enrollment-ready, trending down over twelve weeks"
+      aria-label="Share of the cohort progressing toward enrollment readiness over twelve weeks"
     >
       <defs>
         <linearGradient id="pm-fill" x1="0" x2="0" y1="0" y2="1">
@@ -233,7 +233,7 @@ export function LiveReadiness() {
           </span>
           <span className="pm-kpi--risk">
             <span className="pm-kpi__value">{Math.round(atRisk)}%</span>
-            <span className="pm-kpi__label">At risk &middot; {atRiskCount}</span>
+            <span className="pm-kpi__label">In progress &middot; {atRiskCount}</span>
           </span>
           <span className="pm-kpi--good">
             <span className="pm-kpi__value">{Math.round(ready)}%</span>
@@ -244,19 +244,19 @@ export function LiveReadiness() {
         <Trend points={cohort.trend} key={`${cohort.id}-trend`} />
 
         <div className="pm__head">
-          <span className="pm__title">Top blockers</span>
+          <span className="pm__title">Top next milestones</span>
           <span className="pm__more">View all</span>
         </div>
 
         <div className="pm-rows pm-rows--stagger" key={`${cohort.id}-rows`}>
-          {cohort.blockers.map((blocker, index) => (
+          {cohort.milestones.map((milestone, index) => (
             <Row
-              key={blocker.label}
-              icon={icons[blocker.icon]}
+              key={milestone.label}
+              icon={icons[milestone.icon]}
               tone={tones[index]}
-              title={blocker.label}
-              meta={blocker.office}
-              count={blocker.count}
+              title={milestone.label}
+              meta={milestone.office}
+              count={milestone.count}
             />
           ))}
         </div>

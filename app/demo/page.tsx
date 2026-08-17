@@ -3,9 +3,9 @@ import { DemoForm } from "@/components/demo-form";
 import { Container, CampusPhoto, Waves } from "@/components/ui";
 
 export const metadata: Metadata = {
-  title: "Request a Pilot",
+  title: "See Audentra in Action",
   description:
-    "Tell us about your institution and what you're trying to improve. We'll tailor the conversation around your workflows rather than giving you a generic product tour.",
+    "See Audentra applied to an enrollment priority at your institution. We'll tailor the walkthrough around your workflows, teams, and outcomes.",
 };
 
 export default function DemoPage() {
@@ -16,12 +16,11 @@ export default function DemoPage() {
         <Container>
           <div className="au-pagehero__grid" style={{ alignItems: "start" }}>
             <div>
-              <span className="au-eyebrow au-eyebrow--light">Request a Pilot</span>
-              <h1 className="au-h1">Start with the problem, not the product tour.</h1>
+              <span className="au-eyebrow au-eyebrow--light">See Audentra in Action</span>
+              <h1 className="au-h1">See your enrollment priorities in one coordinated view.</h1>
               <p className="au-lede">
-                Tell us about your institution and what you&rsquo;re trying to improve. We&rsquo;ll
-                tailor the conversation around your workflows rather than giving you a generic product
-                tour.
+                Tell us which student journey matters most to your institution. We&rsquo;ll tailor the
+                conversation around your workflows, teams, and measures of progress.
               </p>
 
               <div style={{ marginTop: "2.5rem" }}>
@@ -34,7 +33,7 @@ export default function DemoPage() {
                     "Review of your current workflow",
                     "Relevant Audentra capabilities",
                     "Clear next steps",
-                    "No-pressure conversation",
+                    "Space to decide the right next step",
                   ]}
                 />
               </div>

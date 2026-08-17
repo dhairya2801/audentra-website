@@ -28,8 +28,8 @@ const solutions = [
     title: "Institutional Leadership",
     lede: "Connect operational activity to strategic outcomes.",
     points: [
-      { title: "Funnel movement in context", body: "Deposits, readiness, and projected melt against last cycle." },
-      { title: "Capacity and bottlenecks", body: "Where the institution is under-resourced against demand." },
+      { title: "Funnel movement in context", body: "Deposits, readiness, and enrollment progress alongside last cycle." },
+      { title: "Capacity and opportunity", body: "Where staff focus can create the greatest forward movement." },
       { title: "Drill-down to the student", body: "Every metric resolves to the people behind it." },
     ],
   },
@@ -39,9 +39,9 @@ const solutions = [
     title: "Student Experience",
     lede: "Students shouldn't have to understand your org chart to enroll.",
     points: [
-      { title: "Frictionless onboarding", body: "Preventable holds and missing documentation identified proactively." },
+      { title: "Guided onboarding", body: "Requirements and documentation organized proactively around each student." },
       { title: "One place to look", body: "Requirements, progress, financial information, and answers together." },
-      { title: "Support that finds them", body: "Outreach before a deadline passes, not after." },
+      { title: "Timely support", body: "Outreach aligned with upcoming milestones and dates." },
     ],
   },
 ];
@@ -56,7 +56,7 @@ export default function SolutionsPage() {
         actions={
           <>
             <Btn href="/demo" icon={<ArrowRight />}>
-              Request a Pilot
+              See Audentra in Action
             </Btn>
             <Btn href="/solutions/enrollment-readiness" variant="outlineLight">
               Start with Enrollment Readiness
@@ -95,8 +95,8 @@ export default function SolutionsPage() {
       ))}
 
       <CtaBand
-        title="Start where the pressure is highest."
-        lede="Most institutions begin with enrollment readiness because the deadline is fixed and the result is measurable."
+        title="Start where progress can be measured."
+        lede="Most institutions begin with enrollment readiness because the timeline is clear and the result is measurable."
         secondary={{ href: "/solutions/enrollment-readiness", label: "Explore Enrollment Readiness" }}
       />
     </>

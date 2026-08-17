@@ -25,38 +25,38 @@ import {
 export const metadata: Metadata = {
   title: "Enrollment Readiness",
   description:
-    "Deposited doesn't mean enrolled. Audentra helps enrollment teams identify barriers earlier, prioritize the students who need attention, and coordinate the offices that can clear the path to enrollment.",
+    "Audentra Enrollment Readiness gives teams one current view from deposit through enrollment and coordinates timely support across every participating office.",
 };
 
 /* The questions a buyer arrives with. Stated in their words, before ours. */
 const buyerQuestions = [
-  "Which deposited students are actually on track to enroll?",
-  "Where is enrollment friction accumulating?",
-  "Which students need intervention this week?",
-  "Which office owns the blocker?",
-  "Are our interventions changing the outcome?",
-  "Where are students getting stuck across departments?",
+  "How many deposited students are on track to enroll?",
+  "Where can timely institutional support advance progress?",
+  "Which students would benefit from coordinated support this week?",
+  "Which team is best positioned to move the next step forward?",
+  "How is our support changing enrollment readiness?",
+  "Where can cross-office coordination strengthen the journey?",
 ];
 
 const process = [
-  { icon: Search, title: "Identify", body: "Surface unresolved requirements and emerging risk." },
-  { icon: Sort, title: "Prioritize", body: "Rank students by deadline pressure and open items." },
-  { icon: Route, title: "Coordinate", body: "Route work to the office that can actually clear it." },
+  { icon: Search, title: "Identify", body: "Bring current progress and next milestones into view." },
+  { icon: Sort, title: "Prioritize", body: "Focus support around timing, context, and opportunity." },
+  { icon: Route, title: "Coordinate", body: "Connect each next step with the best-positioned office." },
   { icon: Mail, title: "Engage", body: "Reach students with specific, deadline-aware guidance." },
-  { icon: CheckCircle, title: "Resolve", body: "Close the requirement and confirm the record." },
+  { icon: CheckCircle, title: "Advance", body: "Complete the milestone and confirm the shared record." },
   { icon: Chart, title: "Measure", body: "Compare cohort movement against the baseline." },
 ];
 
 const outcomes = [
   {
     icon: Target,
-    title: "Risk surfaces sooner",
-    body: "Unresolved requirements appear as work while there is still runway to act on them, rather than in a post-census report.",
+    title: "Opportunities appear sooner",
+    body: "Upcoming milestones become coordinated work while there is time to provide meaningful support.",
   },
   {
     icon: Route,
-    title: "Handoffs stop stalling",
-    body: "Cross-office dependencies are explicit, so a student waiting on two departments is visible to both.",
+    title: "Handoffs stay connected",
+    body: "Cross-office dependencies are explicit, so participating teams share the same view of progress.",
   },
   {
     icon: Chart,
@@ -69,16 +69,16 @@ export default function EnrollmentReadinessPage() {
   return (
     <>
       <PageHero
-        eyebrow="Enrollment Readiness"
-        title="Deposited doesn't mean enrolled."
+        eyebrow="Audentra Enrollment Readiness™"
+        title="Give every deposit a clear path to enrollment."
         lede={
           <>
-            Between admission and enrollment, unresolved financial aid, documents, accounts, housing,
-            orientation, and other requirements can quietly turn committed students into melt.
+            Between admission and enrollment, students move through financial aid, documents,
+            accounts, housing, orientation, and other important milestones.
             <br />
             <br />
-            Audentra helps enrollment teams identify those barriers earlier, prioritize the students
-            who need attention, and coordinate the offices that can clear the path to enrollment.
+            Audentra gives enrollment teams a current readiness picture, highlights where timely
+            support can build momentum, and coordinates the teams that can move each next step forward.
           </>
         }
         actions={
@@ -106,12 +106,12 @@ export default function EnrollmentReadinessPage() {
         </ul>
       </Section>
 
-      {/* Problem */}
+      {/* Opportunity */}
       <Section>
         <SectionHead
-          eyebrow="The problem"
+          eyebrow="The opportunity"
           title="One student. Multiple systems. Multiple offices. One enrollment decision."
-          lede="Between admission and enrollment, a single student passes through six offices and at least as many systems. Nobody owns the whole path — which is exactly where students are lost."
+          lede="Between admission and enrollment, a student may connect with six offices and as many systems. Audentra gives every participating team a shared view of the whole path."
         />
 
         <JourneyRail />
@@ -125,8 +125,8 @@ export default function EnrollmentReadinessPage() {
       <Section tone="paper">
         <SectionHead
           eyebrow="The operating loop"
-          title="A loop your team runs daily, not a report they read quarterly."
-          lede="Six moves, repeated through every day of the melt window. Each one hands off to the next with the student context still attached."
+          title="A daily loop that keeps student progress moving."
+          lede="Six connected moves, repeated throughout the enrollment cycle. Each one hands off to the next with the student context still attached."
         />
         <div className="au-process">
           {process.map((step) => (
@@ -144,10 +144,10 @@ export default function EnrollmentReadinessPage() {
         <div className="au-featurerow">
           <div>
             <span className="au-eyebrow au-eyebrow--light">In the product</span>
-            <h2 className="au-h2">Turn the melt window into an operating workflow.</h2>
+            <h2 className="au-h2">Turn enrollment readiness into an operating workflow.</h2>
             <p className="au-lede">
-              Readiness is not a dashboard number. Every percentage point resolves to named students,
-              named blockers, and a named owner in the office that can clear it.
+              Every readiness measure connects to named students, upcoming milestones, and the team
+              best positioned to move the next step forward.
             </p>
             <CheckList
               items={[
@@ -156,12 +156,12 @@ export default function EnrollmentReadinessPage() {
                   body: "Which admitted students are actually on track to enroll.",
                 },
                 {
-                  title: "Blocker breakdown by office",
-                  body: "Financial clearance, documents, deposits, immunization, housing.",
+                  title: "Milestone view by office",
+                  body: "Financial clearance, documents, deposits, immunization, and housing.",
                 },
                 {
-                  title: "Outreach that references the real blocker",
-                  body: "Drafted by EDward, reviewed and sent by staff.",
+                  title: "Outreach grounded in current progress",
+                  body: "Prepared by EDward, reviewed and sent by staff.",
                 },
                 {
                   title: "Movement you can measure",
@@ -190,8 +190,8 @@ export default function EnrollmentReadinessPage() {
             <CheckList
               items={[
                 { title: "A defined cohort", body: "One population, agreed before configuration begins." },
-                { title: "Selected workflows", body: "The two or three requirements that drive the most melt." },
-                { title: "Participating departments", body: "The offices that must coordinate to clear them." },
+                { title: "Selected workflows", body: "The two or three milestones with the greatest opportunity for progress." },
+                { title: "Participating departments", body: "The offices that coordinate around those milestones." },
                 { title: "Success measures", body: "Agreed criteria, reviewed with your executive sponsor." },
               ]}
             />
@@ -206,7 +206,7 @@ export default function EnrollmentReadinessPage() {
             alt="A university campus on a clear morning"
             title="What a pilot looks like"
             items={[
-              "One cohort, one melt window",
+              "One cohort, one enrollment cycle",
               "Baseline agreed before go-live",
               "Weekly operating review with your team",
               "Executive readout at the end of the cycle",
@@ -218,7 +218,7 @@ export default function EnrollmentReadinessPage() {
       <Section tone="navy" mesh tight>
         <SectionHead
           eyebrow="What changes"
-          title="Earlier signal, faster resolution, fewer students lost to friction."
+          title="Earlier visibility. Faster coordination. Greater student confidence."
           lede="The measures that matter are agreed with your team before a pilot begins, and compared against your own baseline rather than an industry benchmark."
           light
         />
@@ -227,7 +227,7 @@ export default function EnrollmentReadinessPage() {
 
       <CtaBand
         title="See what enrollment readiness could look like at your institution."
-        lede="Bring your melt numbers. We'll show you where Audentra would have surfaced the risk."
+        lede="Bring a priority cohort and the measures that matter. We'll show you how Audentra would connect the journey."
         primary={{ href: "/demo", label: "Request an Enrollment Readiness Pilot" }}
         secondary={{ href: "/pilot", label: "See How the Pilot Works" }}
       />

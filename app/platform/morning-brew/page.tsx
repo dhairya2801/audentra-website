@@ -20,7 +20,7 @@ const views = [
     icon: Chart,
     audience: "leader" as const,
     title: "Leader Morning Brew",
-    items: ["Team workload", "Service levels", "Bottlenecks", "Enrollment movement", "Escalations"],
+    items: ["Team workload", "Service levels", "Coordination opportunities", "Enrollment movement", "Leadership highlights"],
   },
   {
     icon: Clock,
@@ -29,7 +29,7 @@ const views = [
     items: [
       "Enrollment funnel",
       "Institutional trends",
-      "Operational risk",
+      "Enrollment momentum",
       "Resource efficiency",
       "Strategic priorities",
     ],
@@ -100,8 +100,8 @@ export default function MorningBrewPage() {
             More time improving it.
           </h2>
           <p className="au-lede">
-            Most institutional reporting is reconstructed by hand every week. Morning Brew removes the
-            assembly step so the meeting starts at the decision.
+            Morning Brew assembles the institutional picture before the meeting, so teams can begin
+            with the decision and the next action.
           </p>
           <div className="au-btn-row" style={{ justifyContent: "center" }}>
             <Btn href="/demo" variant="light" icon={<ArrowRight />}>

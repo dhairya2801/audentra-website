@@ -34,13 +34,13 @@ export default function NotFound() {
           <FeatureCard
             icon={Clipboard}
             title="Enrollment Readiness"
-            body="Deposited doesn't mean enrolled."
+            body="Give every deposit a clear path to enrollment."
             href="/solutions/enrollment-readiness"
             cta="Explore"
           />
           <FeatureCard
             icon={Cap}
-            title="Request a Pilot"
+            title="See Audentra in Action"
             body="Tell us what you're trying to improve."
             href="/demo"
             cta="Get started"

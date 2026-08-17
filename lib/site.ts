@@ -4,7 +4,7 @@ export const site = {
   url: "https://www.audentra.ai",
   tagline: "Institutional intelligence for what's next.",
   description:
-    "Audentra is institutional intelligence for higher education. It connects the signals across the systems institutions already run, shows which students need attention and what is standing in their way, and coordinates the next action across offices.",
+    "Audentra is institutional intelligence for higher education. It connects signals across the systems institutions already run, gives teams one current view of student progress, and coordinates the next action across offices.",
 };
 
 export type NavLink = {
@@ -75,6 +75,7 @@ export const nav: NavItem[] = [
     ],
   },
   { label: "Why Audentra", href: "/why-audentra" },
+  { label: "Trust", href: "/trust" },
   {
     label: "Company",
     columns: [
@@ -82,12 +83,11 @@ export const nav: NavItem[] = [
         links: [
           { label: "About Audentra", href: "/about", description: "Why we're building this." },
           { label: "Pilot Program", href: "/pilot", description: "Prove the impact in one enrollment cycle." },
-          { label: "Trust", href: "/trust", description: "Security, governance, responsible AI." },
+          { label: "Pricing", href: "/pricing", description: "How pilots and platform scope shape investment." },
         ],
       },
     ],
   },
-  { label: "Pricing", href: "/pricing" },
 ];
 
 export const footerColumns: { title: string; links: NavLink[] }[] = [

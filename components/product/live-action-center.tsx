@@ -32,7 +32,7 @@ const QUEUE: Task[] = [
   {
     icon: "doc",
     tone: "purple",
-    title: "Collect missing documents",
+    title: "Complete verification documents",
     meta: "Devin Patel · due in 2 days · Admissions",
     resolved: "Received · verification complete",
     priority: "high",
@@ -131,7 +131,7 @@ export function LiveActionCenter() {
 
         <p className="pm-foot" aria-live="polite">
           {resolved === 0
-            ? "Ranked by deadline pressure and open items."
+            ? "Organized by timing, context, and opportunity."
             : resolved >= QUEUE.length
               ? "Queue clear — the next cohort loads automatically."
               : `${resolved} resolved this session · owner notified`}

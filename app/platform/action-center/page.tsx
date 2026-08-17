@@ -27,26 +27,26 @@ import {
 export const metadata: Metadata = {
   title: "Action Center — coordinated institutional work",
   description:
-    "Insight becomes valuable when someone owns the next step. Action Center identifies what needs attention, attaches the student context, assigns the right office, tracks the deadline, and records what happened.",
+    "Insight creates value when the next step has a clear owner. Action Center brings together student context, the best-positioned office, timing, and a reviewable record.",
 };
 
 const fields = [
   { label: "Task", value: "What needs to happen, in institutional language." },
-  { label: "Owner", value: "A named person, not a shared inbox." },
+  { label: "Owner", value: "A named person with clear accountability." },
   { label: "Student", value: "The record and context the work belongs to." },
-  { label: "Priority", value: "Derived from risk, deadlines, and open items." },
+  { label: "Priority", value: "Informed by timing, context, and opportunity." },
   { label: "Due date", value: "Anchored to the institutional deadline that matters." },
-  { label: "Status", value: "Open, in progress, waiting, or resolved." },
+  { label: "Status", value: "Ready, in progress, coordinated, or complete." },
   { label: "Department", value: "Which office is accountable right now." },
-  { label: "Dependencies", value: "What has to clear before this can close." },
+  { label: "Dependencies", value: "The connected milestones that shape this next step." },
   { label: "Activity", value: "A reviewable history of what changed and when." },
 ];
 
 const signals = [
-  { icon: Doc, title: "A student has an outstanding requirement", body: "The gap becomes an assigned task before it becomes a hold." },
+  { icon: Doc, title: "A student reaches a support milestone", body: "The next step becomes assigned work with the right context attached." },
   { icon: Clock, title: "A deadline approaches", body: "Time-sensitive items rise in the queue automatically." },
   { icon: Mail, title: "A message arrives", body: "Inbound student questions become trackable work with context attached." },
-  { icon: Pulse, title: "A risk signal appears", body: "Emerging patterns surface as work rather than as a report nobody opens." },
+  { icon: Pulse, title: "A new pattern appears", body: "Emerging opportunities become coordinated work for the right team." },
 ];
 
 export default function ActionCenterPage() {
@@ -54,16 +54,15 @@ export default function ActionCenterPage() {
     <>
       <PageHero
         eyebrow="Action Center — Act"
-        title="Insight becomes valuable when someone owns the next step."
+        title="Insight creates value when someone owns the next step."
         lede={
           <>
             Audentra turns institutional intelligence into coordinated work. Action Center identifies
-            what needs attention, attaches the student context, assigns the right office, tracks the
+            what can move forward, attaches the student context, assigns the right office, tracks the
             deadline, and records what happened.
             <br />
             <br />
-            So the institution doesn&rsquo;t just know where students are stuck. Someone knows what
-            to do about it.
+            The institution shares one picture, and someone knows exactly how to move it forward.
           </>
         }
         actions={
@@ -100,8 +99,8 @@ export default function ActionCenterPage() {
             <span className="au-eyebrow">Anatomy of an action</span>
             <h2 className="au-h2">Nine fields that end the &ldquo;who owns this?&rdquo; conversation.</h2>
             <p className="au-lede">
-              Cross-departmental work fails on ambiguity, not effort. Every Audentra action carries the
-              information required to move it forward without a meeting.
+              Every Audentra action carries the ownership, context, timing, and dependencies required
+              to move cross-departmental work forward with clarity.
             </p>
             <div className="au-grid au-grid--2" style={{ marginTop: "2rem", gap: "0.75rem" }}>
               {fields.map((field) => (
@@ -149,7 +148,7 @@ export default function ActionCenterPage() {
         <div className="au-featurerow au-featurerow--flip">
           <div>
             <span className="au-eyebrow au-eyebrow--light">Coordination</span>
-            <h2 className="au-h2">Work that crosses offices stops falling between them.</h2>
+            <h2 className="au-h2">Work that crosses offices stays connected between them.</h2>
             <p className="au-lede">
               A single enrollment decision can touch Admissions, Financial Aid, Student Accounts,
               Housing, and the Registrar. The Action Center makes the handoffs explicit.
@@ -162,11 +161,11 @@ export default function ActionCenterPage() {
                 },
                 {
                   title: "Dependencies made visible",
-                  body: "Teams can see what they are waiting on and who is waiting on them.",
+                  body: "Teams can see the connected milestones and the people coordinating each one.",
                 },
                 {
-                  title: "Escalation before it becomes melt",
-                  body: "Items past service levels surface to leaders automatically.",
+                  title: "Leadership visibility at the right moment",
+                  body: "Time-sensitive items surface to leaders with their context attached.",
                 },
               ]}
             />
@@ -182,17 +181,17 @@ export default function ActionCenterPage() {
               {
                 icon: Wallet,
                 title: "Financial Aid",
-                body: "Open items, median time to clear, and anything past service level.",
+                body: "Current milestones, median completion time, and team capacity.",
               },
               {
                 icon: Doc,
                 title: "Admissions",
-                body: "Documents outstanding and which students they are blocking.",
+                body: "Document progress and the students approaching their next milestone.",
               },
               {
                 icon: Bolt,
                 title: "Student Accounts",
-                body: "Holds and deposits, with the deadline each one sits against.",
+                body: "Account milestones and deposits, aligned with relevant dates.",
               },
             ]}
           />
@@ -200,8 +199,8 @@ export default function ActionCenterPage() {
       </Section>
 
       <CtaBand
-        title="Bring one stuck workflow to the conversation."
-        lede="We'll map it into the Action Center and show you what changes on day one."
+        title="Bring one workflow you want to strengthen."
+        lede="We'll map it into the Action Center and show the coordinated operating view."
         secondary={{ href: "/platform/morning-brew", label: "Next: Morning Brew" }}
       />
     </>

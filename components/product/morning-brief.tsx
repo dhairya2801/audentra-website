@@ -135,7 +135,7 @@ export function MorningBrief() {
             <div className="pm-brief__action">
               <span className="pm-brief__action-body">
                 <b>Outreach sequence prepared</b>
-                <small>Prioritized by deadline pressure &middot; aid counselor as owner</small>
+                <small>Organized by timing and context &middot; aid counselor as owner</small>
               </span>
               <span className="pm-brief__review">
                 Review <ArrowRight size={13} />

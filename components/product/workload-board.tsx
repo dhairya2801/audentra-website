@@ -75,7 +75,7 @@ export function WorkloadBoard() {
         </div>
 
         <div className="pm-brew__section">
-          <span className="pm-brew__label">Where it is stalling</span>
+          <span className="pm-brew__label">Where coordination can help</span>
           <div className="pm-rows">
             <div className="pm-row">
               <span className="pm-row__icon">
@@ -83,19 +83,19 @@ export function WorkloadBoard() {
               </span>
               <span>
                 <b>Aid → Student Accounts handoff</b>
-                <small>41 students waiting on both offices</small>
+                <small>41 students with milestones across both offices</small>
               </span>
-              <span className="pm-badge pm-badge--high">Bottleneck</span>
+              <span className="pm-badge pm-badge--high">Coordinate</span>
             </div>
             <div className="pm-row">
               <span className="pm-row__icon pm-row__icon--purple">
                 <Clock size={13} />
               </span>
               <span>
-                <b>2 cases past 5 days</b>
-                <small>Escalated to you this morning</small>
+                <b>2 cases ready for leadership support</b>
+                <small>Highlighted for you this morning</small>
               </span>
-              <span className="pm-badge pm-badge--medium">Escalation</span>
+              <span className="pm-badge pm-badge--medium">Review</span>
             </div>
             <div className="pm-row">
               <span className="pm-row__icon pm-row__icon--teal">
@@ -103,7 +103,7 @@ export function WorkloadBoard() {
               </span>
               <span>
                 <b>Financial Aid at 94% capacity</b>
-                <small>Reassigning 3 counselors clears it by Friday</small>
+                <small>Three additional counselors align capacity by Friday</small>
               </span>
               <span className="pm-badge pm-badge--low">Suggested</span>
             </div>

@@ -71,10 +71,10 @@ export function SiteHeader() {
         <Container>
           <div className="au-announce__inner">
             <span>
-              Audentra is partnering with select institutions on focused enrollment workflows.
+              Make student progress visible from deposit through enrollment.
             </span>
-            <Link href="/pilot">
-              See the pilot program <ArrowRight size={14} />
+            <Link href="/solutions/enrollment-readiness">
+              Explore Enrollment Readiness <ArrowRight size={14} />
             </Link>
           </div>
         </Container>
@@ -178,11 +178,8 @@ export function SiteHeader() {
             </button>
 
             <div className="au-header__actions">
-              <Link href="/why-audentra" className="au-btn au-btn--outline">
-                See How Audentra Works
-              </Link>
               <Link href="/demo" className="au-btn au-btn--primary">
-                Request a Pilot
+                See Audentra in Action
               </Link>
             </div>
           </div>
@@ -214,10 +211,10 @@ export function SiteHeader() {
               )}
               <div className="au-drawer__cta">
                 <Link href="/demo" className="au-btn au-btn--primary">
-                  Request a Pilot
+                  See Audentra in Action
                 </Link>
-                <Link href="/why-audentra" className="au-btn au-btn--outline">
-                  See How Audentra Works
+                <Link href="/solutions/enrollment-readiness" className="au-btn au-btn--outline">
+                  Explore Enrollment Readiness
                 </Link>
               </div>
             </Container>

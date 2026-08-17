@@ -14,11 +14,11 @@ import {
 export const metadata: Metadata = {
   title: "Pilot Program",
   description:
-    "Prove the impact in one enrollment cycle. Start with one cohort and one enrollment workflow where unresolved friction is costing your institution time, staff capacity, or students.",
+    "Prove the impact in one enrollment cycle. Start with one cohort and one enrollment workflow where coordinated support can create measurable progress.",
 };
 
 const steps = [
-  { title: "Define", body: "Choose the problem and the population. Agree on what success would look like." },
+  { title: "Define", body: "Choose the priority and the population. Agree on what success would look like." },
   { title: "Baseline", body: "Understand the current workflow and record where it stands today." },
   { title: "Configure", body: "Deploy Audentra around the selected use case and your existing systems." },
   { title: "Operate", body: "Put the workflow into practice with the teams who own it." },
@@ -34,15 +34,15 @@ export default function PilotPage() {
         title="Prove the impact in one enrollment cycle."
         lede={
           <>
-            Start with one cohort and one enrollment workflow where unresolved friction is costing
-            your institution time, staff capacity, or students.
+            Start with one cohort and one enrollment workflow where greater visibility and
+            coordination can create measurable progress.
             <br />
             <br />
             Together, we&rsquo;ll establish the baseline, deploy Audentra around the workflow,
             measure what changes, and decide what comes next based on evidence.
             <br />
             <br />
-            Focused scope. Measurable outcome. No platform-wide rollout required.
+            Focused scope. Measurable outcome. A practical path to broader value.
           </>
         }
         actions={
@@ -62,9 +62,9 @@ export default function PilotPage() {
             alt="A university campus building on a clear morning"
             title="Who this is for"
             items={[
-              "Institutions with a measurable melt problem",
+              "Institutions with a measurable enrollment priority",
               "An executive sponsor who wants evidence",
-              "Teams willing to change a workflow, not just buy software",
+              "Teams ready to strengthen a shared workflow",
             ]}
           />
         }
@@ -74,7 +74,7 @@ export default function PilotPage() {
         <SectionHead
           eyebrow="How a pilot runs"
           title="Six steps, one enrollment cycle."
-          lede="Small enough to run without a reorganization. Specific enough to prove or disprove the value."
+          lede="Focused enough to run within current operations. Specific enough to prove or disprove the value."
         />
         <Cols items={steps.slice(0, 3)} numbered />
         <Cols items={steps.slice(3)} numbered />
@@ -94,7 +94,7 @@ export default function PilotPage() {
                 { title: "An executive sponsor", body: "Someone accountable for the outcome being measured." },
                 { title: "A working team", body: "The staff who run the workflow every day." },
                 { title: "A baseline", body: "Permission to record where things stand before we start." },
-                { title: "Candid feedback", body: "Including the parts that do not land." },
+                { title: "Candid feedback", body: "Clear input throughout the operating cycle." },
               ]}
             />
           </div>
@@ -103,10 +103,10 @@ export default function PilotPage() {
             <span className="au-pill">What we commit to</span>
             <CheckList
               items={[
-                { title: "Configuration around your process", body: "Not a template with your logo on it." },
+                { title: "Configuration around your process", body: "A workflow shaped to your institution." },
                 { title: "A weekly operating review", body: "With the team actually doing the work." },
                 { title: "Measurement you can audit", body: "Numbers your institutional research office can verify." },
-                { title: "An honest readout", body: "Including where Audentra did not move the needle." },
+                { title: "An honest readout", body: "Including every measure and what the evidence supports." },
               ]}
             />
           </div>
