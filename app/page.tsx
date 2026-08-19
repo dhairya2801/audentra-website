@@ -181,7 +181,7 @@ export default function HomePage() {
               <p className="au-lede">
                 Audentra gives enrollment teams one current view of each student&rsquo;s progress,
                 highlights where timely support can strengthen momentum, and coordinates the next
-                action across Admissions, Financial Aid, Student Accounts, and Student Services.
+                action across Admissions, Financial Aid and Student Accounts.
               </p>
               <p className="au-hero__tagline">Institutional intelligence for what&rsquo;s next.</p>
               <div className="au-btn-row">
