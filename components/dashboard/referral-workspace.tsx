@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import campaigns from "@/lib/analytics/outreach.json";
+import outreach from "@/lib/analytics/outreach.json";
+import { generalCampaigns } from "@/lib/analytics/schema";
 import {
   blankReferral,
   referralUrl,
@@ -76,7 +77,7 @@ export function ReferralWorkspace({
             contact_name: row.contact_name,
             organization: row.organization,
             channel: row.channel,
-            campaign: row.campaign,
+            campaign: "none",
             date_sent: row.date_sent?.slice(0, 10) || null,
             notes: row.notes,
             status: row.status,
@@ -199,8 +200,7 @@ export function ReferralWorkspace({
               onChange={(e) => setChannel(e.target.value)}
             >
               <option value="all">All channels</option>
-              <option value="none">Unassigned channel</option>
-              {campaigns.campaigns.map((c) => (
+              {generalCampaigns.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.label}
                 </option>
@@ -236,7 +236,7 @@ export function ReferralWorkspace({
               <thead>
                 <tr>
                   <th>Contact / referral</th>
-                  <th>Channel & campaign</th>
+                  <th>Channel</th>
                   <th>Status</th>
                   <th>Sent</th>
                   <th>Visits</th>
@@ -253,20 +253,22 @@ export function ReferralWorkspace({
                     <td>
                       <button onClick={() => edit(r)} className="contact-cell">
                         <strong>
-                          {r.contact_name || "Unassigned contact"}
+                          {r.contact_name
+                            ? `${r.contact_name} (${r.code})`
+                            : "Unassigned contact"}
                         </strong>
                         <span>{r.organization || "No organization"}</span>
-                        <code>{r.code}</code>
+                        {!r.contact_name && <code>{r.code}</code>}
                       </button>
                     </td>
                     <td>
                       <span>
-                        {campaigns.campaigns.find((c) => c.id === r.channel)
-                          ?.label || "Not assigned"}
+                        {generalCampaigns.find((c) => c.id === r.channel)
+                          ?.label ||
+                          outreach.campaigns.find((c) => c.id === r.channel)
+                            ?.label ||
+                          "Not assigned"}
                       </span>
-                      <small>
-                        {r.campaign === "none" ? "No campaign" : r.campaign}
-                      </small>
                     </td>
                     <td>
                       <span className={`outreach-status status-${r.status}`}>
@@ -372,28 +374,17 @@ export function ReferralWorkspace({
                 value={fields.channel}
                 onChange={(e) => field("channel", e.target.value)}
               >
-                <option value="none">Unassigned</option>
-                {campaigns.campaigns.map((c) => (
+                {!generalCampaigns.some((c) => c.id === fields.channel) && (
+                  <option value={fields.channel} disabled hidden>
+                    {outreach.campaigns.find((c) => c.id === fields.channel)
+                      ?.label || "Select channel"}
+                  </option>
+                )}
+                {generalCampaigns.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.label}
                   </option>
                 ))}
-              </select>
-            </label>
-            <label>
-              Campaign (optional)
-              <select
-                value={fields.campaign}
-                onChange={(e) => field("campaign", e.target.value)}
-              >
-                <option value="none">No campaign</option>
-                {[...new Set(campaigns.campaigns.map((c) => c.campaign))].map(
-                  (c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ),
-                )}
               </select>
             </label>
             <label>

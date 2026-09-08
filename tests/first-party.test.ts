@@ -27,7 +27,7 @@ test("current campaign library has four categories and persists approved UTM sna
     });
     assert.equal(e?.attribution.source, c.source);
     assert.equal(e?.attribution.medium, c.medium);
-    assert.equal(e?.attribution.campaign, c.campaign);
+    assert.equal(e?.attribution.campaign, "none");
     assert.equal(e?.attribution.content, c.content);
     assert.equal(e?.attribution.referral, "none");
   }

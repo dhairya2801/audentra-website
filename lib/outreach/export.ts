@@ -8,7 +8,6 @@ export const exportHeaders = [
   "Contact / person",
   "Organization",
   "Channel",
-  "Campaign",
   "Date sent",
   "Status",
   "Notes",
@@ -27,7 +26,6 @@ export function referralRow(r: Referral) {
     r.contact_name,
     r.organization,
     r.channel,
-    r.campaign,
     r.date_sent,
     r.status,
     r.notes,
@@ -70,7 +68,7 @@ export async function xlsxExport(referrals: Referral[]) {
   const links = sheet(
     "Referral links",
     exportHeaders,
-    [18, 48, 26, 28, 24, 26, 18, 20, 45],
+    [18, 48, 26, 28, 24, 18, 20, 45],
   );
   for (const referral of referrals) {
     const row = links.addRow(
@@ -85,16 +83,9 @@ export async function xlsxExport(referrals: Referral[]) {
     };
   }
   const campaigns = sheet(
-    "General campaigns",
-    [
-      "Channel",
-      "Full URL",
-      "UTM source",
-      "UTM medium",
-      "UTM campaign",
-      "UTM content",
-    ],
-    [28, 110, 24, 24, 28, 24],
+    "General links",
+    ["Channel", "Full URL", "UTM source", "UTM medium", "UTM content"],
+    [28, 110, 24, 24, 24],
   );
   for (const c of generalCampaigns)
     campaigns.addRow([
@@ -102,7 +93,6 @@ export async function xlsxExport(referrals: Referral[]) {
       { text: campaignUrl(c), hyperlink: campaignUrl(c) },
       c.source,
       c.medium,
-      c.campaign,
       c.content,
     ]);
   const guide = sheet("How to use", ["Topic", "Instructions"], [28, 115]);
@@ -113,11 +103,11 @@ export async function xlsxExport(referrals: Referral[]) {
     ],
     [
       "Public links",
-      "Share the opaque Full URL. Channel and campaign are assigned privately in the dashboard, then resolved by the marketing site. Do not append names, emails, organizations, or notes to any URL.",
+      "Share the opaque Full URL. Channels are assigned privately in the dashboard, then resolved by the marketing site. Do not append names, emails, organizations, or notes to any URL.",
     ],
     [
-      "General campaigns",
-      "Use the general links for broad posts and campaigns. All UTM values are approved non-personal categories. Individual referral URLs need only ?r=CODE.",
+      "General links",
+      "Use the general links for broad posts and outreach. All UTM values are approved non-personal categories. Individual referral URLs need only ?r=CODE.",
     ],
     [
       "Keep private",
@@ -133,7 +123,7 @@ export async function xlsxExport(referrals: Referral[]) {
     ],
     [
       "Attribution",
-      "The link metadata is captured when a tab visit starts and preserved through internal navigation/forms. A new campaign link or 30 minutes of inactivity starts a new visit. No persistent person or cross-device ID.",
+      "The link metadata is captured when a tab visit starts and preserved through internal navigation/forms. A new outreach link or 30 minutes of inactivity starts a new visit. No persistent person or cross-device ID.",
     ],
     [
       "Verify",

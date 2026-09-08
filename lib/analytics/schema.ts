@@ -168,7 +168,7 @@ export function campaignUrl(
 ) {
   const url = new URL("https://audentra.ai/");
   for (const key of Object.keys(utmKeys) as (keyof typeof utmKeys)[])
-    url.searchParams.set(utmKeys[key], c[key]);
+    if (key !== "campaign") url.searchParams.set(utmKeys[key], c[key]);
   if (referral && safeReferral(referral) !== "none")
     url.searchParams.set("r", referral);
   return url.href;

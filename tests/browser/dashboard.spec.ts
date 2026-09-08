@@ -21,7 +21,25 @@ const fixture = {
       { requestPath: "/", count: 500 },
       { requestPath: "/demo", count: 92 },
     ]),
-    attribution: query([]),
+    referrals: query([{ code: "01de78", contact_name: "Dhairya Shah" }]),
+    attribution: query([
+      {
+        source: "linkedin",
+        medium: "social",
+        content: "general",
+        channel: "linkedin-post",
+        referral: "01de78",
+        sessions: 5,
+      },
+      {
+        source: "linkedin",
+        medium: "social",
+        content: "general",
+        channel: "linkedin-post",
+        referral: "abcdef",
+        sessions: 1,
+      },
+    ]),
   },
   since: "2026-09-01T00:00:00Z",
   until: "2026-09-07T23:59:59Z",
@@ -139,6 +157,7 @@ test("dashboard renders reports, filters, link library, and responsive layouts (
         referrals: outreach.referrals.map((code) => ({
           ...blankReferral,
           code,
+          contact_name: code === "01de78" ? "Dhairya Shah" : "",
           version: 1,
           created_at: "2026-09-07",
           updated_at: "2026-09-07",
@@ -164,6 +183,26 @@ test("dashboard renders reports, filters, link library, and responsive layouts (
   await page.getByLabel("Team password").fill(password);
   await page.getByRole("button", { name: "Open workspace" }).click();
   await expect(page.getByText("1,248", { exact: true })).toBeVisible();
+  await expect(page.getByText("Optional Vercel Pro reports")).toHaveCount(0);
+  await expect(
+    page.getByRole("combobox", { name: "Group outreach by" }),
+  ).toHaveCount(0);
+  await expect(
+    page.locator(".outreach-card").getByText("By channel"),
+  ).toBeVisible();
+  await page
+    .locator(".outreach-card")
+    .getByRole("button", { name: "LinkedIn ↗", exact: true })
+    .click();
+  await expect(
+    page.getByRole("cell", { name: "Dhairya Shah (01de78)", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("cell", { name: "abcdef", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("columnheader", { name: "Campaign", exact: true }),
+  ).toHaveCount(0);
   await page.setViewportSize({ width: 1512, height: 1200 });
   await page.screenshot({
     path: "deliverables/dashboard-desktop.png",
@@ -176,7 +215,7 @@ test("dashboard renders reports, filters, link library, and responsive layouts (
   await requestPromise;
   await page.getByRole("button", { name: "Link library" }).click();
   await expect(
-    page.getByRole("heading", { name: "Approved general campaign links" }),
+    page.getByRole("heading", { name: "Approved general links" }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Referral links", exact: false })
@@ -185,7 +224,27 @@ test("dashboard renders reports, filters, link library, and responsive layouts (
     page.getByRole("heading", { name: "Referral links" }),
   ).toBeVisible();
   for (const r of outreach.referrals)
-    await expect(page.getByText(r, { exact: true })).toBeVisible();
+    await expect(
+      page.getByText(r === "01de78" ? "Dhairya Shah (01de78)" : r, {
+        exact: true,
+      }),
+    ).toBeVisible();
+  await page.getByRole("button", { name: /New referral link/ }).click();
+  await expect(
+    page.getByLabel("Channel / source").locator("option:not([disabled])"),
+  ).toHaveText(["LinkedIn", "Email", "WhatsApp", "Founder Network"]);
+  await expect(page.getByLabel("Campaign", { exact: false })).toHaveCount(0);
+  await page.getByRole("button", { name: "Cancel", exact: true }).click();
+  await page.getByRole("button", { name: /Dhairya Shah \(01de78\)/ }).click();
+  await page.getByRole("button", { name: /Inspect product interest/ }).click();
+  await expect(page.locator(".filter-notice")).toContainText(
+    "Dhairya Shah (01de78)",
+  );
+  await expect(
+    page
+      .locator(".outreach-card")
+      .getByRole("columnheader", { name: "Channel", exact: true }),
+  ).toBeVisible();
   await page.getByRole("button", { name: "Overview", exact: false }).click();
   await page.setViewportSize({ width: 390, height: 844 });
   expect(

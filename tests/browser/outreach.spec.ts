@@ -42,10 +42,7 @@ test("database-backed referral CRUD, opaque public metadata, durable deduplicati
       .fill("Private Test Organization");
     await page
       .getByRole("combobox", { name: /^Channel \/ source/ })
-      .selectOption("linkedin-dm");
-    await page
-      .getByRole("combobox", { name: /^Campaign/ })
-      .selectOption("founder-outreach");
+      .selectOption("linkedin-post");
     await page.getByRole("combobox", { name: /^Status/ }).selectOption("sent");
     await page.getByLabel("Notes", { exact: true }).fill("=PRIVATE_TEST_NOTE");
     await page
@@ -55,7 +52,9 @@ test("database-backed referral CRUD, opaque public metadata, durable deduplicati
       .locator(".referral-table tbody tr")
       .filter({ hasText: "Private Test Contact" });
     await expect(row).toBeVisible();
-    code = await row.locator("code").innerText();
+    code = (await row.locator("strong").innerText()).match(
+      /\(([a-f0-9]{10})\)/,
+    )![1];
     expect(code).toMatch(/^[a-f0-9]{10}$/);
     const publicResponse = await request.get(
       `http://localhost:3100/api/referral?r=${code}`,
@@ -68,7 +67,7 @@ test("database-backed referral CRUD, opaque public metadata, durable deduplicati
       "code",
     ]);
     expect(JSON.stringify(publicData)).not.toContain("Private");
-    expect(publicData.channel).toBe("linkedin-dm");
+    expect(publicData.channel).toBe("linkedin-post");
     const visit = randomUUID();
     for (const event_name of [
       "visit_started",

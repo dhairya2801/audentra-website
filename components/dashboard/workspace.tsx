@@ -26,7 +26,10 @@ const names: Record<string, string> = {
   "other-external": "Other external referral",
 };
 const label = (key: string) =>
-  outreach.campaigns.find((c) => c.id === key)?.label || names[key] || key;
+  generalCampaigns.find((c) => c.id === key)?.label ||
+  outreach.campaigns.find((c) => c.id === key)?.label ||
+  names[key] ||
+  key;
 function Empty({
   result,
   text = "No activity recorded in this period.",
@@ -221,6 +224,12 @@ export function Dashboard({
       });
     return () => controller.abort();
   }, [days, dimension, selected, refresh, router]);
+  const referralLabel = (code: string) => {
+    const name = report?.firstParty.referrals?.rows.find(
+      (r) => r.code === code,
+    )?.contact_name;
+    return name ? `${name} (${code})` : label(code);
+  };
   const eventCount = (name: string, key = "count") =>
     value(report?.events.rows.filter((r) => r.eventName === name) || [], key);
   const qCount = (name: string, key: string, metric = "count") =>
@@ -359,8 +368,12 @@ export function Dashboard({
               {selected && (
                 <div className="filter-notice">
                   Neon reports filtered by {dimension}:{" "}
-                  <strong>{label(selected)}</strong>. Vercel traffic remains
-                  site-wide.
+                  <strong>
+                    {dimension === "referral"
+                      ? referralLabel(selected)
+                      : label(selected)}
+                  </strong>
+                  . Vercel traffic remains site-wide.
                   <button onClick={() => setSelected("")}>
                     Clear filter ×
                   </button>
@@ -413,10 +426,10 @@ export function Dashboard({
                     ))}
                   </section>
                   <div className="table-note">
-                    General campaigns, referral links, and direct visits are
+                    General links, referral links, and direct visits are
                     included. Attribution starts with this release; older
-                    referral events retain unknown campaign dimensions. Opt-outs
-                    and blockers can reduce counts.
+                    referral events retain unknown attribution. Opt-outs and
+                    blockers can reduce counts.
                   </div>
                   <div className="overview-grid">
                     <section className="report-card trend-card">
@@ -480,29 +493,7 @@ export function Dashboard({
                           activity and attribution.
                         </p>
                       </div>
-                      <label>
-                        <span className="sr-only">Group outreach by</span>
-                        <select
-                          value={dimension}
-                          onChange={(e) => {
-                            setDimension(e.target.value);
-                            setSelected("");
-                          }}
-                        >
-                          {[
-                            "channel",
-                            "source",
-                            "medium",
-                            "campaign",
-                            "content",
-                            "referral",
-                          ].map((d) => (
-                            <option key={d} value={d}>
-                              By {d === "referral" ? "referral code" : d}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
+                      <span className="subtle-tag">By channel</span>
                     </div>
                     {Object.values(report.quality).some((r) => r.error) ? (
                       <Empty result={report.events} />
@@ -511,11 +502,7 @@ export function Dashboard({
                         <table>
                           <thead>
                             <tr>
-                              <th>
-                                {dimension === "referral"
-                                  ? "Referral code"
-                                  : dimension}
-                              </th>
+                              <th>Channel</th>
                               <th>Sessions</th>
                               <th>Engaged</th>
                               <th>Product interest</th>
@@ -530,9 +517,19 @@ export function Dashboard({
                           </thead>
                           <tbody>
                             {qualityKeys.map((key) => (
-                              <tr key={key} data-selected={selected === key}>
+                              <tr
+                                key={key}
+                                data-selected={
+                                  dimension === "channel" && selected === key
+                                }
+                              >
                                 <td>
-                                  <button onClick={() => setSelected(key)}>
+                                  <button
+                                    onClick={() => {
+                                      setDimension("channel");
+                                      setSelected(key);
+                                    }}
+                                  >
                                     {label(key)} ↗
                                   </button>
                                 </td>
@@ -579,7 +576,7 @@ export function Dashboard({
                           </tbody>
                         </table>
                         {!qualityKeys.length && (
-                          <Empty text="No activity in this period. Share a campaign or referral link to begin." />
+                          <Empty text="No activity in this period. Share a general or referral link to begin." />
                         )}
                       </div>
                     )}
@@ -608,7 +605,6 @@ export function Dashboard({
                                 {[
                                   "Source",
                                   "Medium",
-                                  "Campaign",
                                   "Content",
                                   "Channel",
                                   "Referral",
@@ -625,13 +621,16 @@ export function Dashboard({
                                     {[
                                       "source",
                                       "medium",
-                                      "campaign",
                                       "content",
                                       "channel",
                                       "referral",
                                       "sessions",
                                     ].map((k) => (
-                                      <td key={k}>{String(r[k])}</td>
+                                      <td key={k}>
+                                        {k === "referral"
+                                          ? referralLabel(String(r[k]))
+                                          : String(r[k])}
+                                      </td>
                                     ))}
                                   </tr>
                                 ),
@@ -761,49 +760,8 @@ export function Dashboard({
                     </a>
                     <p>
                       Use Clarity for consented session recordings and heatmaps.
-                      Filter by referral, campaign, source, or custom event to
-                      explore the behavior behind a signal.
-                    </p>
-                  </section>
-                  <section className="report-card optional-pro">
-                    <div className="card-heading">
-                      <div>
-                        <h2>Optional Vercel Pro reports</h2>
-                        <p>
-                          Vendor comparisons only. All core outreach and
-                          conversion metrics above work on Hobby with Neon.
-                        </p>
-                      </div>
-                      <span className="subtle-tag">PRO / ENTERPRISE</span>
-                    </div>
-                    <div className="two-grid">
-                      {[
-                        ["engaged_visit", "Vercel engaged visits"],
-                        ["demo_submitted", "Vercel demo events"],
-                      ].map(([event, title]) => (
-                        <div key={event}>
-                          <h3>{title}</h3>
-                          {report.premium.error ? (
-                            <Empty result={report.premium} />
-                          ) : (
-                            <strong>
-                              {number(
-                                value(
-                                  report.premium.rows.filter(
-                                    (r) => r.eventName === event,
-                                  ),
-                                  "count",
-                                ),
-                              )}
-                            </strong>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                    <p className="card-footnote">
-                      Available automatically with an eligible Vercel plan and
-                      configured reporting token. Vendor event counts may differ
-                      from server-confirmed Neon conversions.
+                      Filter by referral, source, or custom event to explore the
+                      behavior behind a signal.
                     </p>
                   </section>
                 </div>
@@ -822,7 +780,7 @@ export function Dashboard({
           {tab === "links" && (
             <section className="report-card">
               <div className="card-heading">
-                <h1>Approved general campaign links</h1>
+                <h1>Approved general links</h1>
               </div>
               <div className="link-grid">
                 {generalCampaigns.map((c) => (
@@ -834,7 +792,7 @@ export function Dashboard({
                       </button>
                     </div>
                     <p>
-                      {c.source} · {c.medium} · {c.campaign}
+                      {c.source} · {c.medium}
                     </p>
                     <code>{campaignUrl(c)}</code>
                   </article>

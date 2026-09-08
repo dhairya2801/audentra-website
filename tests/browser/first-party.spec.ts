@@ -147,9 +147,7 @@ test("Neon records general UTM, opaque referral and direct journeys, server conv
         ).toBe(true);
         expect(
           saved.every(
-            (e) =>
-              e.campaign ===
-              (expectedSource === "direct" ? "none" : "founder-outreach"),
+            (e) => e.campaign === (referral ? "founder-outreach" : "none"),
           ),
         ).toBe(true);
         expect(saved.map((e) => e.event_name)).toEqual(

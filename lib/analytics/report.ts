@@ -17,6 +17,7 @@ export type Report = {
   quality: Record<string, QueryResult>;
   premium: QueryResult;
   firstParty: {
+    referrals: QueryResult;
     summary: QueryResult;
     trend: QueryResult;
     pages: QueryResult;

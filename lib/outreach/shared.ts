@@ -1,4 +1,4 @@
-import campaigns from "@/lib/analytics/outreach.json";
+import outreach from "@/lib/analytics/outreach.json";
 export const statuses = [
   "unassigned",
   "not-sent",
@@ -63,12 +63,7 @@ export function validateReferral(input: unknown): ReferralFields | null {
   if (!statuses.includes(v.status as OutreachStatus)) return null;
   if (
     v.channel !== "none" &&
-    !campaigns.campaigns.some((c) => c.id === v.channel)
-  )
-    return null;
-  if (
-    v.campaign !== "none" &&
-    !campaigns.campaigns.some((c) => c.campaign === v.campaign)
+    !outreach.campaigns.some((c) => c.id === v.channel)
   )
     return null;
   const date = v.date_sent === "" || v.date_sent === null ? null : v.date_sent;
@@ -86,7 +81,7 @@ export function validateReferral(input: unknown): ReferralFields | null {
     notes: (v.notes as string).trim(),
     status: v.status as OutreachStatus,
     channel: v.channel as string,
-    campaign: v.campaign as string,
+    campaign: "none",
     date_sent: date as string | null,
   };
 }
