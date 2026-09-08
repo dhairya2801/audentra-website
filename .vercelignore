@@ -1,0 +1,9 @@
+.env*
+deliverables/
+test-results/
+playwright-report/
+tests/
+
+.next*/
+.agents/
+skills-lock.json

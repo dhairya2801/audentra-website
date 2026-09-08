@@ -1,0 +1,114 @@
+{
+  "referrals": [
+    "ab4831",
+    "383467",
+    "387d7f",
+    "01de78",
+    "ffc65d",
+    "ef2fc4",
+    "c5b8bc",
+    "d79e4f",
+    "3da211",
+    "0eccbe",
+    "0ced55",
+    "064945",
+    "a210f5",
+    "f666aa",
+    "26c562",
+    "21ae67",
+    "94e147",
+    "b2841b",
+    "33f687",
+    "e6ab89"
+  ],
+  "campaigns": [
+    {
+      "id": "linkedin-post",
+      "label": "LinkedIn post",
+      "source": "linkedin",
+      "medium": "social",
+      "campaign": "founder-outreach",
+      "content": "post"
+    },
+    {
+      "id": "linkedin-dm",
+      "label": "LinkedIn personal DM",
+      "source": "linkedin",
+      "medium": "direct-message",
+      "campaign": "founder-outreach",
+      "content": "personal-dm"
+    },
+    {
+      "id": "personal-email",
+      "label": "Personal email",
+      "source": "email",
+      "medium": "personal-email",
+      "campaign": "founder-outreach",
+      "content": "personal-note"
+    },
+    {
+      "id": "email-outreach",
+      "label": "General email outreach",
+      "source": "email",
+      "medium": "email",
+      "campaign": "founder-outreach",
+      "content": "introduction"
+    },
+    {
+      "id": "whatsapp",
+      "label": "WhatsApp",
+      "source": "whatsapp",
+      "medium": "direct-message",
+      "campaign": "founder-outreach",
+      "content": "introduction"
+    },
+    {
+      "id": "founder-network",
+      "label": "Founder network",
+      "source": "founder-network",
+      "medium": "referral",
+      "campaign": "founder-outreach",
+      "content": "introduction"
+    },
+    {
+      "id": "higher-ed",
+      "label": "Higher-ed outreach",
+      "source": "higher-ed",
+      "medium": "email",
+      "campaign": "higher-ed-outreach",
+      "content": "introduction"
+    },
+    {
+      "id": "investor-advisor",
+      "label": "Investor / advisor outreach",
+      "source": "investor-advisor",
+      "medium": "referral",
+      "campaign": "advisor-outreach",
+      "content": "introduction"
+    },
+    {
+      "id": "partner",
+      "label": "Partner introduction",
+      "source": "partner",
+      "medium": "referral",
+      "campaign": "partner-outreach",
+      "content": "introduction"
+    },
+    {
+      "id": "conference",
+      "label": "Conference follow-up",
+      "source": "conference",
+      "medium": "in-person",
+      "campaign": "conference-outreach",
+      "content": "follow-up"
+    },
+    {
+      "id": "x-post",
+      "label": "X post",
+      "source": "x",
+      "medium": "social",
+      "campaign": "founder-outreach",
+      "content": "post"
+    }
+  ]
+}

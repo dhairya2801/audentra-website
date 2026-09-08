@@ -53,6 +53,35 @@ export default function PrivacyPage() {
             to communicate about Audentra. You can ask us to remove it at any time.
           </p>
 
+          <h2 className="au-h3" style={{ marginTop: "2rem" }}>Marketing website analytics</h2>
+          <p className="au-body">
+            On our public marketing website, we use Vercel Web Analytics to measure page visits,
+            referral sources, product interest, and walkthrough or newsletter requests. Approved
+            campaign labels and anonymous referral codes help us understand outreach. A referral
+            code identifies a link, not necessarily the person using it. We do not include names,
+            email addresses, institution names, or form text in analytics events.
+          </p>
+          <p className="au-body" style={{ marginTop: "1rem" }}>
+            With your permission, Microsoft Clarity collects behavioral information such as clicks,
+            scrolling, heatmaps, and masked session recordings. Forms are masked. Clarity may use
+            analytics cookies after consent; advertising storage is denied. Use Analytics preferences
+            in the footer to allow or decline analytics and withdraw recording consent. We also
+            honor Do Not Track and Global Privacy Control browser signals. Basic traffic analytics
+            can operate before a choice is made; declining disables our analytics integration.
+          </p>
+          <p className="au-body" style={{ marginTop: "1rem" }}>
+            Outreach attribution is kept in browser-tab storage and resets after 30 minutes of
+            inactivity or a new campaign link. Your analytics preference is stored in your browser.
+            For referral links, we also keep anonymous visit milestones and server-recorded activity
+            times in our own database. The random browser-tab visit identifier is not sent to Vercel
+            or Clarity. Private outreach contact details, notes, and statuses remain in our
+            password-protected team workspace and its database.
+            Attribution may accompany your contact request so our team can understand its context.
+            We do not create a persistent marketing identity or connect this tracking to university
+            student or staff portals. Analytics reporting and retention follow the active Vercel
+            and Microsoft Clarity service settings. Contact hello@audentra.ai with privacy questions.
+          </p>
+
           <h2 className="au-h3" style={{ marginTop: "2rem" }}>
             Questions
           </h2>

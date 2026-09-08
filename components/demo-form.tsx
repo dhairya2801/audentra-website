@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { attributionForForm, emit } from "@/lib/analytics/client";
 import { ArrowRight, Check } from "./icons";
 
 type SubmitState = "idle" | "submitting" | "success" | "error";
 
 export function DemoForm() {
+  const submissionId = useRef<string | null>(null);
   const [state, setState] = useState<SubmitState>("idle");
   const [error, setError] = useState("");
   const confirmationRef = useRef<HTMLDivElement>(null);
@@ -17,21 +19,30 @@ export function DemoForm() {
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (state === "submitting" || state === "success") return;
+    const payload = new FormData(event.currentTarget);
+    payload.set("attribution", attributionForForm());
+    payload.set("submissionId", (submissionId.current ||= crypto.randomUUID()));
     setState("submitting");
     setError("");
 
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
-        body: new FormData(event.currentTarget),
+        body: payload,
       });
-      const result = (await response.json()) as { error?: string };
+      const result = (await response.json()) as {
+        error?: string;
+        accepted?: boolean;
+      };
 
       if (!response.ok) throw new Error(result.error);
 
       setState("success");
+      if (result.accepted) emit("demo_submitted");
     } catch (submissionError) {
       setState("error");
+      emit("form_error", "demo");
       setError(
         submissionError instanceof Error && submissionError.message
           ? submissionError.message
@@ -49,13 +60,16 @@ export function DemoForm() {
         role="status"
         tabIndex={-1}
       >
-        <span className="au-icon au-icon--teal" style={{ margin: "0 auto 1.25rem" }}>
+        <span
+          className="au-icon au-icon--teal"
+          style={{ margin: "0 auto 1.25rem" }}
+        >
           <Check size={22} />
         </span>
         <h2 className="au-h3">Thanks — we&rsquo;ll be in touch.</h2>
         <p className="au-body">
-          A member of the Audentra team will follow up within one business day to schedule a
-          conversation around your institution&rsquo;s workflows.
+          A member of the Audentra team will follow up within one business day
+          to schedule a conversation around your institution&rsquo;s workflows.
         </p>
       </div>
     );
@@ -68,28 +82,59 @@ export function DemoForm() {
       action="/api/contact"
       method="post"
       onSubmit={submit}
+      data-clarity-mask="true"
+      onChange={() => {
+        submissionId.current = null;
+        emit("demo_form_started");
+      }}
     >
       <input type="hidden" name="source" value="product-walkthrough" />
       <div className="au-honeypot" aria-hidden="true">
         <label htmlFor="pilot-website">Website</label>
-        <input id="pilot-website" name="website" tabIndex={-1} autoComplete="off" />
+        <input
+          id="pilot-website"
+          name="website"
+          tabIndex={-1}
+          autoComplete="off"
+        />
       </div>
       <div className="au-form">
         <div className="au-field">
           <label htmlFor="first-name">First name</label>
-          <input id="first-name" name="firstName" autoComplete="given-name" required />
+          <input
+            id="first-name"
+            name="firstName"
+            autoComplete="given-name"
+            required
+          />
         </div>
         <div className="au-field">
           <label htmlFor="last-name">Last name</label>
-          <input id="last-name" name="lastName" autoComplete="family-name" required />
+          <input
+            id="last-name"
+            name="lastName"
+            autoComplete="family-name"
+            required
+          />
         </div>
         <div className="au-field au-field--full">
           <label htmlFor="email">Work email</label>
-          <input id="email" name="email" type="email" autoComplete="email" required />
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+          />
         </div>
         <div className="au-field">
           <label htmlFor="institution">Institution</label>
-          <input id="institution" name="institution" autoComplete="organization" required />
+          <input
+            id="institution"
+            name="institution"
+            autoComplete="organization"
+            required
+          />
         </div>
         <div className="au-field">
           <label htmlFor="title">Job title</label>
@@ -97,7 +142,11 @@ export function DemoForm() {
         </div>
         <div className="au-field au-field--full">
           <label htmlFor="interest">Primary area of interest</label>
-          <select id="interest" name="interest" defaultValue="enrollment-readiness">
+          <select
+            id="interest"
+            name="interest"
+            defaultValue="enrollment-readiness"
+          >
             <option value="enrollment-readiness">Enrollment readiness</option>
             <option value="enrollment-management">Enrollment management</option>
             <option value="admissions">Admissions</option>
@@ -122,8 +171,9 @@ export function DemoForm() {
       </div>
 
       <p className="au-form-note">
-        By submitting this form, you agree that Audentra may use your information to respond to
-        your request. See our <Link href="/legal/privacy">Privacy Policy</Link>.
+        By submitting this form, you agree that Audentra may use your
+        information to respond to your request. See our{" "}
+        <Link href="/legal/privacy">Privacy Policy</Link>.
       </p>
 
       {state === "error" ? (
@@ -133,7 +183,11 @@ export function DemoForm() {
       ) : null}
 
       <div className="au-btn-row">
-        <button type="submit" className="au-btn au-btn--primary" disabled={state === "submitting"}>
+        <button
+          type="submit"
+          className="au-btn au-btn--primary"
+          disabled={state === "submitting"}
+        >
           {state === "submitting" ? "Sending…" : "Schedule a Walkthrough"}
           <ArrowRight />
         </button>

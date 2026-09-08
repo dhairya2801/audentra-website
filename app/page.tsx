@@ -1,3 +1,4 @@
+import { DashboardPage } from "@/components/dashboard/page";
 import { Architecture } from "@/components/architecture";
 import { JourneyRail } from "@/components/journey-rail";
 import { BrewPulse } from "@/components/product/brew-pulse";
@@ -162,6 +163,7 @@ const pilotMeasures = [
 ];
 
 export default function HomePage() {
+  if (process.env.AUDENTRA_APP === "analytics") return <DashboardPage />;
   return (
     <>
       {/* ---------- 1. Hero + intelligence demonstration ---------- */}

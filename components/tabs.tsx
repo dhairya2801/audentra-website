@@ -2,6 +2,8 @@
 
 import { useId, useState, type ReactNode } from "react";
 
+import { emit } from "@/lib/analytics/client";
+
 export type Tab = {
   id: string;
   label: string;
@@ -11,6 +13,10 @@ export type Tab = {
 export function Tabs({ tabs, label }: { tabs: Tab[]; label: string }) {
   const [active, setActive] = useState(tabs[0]?.id);
   const uid = useId();
+  function select(id: string) {
+    setActive(id);
+    emit("product_interest", id === "student" ? "student-experience" : id);
+  }
 
   return (
     <div>
@@ -25,14 +31,16 @@ export function Tabs({ tabs, label }: { tabs: Tab[]; label: string }) {
             aria-selected={active === tab.id}
             tabIndex={active === tab.id ? 0 : -1}
             className="au-tab"
-            onClick={() => setActive(tab.id)}
+            onClick={() => select(tab.id)}
             onKeyDown={(event) => {
-              const index = tabs.findIndex((candidate) => candidate.id === active);
+              const index = tabs.findIndex(
+                (candidate) => candidate.id === active,
+              );
               if (event.key === "ArrowRight") {
-                setActive(tabs[(index + 1) % tabs.length].id);
+                select(tabs[(index + 1) % tabs.length].id);
               }
               if (event.key === "ArrowLeft") {
-                setActive(tabs[(index - 1 + tabs.length) % tabs.length].id);
+                select(tabs[(index - 1 + tabs.length) % tabs.length].id);
               }
             }}
           >

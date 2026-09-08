@@ -1,16 +1,22 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
+import { attributionForForm, emit } from "@/lib/analytics/client";
 import { ArrowRight } from "./icons";
 
 type SubmitState = "idle" | "submitting" | "success" | "error";
 
 export function NewsletterForm() {
+  const submissionId = useRef<string | null>(null);
   const [state, setState] = useState<SubmitState>("idle");
   const [message, setMessage] = useState("");
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (state === "submitting" || state === "success") return;
+    const payload = new FormData(event.currentTarget);
+    payload.set("attribution", attributionForForm());
+    payload.set("submissionId", (submissionId.current ||= crypto.randomUUID()));
     const form = event.currentTarget;
     setState("submitting");
     setMessage("");
@@ -18,17 +24,22 @@ export function NewsletterForm() {
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
-        body: new FormData(form),
+        body: payload,
       });
-      const result = (await response.json()) as { error?: string };
+      const result = (await response.json()) as {
+        error?: string;
+        accepted?: boolean;
+      };
 
       if (!response.ok) throw new Error(result.error);
 
       form.reset();
       setState("success");
+      if (result.accepted) emit("newsletter_submitted");
       setMessage("Thanks — we'll keep you posted.");
     } catch (error) {
       setState("error");
+      emit("form_error", "newsletter");
       setMessage(
         error instanceof Error && error.message
           ? error.message
@@ -39,11 +50,26 @@ export function NewsletterForm() {
 
   return (
     <div className="au-newsform-wrap">
-      <form className="au-newsform" action="/api/contact" method="post" onSubmit={submit}>
+      <form
+        data-clarity-mask="true"
+        onChange={() => {
+          submissionId.current = null;
+          emit("newsletter_started");
+        }}
+        className="au-newsform"
+        action="/api/contact"
+        method="post"
+        onSubmit={submit}
+      >
         <input type="hidden" name="source" value="newsletter" />
         <div className="au-honeypot" aria-hidden="true">
           <label htmlFor="newsletter-website">Website</label>
-          <input id="newsletter-website" name="website" tabIndex={-1} autoComplete="off" />
+          <input
+            id="newsletter-website"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+          />
         </div>
         <label htmlFor="footer-email" className="au-sr">
           Work email
@@ -66,7 +92,10 @@ export function NewsletterForm() {
         </button>
       </form>
       {message ? (
-        <p className={`au-form-message au-form-message--${state}`} role={state === "error" ? "alert" : "status"}>
+        <p
+          className={`au-form-message au-form-message--${state}`}
+          role={state === "error" ? "alert" : "status"}
+        >
           {message}
         </p>
       ) : null}

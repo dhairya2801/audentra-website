@@ -229,3 +229,9 @@ For Vercel: import the directory, use the Next.js framework preset, verify the
 `CONTACT_FROM_EMAIL` from `.env.example`. Update `site.url` in `lib/site.ts` if
 the production domain differs from `www.audentra.ai`; it feeds metadata,
 `sitemap.xml`, and `robots.txt`.
+
+## Marketing analytics and team dashboard
+
+See [docs/analytics.md](docs/analytics.md) for the architecture, exact events, privacy/attribution rules, environment variables, account prerequisites, and verification commands. The `audentra-website` and `audentra-analytics` Vercel projects use this repository; only the latter sets `AUDENTRA_APP=analytics`.
+
+The private dashboard and its Postgres database are the source of truth for individual referral codes, contacts, organizations, notes, statuses, and activity. Run `npm run outreach:migrate` once to initialize the database and seed 20 unassigned codes. Run `npm run outreach:workbook` to export the current database to `deliverables/audentra-outreach-links.xlsx`, or use the authenticated dashboard CSV/Excel export buttons. Exports are snapshots; editing an export does not update the database.

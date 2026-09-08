@@ -2855,3 +2855,12 @@ a.au-list__row:hover .au-list__go {
     padding-inline: 1rem 2.75rem;
   }
 }
+
+/* Optional analytics consent; no layout shift for marketing content. */
+.au-consent { position: fixed; z-index: 100; bottom: 1rem; left: 1rem; width: min(34rem, calc(100vw - 2rem)); padding: 1.25rem; background: #fff; color: #152338; border: 1px solid #dce1e8; border-radius: 14px; box-shadow: 0 12px 45px #101b3322; font-size: .85rem; }
+.au-consent p { margin: .5rem 0 1rem; line-height: 1.5; }
+.au-consent a { text-decoration: underline; }
+.au-consent-actions { display: flex; gap: .7rem; flex-wrap: wrap; }
+.au-consent button { border: 1px solid #cbd3dc; padding: .65rem 1rem; border-radius: 6px; cursor: pointer; }
+.au-consent button:last-child { background: #173d3c; color: white; }
+.au-privacy-settings { margin: 1rem 0; font-size: .8rem; text-decoration: underline; cursor: pointer; }

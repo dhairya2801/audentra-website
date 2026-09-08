@@ -1,3 +1,4 @@
+import { PrivacySettings } from "./analytics/marketing-analytics";
 import Image from "next/image";
 import Link from "next/link";
 import { footerColumns, site } from "@/lib/site";
@@ -72,6 +73,7 @@ export function SiteFooter() {
           </nav>
         </div>
       </Container>
+    <PrivacySettings />
     </footer>
   );
 }

@@ -1,3 +1,5 @@
+import { MarketingAnalytics } from "@/components/analytics/marketing-analytics";
+import "./dashboard.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
@@ -21,7 +23,15 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
+  metadataBase: new URL(
+    process.env.AUDENTRA_APP === "analytics"
+      ? "https://analytics.audentra.ai"
+      : site.url,
+  ),
+  robots:
+    process.env.AUDENTRA_APP === "analytics"
+      ? { index: false, follow: false }
+      : undefined,
   title: {
     default: `${site.name} — Institutional Intelligence for Higher Education`,
     template: `%s — ${site.name}`,
@@ -40,23 +50,45 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+  const dashboard = process.env.AUDENTRA_APP === "analytics";
   return (
     <html lang="en" className={inter.variable} data-scroll-behavior="smooth">
       <head>
-        <link rel="preconnect" href="https://api.fontshare.com" />
-        <link rel="preconnect" href="https://cdn.fontshare.com" crossOrigin="" />
-        <link
-          rel="stylesheet"
-          href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap"
-        />
+        {!dashboard && (
+          <>
+            <link rel="preconnect" href="https://api.fontshare.com" />
+            <link
+              rel="preconnect"
+              href="https://cdn.fontshare.com"
+              crossOrigin=""
+            />
+            <link
+              rel="stylesheet"
+              href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap"
+            />
+          </>
+        )}
       </head>
       <body>
-        <a className="au-skip" href="#main">
-          Skip to main content
-        </a>
-        <SiteHeader />
-        <main id="main">{children}</main>
-        <SiteFooter />
+        {dashboard ? (
+          children
+        ) : (
+          <>
+            <a className="au-skip" href="#main">
+              Skip to main content
+            </a>
+            <SiteHeader />
+            <main id="main">{children}</main>
+            <SiteFooter />
+            <MarketingAnalytics
+              production={
+                process.env.VERCEL_ENV === "production" ||
+                process.env.NEXT_PUBLIC_ANALYTICS_TEST === "1"
+              }
+              clarityId={process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID}
+            />
+          </>
+        )}
       </body>
     </html>
   );

@@ -1,3 +1,5 @@
+import { sanitizeAttribution } from "@/lib/analytics/schema";
+
 const CONTACT_EMAIL = "hello@audentra.ai";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -25,6 +27,8 @@ function sameOrigin(request: Request) {
 }
 
 export async function POST(request: Request) {
+  if (process.env.AUDENTRA_APP === "analytics")
+    return new Response(null, { status: 404 });
   if (!sameOrigin(request)) {
     return Response.json({ error: "Invalid request origin." }, { status: 403 });
   }
@@ -33,7 +37,10 @@ export async function POST(request: Request) {
   try {
     formData = await request.formData();
   } catch {
-    return Response.json({ error: "Invalid form submission." }, { status: 400 });
+    return Response.json(
+      { error: "Invalid form submission." },
+      { status: 400 },
+    );
   }
 
   // Bots commonly fill fields hidden from people. Return a normal response so
@@ -43,10 +50,15 @@ export async function POST(request: Request) {
   }
 
   const source = readLine(formData, "source", 32);
+  if (!["newsletter", "product-walkthrough"].includes(source))
+    return Response.json({ error: "Invalid form." }, { status: 400 });
   const email = readLine(formData, "email", 254).toLowerCase();
 
   if (!EMAIL_PATTERN.test(email)) {
-    return Response.json({ error: "Enter a valid work email address." }, { status: 400 });
+    return Response.json(
+      { error: "Enter a valid work email address." },
+      { status: 400 },
+    );
   }
 
   const firstName = readLine(formData, "firstName", 80);
@@ -58,7 +70,10 @@ export async function POST(request: Request) {
   const pilot = formData.get("pilot") === "on";
 
   if (source !== "newsletter" && (!firstName || !lastName || !institution)) {
-    return Response.json({ error: "Complete all required fields." }, { status: 400 });
+    return Response.json(
+      { error: "Complete all required fields." },
+      { status: 400 },
+    );
   }
 
   const apiKey = process.env.RESEND_API_KEY;
@@ -76,6 +91,23 @@ export async function POST(request: Request) {
   const subject = isNewsletter
     ? "New Audentra newsletter request"
     : `New Audentra pilot request from ${firstName} ${lastName}`;
+  let attributionText = "";
+  try {
+    const raw = readField(formData, "attribution", 1000);
+    if (raw)
+      attributionText =
+        "\n\nOutreach attribution (link context, not identity):\n" +
+        Object.entries({ ...sanitizeAttribution(JSON.parse(raw)), referral: /^[a-f0-9]{6,10}$/.test(JSON.parse(raw).referral || "") ? JSON.parse(raw).referral : "none" })
+          .map(([key, value]) => `${key}: ${value}`)
+          .join("\n");
+  } catch {
+    /* Optional attribution must never prevent delivery. */
+  }
+  const submissionId = readLine(formData, "submissionId", 36);
+  const validId =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      submissionId,
+    );
   const text = isNewsletter
     ? [`Newsletter request`, `Email: ${email}`].join("\n")
     : [
@@ -97,30 +129,38 @@ export async function POST(request: Request) {
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
+        ...(validId ? { "Idempotency-Key": `contact-${submissionId}` } : {}),
       },
       body: JSON.stringify({
         from,
         to: [CONTACT_EMAIL],
         reply_to: email,
         subject,
-        text,
+        text: text + attributionText,
       }),
     });
 
     if (!response.ok) {
-      console.error("Contact form email delivery failed with status", response.status);
+      console.error(
+        "Contact form email delivery failed with status",
+        response.status,
+      );
       return Response.json(
-        { error: `We could not send your request. Email us at ${CONTACT_EMAIL}.` },
+        {
+          error: `We could not send your request. Email us at ${CONTACT_EMAIL}.`,
+        },
         { status: 502 },
       );
     }
   } catch {
     console.error("Contact form email delivery failed.");
     return Response.json(
-      { error: `We could not send your request. Email us at ${CONTACT_EMAIL}.` },
+      {
+        error: `We could not send your request. Email us at ${CONTACT_EMAIL}.`,
+      },
       { status: 502 },
     );
   }
 
-  return Response.json({ ok: true });
+  return Response.json({ ok: true, accepted: true });
 }
