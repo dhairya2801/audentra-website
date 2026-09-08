@@ -1262,3 +1262,17 @@
     gap: 8px;
   }
 }
+
+.insights .report-content > .two-grid,
+.insights .report-content > .clarity-card,
+.insights .report-content > .optional-pro {
+  margin-top: 22px;
+}
+.insights .report-content > .clarity-card a {
+  border-top: 0;
+  padding-top: 0;
+  font-size: 18px;
+}
+.insights .report-content > .clarity-card p {
+  margin-bottom: 0;
+}

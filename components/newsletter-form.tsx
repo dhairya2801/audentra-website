@@ -1,7 +1,11 @@
 "use client";
 
 import { FormEvent, useRef, useState } from "react";
-import { attributionForForm, emit } from "@/lib/analytics/client";
+import {
+  attributionForForm,
+  analyticsForForm,
+  emit,
+} from "@/lib/analytics/client";
 import { ArrowRight } from "./icons";
 
 type SubmitState = "idle" | "submitting" | "success" | "error";
@@ -16,6 +20,7 @@ export function NewsletterForm() {
     if (state === "submitting" || state === "success") return;
     const payload = new FormData(event.currentTarget);
     payload.set("attribution", attributionForForm());
+    payload.set("analytics", analyticsForForm());
     payload.set("submissionId", (submissionId.current ||= crypto.randomUUID()));
     const form = event.currentTarget;
     setState("submitting");

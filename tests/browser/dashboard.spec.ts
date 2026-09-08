@@ -7,6 +7,22 @@ const password = readFileSync("deliverables/dashboard-access.local.txt", "utf8")
   .replace("Dashboard password: ", "");
 const query = (rows: Record<string, string | number>[]) => ({ rows });
 const fixture = {
+  premium: {
+    rows: [],
+    error:
+      "This report requires a Vercel plan with custom events (Pro or Enterprise).",
+  },
+  firstParty: {
+    summary: query([{ sessions: 520, legacyEvents: 0 }]),
+    trend: query([
+      { timestamp: "2026-09-07", sessions: 520, engaged: 284, demos: 18 },
+    ]),
+    pages: query([
+      { requestPath: "/", count: 500 },
+      { requestPath: "/demo", count: 92 },
+    ]),
+    attribution: query([]),
+  },
   since: "2026-09-01T00:00:00Z",
   until: "2026-09-07T23:59:59Z",
   fetchedAt: "2026-09-07T15:00:00Z",
@@ -42,7 +58,7 @@ const fixture = {
       ["demo_cta_clicked", 73],
       ["newsletter_submitted", 11],
       ["form_error", 2],
-    ].map(([eventName, count]) => ({ eventName, count })),
+    ].map(([eventName, count]) => ({ eventName, count, requests: count })),
   ),
   products: query([
     { eventData: "enrollment-readiness", count: 164 },
@@ -61,7 +77,11 @@ const fixture = {
     ].map((name, i) => [
       name,
       query([
-        { eventData: "linkedin-dm", count: [162, 119, 48, 11, 4][i] },
+        {
+          eventData: "linkedin-dm",
+          count: [162, 119, 48, 11, 4][i],
+          requests: [162, 119, 48, 11, 4][i],
+        },
         { eventData: "higher-ed", count: [92, 63, 24, 5, 3][i] },
         { eventData: "personal-email", count: [83, 51, 12, 2, 4][i] },
         { eventData: "linkedin-post", count: [183, 51, 8, 0, 0][i] },
@@ -92,7 +112,7 @@ test("sign in, real missing-data state, logout, and no tracking scripts", async 
   await page.getByLabel("Team password").fill(password);
   await page.getByRole("button", { name: "Open workspace" }).click();
   await expect(
-    page.getByRole("heading", { name: "The bigger picture." }),
+    page.getByRole("heading", { name: "Audentra website analytics" }),
   ).toBeVisible();
   await expect(page.getByText(/Connect Vercel:/).first()).toBeVisible();
   expect(
@@ -156,13 +176,13 @@ test("dashboard renders reports, filters, link library, and responsive layouts (
   await requestPromise;
   await page.getByRole("button", { name: "Link library" }).click();
   await expect(
-    page.getByRole("heading", { name: "General campaign links" }),
+    page.getByRole("heading", { name: "Approved general campaign links" }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Referral links", exact: false })
     .click();
   await expect(
-    page.getByRole("heading", { name: "Private context. Opaque links." }),
+    page.getByRole("heading", { name: "Referral links" }),
   ).toBeVisible();
   for (const r of outreach.referrals)
     await expect(page.getByText(r, { exact: true })).toBeVisible();

@@ -1,15 +1,15 @@
 import { requestOrigin } from "@/lib/analytics/request-origin";
-import { events, products, safePath } from "@/lib/analytics/schema";
-import { marketingDb } from "@/lib/outreach/db";
+import { browserEvent, botPattern } from "@/lib/analytics/collection";
+import { recordEvent } from "@/lib/analytics/ledger";
 const limits = new Map<string, { count: number; until: number }>();
 export async function POST(request: Request) {
   if (process.env.AUDENTRA_APP === "analytics")
     return new Response(null, { status: 404 });
   if (!requestOrigin(request)) return new Response(null, { status: 403 });
   if (
-    /bot|crawler|spider|preview|headless|facebookexternalhit|slackbot|linkedinbot/i.test(
-      request.headers.get("user-agent") || "",
-    )
+    request.headers.get("dnt") === "1" ||
+    request.headers.get("sec-gpc") === "1" ||
+    botPattern.test(request.headers.get("user-agent") || "")
   )
     return new Response(null, { status: 204 });
   const now = Date.now(),
@@ -28,32 +28,10 @@ export async function POST(request: Request) {
   } catch {
     return new Response(null, { status: 400 });
   }
-  if (
-    !body ||
-    typeof body !== "object" ||
-    Array.isArray(body) ||
-    !/^[a-f0-9]{6,10}$/.test(body.code) ||
-    !/^[0-9a-f-]{36}$/.test(body.visit_id) ||
-    !events.includes(body.event_name) ||
-    !safePath(body.page) ||
-    ![
-      "none",
-      ...products,
-      "header",
-      "footer",
-      "hero",
-      "body",
-      "demo",
-      "newsletter",
-      "email",
-    ].includes(body.detail)
-  )
-    return new Response(null, { status: 400 });
+  const event = browserEvent(body);
+  if (!event) return new Response(null, { status: 400 });
   try {
-    const sql = marketingDb();
-    // Foreign key and UNIQUE(visit_id,event_name,detail) validate known links and
-    // deduplicate retries in durable storage. This role cannot read contact data.
-    await sql`INSERT INTO outreach_events (code,visit_id,event_name,page,detail) VALUES (${body.code},${body.visit_id},${body.event_name},${body.page},${body.detail}) ON CONFLICT DO NOTHING`;
+    await recordEvent(event);
     return new Response(null, { status: 204 });
   } catch {
     return new Response(null, { status: 503 });

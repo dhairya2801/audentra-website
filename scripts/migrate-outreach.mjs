@@ -50,3 +50,5 @@ await sql`GRANT INSERT ON outreach_events TO audentra_marketing`;
 console.log(
   "Outreach schema ready. Initial codes inserted only if absent; existing records preserved.",
 );
+
+await import("./migrate-first-party.mjs");

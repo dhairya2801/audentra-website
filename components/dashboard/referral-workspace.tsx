@@ -140,14 +140,6 @@ export function ReferralWorkspace({
   return (
     <section className="referral-workspace">
       <div className="referral-intro">
-        <div>
-          <span className="eyebrow">YOUR OUTREACH REGISTER</span>
-          <h2>Private context. Opaque links.</h2>
-          <p>
-            Manage relationships here. Only anonymous codes and approved
-            campaign categories leave this workspace.
-          </p>
-        </div>
         <button
           className="create-referral"
           onClick={() => edit(null)}
@@ -471,7 +463,7 @@ export function ReferralWorkspace({
                   inspect(editing.code);
                 }}
               >
-                Inspect product interest & funnel in Vercel reports ↗
+                Inspect product interest & funnel ↗
               </button>
             </div>
           )}

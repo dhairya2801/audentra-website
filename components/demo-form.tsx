@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { attributionForForm, emit } from "@/lib/analytics/client";
+import {
+  attributionForForm,
+  analyticsForForm,
+  emit,
+} from "@/lib/analytics/client";
 import { ArrowRight, Check } from "./icons";
 
 type SubmitState = "idle" | "submitting" | "success" | "error";
@@ -22,6 +26,7 @@ export function DemoForm() {
     if (state === "submitting" || state === "success") return;
     const payload = new FormData(event.currentTarget);
     payload.set("attribution", attributionForForm());
+    payload.set("analytics", analyticsForForm());
     payload.set("submissionId", (submissionId.current ||= crypto.randomUUID()));
     setState("submitting");
     setError("");

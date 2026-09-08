@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { QueryResult, Report, Row } from "@/lib/analytics/report";
 import outreach from "@/lib/analytics/outreach.json";
-import { campaignUrl } from "@/lib/analytics/schema";
+import { campaignUrl, generalCampaigns } from "@/lib/analytics/schema";
 const number = (n: number) => new Intl.NumberFormat("en-US").format(n);
 const value = (rows: Row[], key: string) =>
   rows.reduce(
@@ -21,6 +21,7 @@ const names: Record<string, string> = {
   "enrollment-readiness": "Enrollment Readiness",
   direct: "Direct / unknown",
   none: "Unattributed",
+  unknown: "Unknown / historical",
   "individual-referral": "Individual referral",
   "other-external": "Other external referral",
 };
@@ -80,12 +81,14 @@ function Trend({
   result,
   since,
   until,
+  firstParty = false,
 }: {
   result: QueryResult;
   since: string;
   until: string;
+  firstParty?: boolean;
 }) {
-  const [metric, setMetric] = useState("pageviews");
+  const [metric, setMetric] = useState(firstParty ? "sessions" : "pageviews");
   if (result.error) return <Empty result={result} />;
   const start = new Date(since),
     end = new Date(until);
@@ -105,17 +108,33 @@ function Trend({
     <>
       <div className="chart-tools">
         <div className="segmented">
-          {["pageviews", "visitors"].map((m) => (
+          {(firstParty
+            ? ["sessions", "engaged", "demos"]
+            : ["pageviews", "visitors"]
+          ).map((m) => (
             <button
               key={m}
               aria-pressed={metric === m}
               onClick={() => setMetric(m)}
             >
-              {m === "pageviews" ? "Page views" : "Visitors"}
+              {
+                (
+                  {
+                    pageviews: "Page views",
+                    visitors: "Visitors",
+                    sessions: "Sessions",
+                    engaged: "Engaged",
+                    demos: "Demo requests",
+                  } as Record<string, string>
+                )[m]
+              }
             </button>
           ))}
         </div>
-        <small>Daily · UTC · All traffic</small>
+        <small>
+          Daily · UTC ·{" "}
+          {firstParty ? "Neon · follows filter" : "Vercel · all traffic"}
+        </small>
       </div>
       <div
         className="traffic-chart"
@@ -177,7 +196,6 @@ export function Dashboard({
     [copied, setCopied] = useState("");
   useEffect(() => {
     const controller = new AbortController();
-    // Synchronize loading state with the external report request.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     setError("");
@@ -191,8 +209,9 @@ export function Dashboard({
           return;
         }
         if (!response.ok)
-          throw new Error("Could not load the workspace. Please retry.");
-        setReport(await response.json());
+          throw new Error("Could not load reports. Please retry.");
+        const data = await response.json();
+        if (!controller.signal.aborted) setReport(data);
       })
       .catch((e) => {
         if (e.name !== "AbortError") setError(e.message);
@@ -202,45 +221,39 @@ export function Dashboard({
       });
     return () => controller.abort();
   }, [days, dimension, selected, refresh, router]);
-  const eventCount = (name: string) =>
-    report
-      ? value(
-          report.events.rows.filter((r) => r.eventName === name),
-          "count",
-        )
-      : 0;
-  const eventUnavailable = !report || !!report.events.error;
-  const opened = eventCount("visit_started"),
-    demos = eventCount("demo_submitted");
-  const qualityKeys = [
-    ...new Set([
-      ...(dimension === "referral" ? outreach.referrals : []),
-      ...Object.values(report?.quality || {}).flatMap((r) =>
-        r.rows.map((row) => String(row.eventData || "none")),
-      ),
-    ]),
-  ];
-  const qCount = (name: string, key: string) =>
+  const eventCount = (name: string, key = "count") =>
+    value(report?.events.rows.filter((r) => r.eventName === name) || [], key);
+  const qCount = (name: string, key: string, metric = "count") =>
     value(
       report?.quality[name]?.rows.filter(
         (r) => String(r.eventData || "none") === key,
       ) || [],
-      "count",
+      metric,
     );
-  qualityKeys.sort(
+  const qualityKeys = [
+    ...new Set(
+      Object.values(report?.quality || {}).flatMap((r) =>
+        r.rows.map((row) => String(row.eventData || "none")),
+      ),
+    ),
+  ].sort(
     (a, b) =>
       qCount("demo_submitted", b) - qCount("demo_submitted", a) ||
       qCount("engaged_visit", b) - qCount("engaged_visit", a) ||
       qCount("visit_started", b) - qCount("visit_started", a),
   );
-  const views = value(report?.traffic.rows || [], "pageviews"),
-    previousViews = value(report?.previous.rows || [], "pageviews");
+  const sessions = eventCount("visit_started"),
+    demos = eventCount("demo_submitted", "requests"),
+    converted = eventCount("demo_submitted");
+  const unavailable = !!report?.events.error;
+  const rate = (n: number, total: number) =>
+    total ? `${((n / total) * 100).toFixed(1)}%` : "—";
   async function copy(id: string, url: string) {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(id);
     } catch {
-      setCopied("Copy unavailable — select the URL below.");
+      setCopied("Clipboard unavailable; select the URL.");
     }
   }
   return (
@@ -249,7 +262,7 @@ export function Dashboard({
         <Link href="/" className="dashboard-brand">
           <span className="brand-symbol">a</span>audentra
         </Link>
-        <span className="workspace-label">OUTREACH INTELLIGENCE</span>
+        <span className="workspace-label">WEBSITE ANALYTICS</span>
         <nav aria-label="Workspace">
           {[
             ["overview", "◫", "Overview"],
@@ -266,26 +279,15 @@ export function Dashboard({
             </button>
           ))}
         </nav>
-        <div className="sidebar-note">
-          <span className="status-dot" />
-          <strong>Signals, with context.</strong>
-          <p>
-            A link open is a beginning.
-            <br />
-            Engagement tells the story.
-          </p>
-        </div>
         <div className="sidebar-bottom">
           <a href={vercelUrl} target="_blank" rel="noreferrer">
-            Vercel Analytics <span>↗</span>
+            Vercel Analytics ↗
           </a>
           <a href={clarityUrl} target="_blank" rel="noreferrer">
-            Clarity recordings <span>↗</span>
+            Clarity recordings ↗
           </a>
           <form action="/api/auth/logout" method="post">
-            <button>
-              Sign out <span>↪</span>
-            </button>
+            <button>Sign out ↪</button>
           </form>
           <small>PRIVATE TEAM WORKSPACE</small>
         </div>
@@ -293,68 +295,62 @@ export function Dashboard({
       <div className="workspace-main">
         <header className="workspace-topbar">
           <span>
-            <i className="status-dot" /> audentra.ai{" "}
-            <span className="topbar-slash">/</span> Marketing website
+            <i className="status-dot" /> audentra.ai / Marketing website
           </span>
           <span className="private-badge">◈ Private</span>
         </header>
         <main className="workspace-content">
-          <div className="page-heading">
-            <div>
-              <span className="eyebrow">
-                {tab === "links"
-                  ? "START A CONVERSATION"
-                  : "MAKE EVERY CONVERSATION COUNT"}
-              </span>
-              <h1>
-                {tab === "overview"
-                  ? "The bigger picture."
-                  : tab === "outreach"
-                    ? "Where interest begins."
-                    : "A link for every introduction."}
-              </h1>
-              <p>
-                {tab === "overview"
-                  ? "Who’s finding Audentra. What resonates. What happens next."
-                  : tab === "outreach"
-                    ? "Compare outreach by the actions it inspires, beyond the first open."
-                    : "Approved general campaign links. Manage individual codes in Referral links."}
-              </p>
-            </div>
-            {tab === "overview" && (
-              <div className="date-controls">
-                <label className="sr-only" htmlFor="date-range">
-                  Date range
-                </label>
-                <select
-                  id="date-range"
-                  value={days}
-                  onChange={(e) => setDays(Number(e.target.value))}
-                >
-                  <option value={7}>Last 7 days</option>
-                  <option value={30}>Last 30 days</option>
-                </select>
-                <button
-                  aria-label="Refresh analytics"
-                  onClick={() => setRefresh((x) => x + 1)}
-                  disabled={loading}
-                >
-                  ↻
-                </button>
+          {tab !== "links" && (
+            <div className="page-heading">
+              <div>
+                <h1>
+                  {tab === "overview"
+                    ? "Audentra website analytics"
+                    : "Referral links"}
+                </h1>
+                {tab === "outreach" && (
+                  <p>
+                    Create and share unique links to see visits and activity. A
+                    link identifies an attributed visit, not necessarily a
+                    person.
+                  </p>
+                )}
               </div>
-            )}
-          </div>
+              {tab === "overview" && (
+                <div className="date-controls">
+                  <label className="sr-only" htmlFor="date-range">
+                    Date range
+                  </label>
+                  <select
+                    id="date-range"
+                    value={days}
+                    onChange={(e) => setDays(Number(e.target.value))}
+                  >
+                    <option value={7}>Last 7 days</option>
+                    <option value={30}>Last 30 days</option>
+                  </select>
+                  <button
+                    aria-label="Refresh analytics"
+                    disabled={loading}
+                    onClick={() => setRefresh((x) => x + 1)}
+                  >
+                    ↻
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
           {tab === "overview" && (
             <>
               <div className="report-status" role="status">
                 {loading
                   ? "Updating reports…"
                   : error ||
-                    `Updated ${new Date(report?.fetchedAt || "1970-01-01").toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} · Reports cached for 2 minutes · Current day is partial`}
+                    `Updated ${new Date(report?.fetchedAt || 0).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} · Neon refreshes immediately · Vercel cached 2 minutes · UTC, today partial`}
               </div>
               {error && (
                 <button
-                  className="primary-button"
+                  className="small-button"
                   onClick={() => setRefresh((x) => x + 1)}
                 >
                   Retry
@@ -362,8 +358,9 @@ export function Dashboard({
               )}
               {selected && (
                 <div className="filter-notice">
-                  Event reports filtered to <strong>{label(selected)}</strong>.
-                  Traffic remains site-wide.
+                  Neon reports filtered by {dimension}:{" "}
+                  <strong>{label(selected)}</strong>. Vercel traffic remains
+                  site-wide.
                   <button onClick={() => setSelected("")}>
                     Clear filter ×
                   </button>
@@ -376,168 +373,111 @@ export function Dashboard({
                   }
                   aria-busy={loading}
                 >
-                  {tab === "overview" && (
-                    <>
-                      <section className="metric-grid" aria-label="Key metrics">
-                        <article>
-                          <span>Visitors</span>
-                          <strong>
-                            {report.traffic.error
-                              ? "—"
-                              : number(value(report.traffic.rows, "visitors"))}
-                          </strong>
-                          <small>Vercel anonymous visitors · all traffic</small>
-                        </article>
-                        <article>
-                          <span>Page views</span>
-                          <strong>
-                            {report.traffic.error ? "—" : number(views)}
-                          </strong>
-                          <small>
-                            {report.previous.error
-                              ? "Previous period unavailable"
-                              : previousViews
-                                ? `${views >= previousViews ? "+" : ""}${Math.round(((views - previousViews) / previousViews) * 100)}% vs previous ${days} days`
-                                : "No previous traffic to compare"}
-                          </small>
-                        </article>
-                        <article>
-                          <span>Engaged visits {selected && "· filtered"}</span>
-                          <strong>
-                            {eventUnavailable
-                              ? "—"
-                              : number(eventCount("engaged_visit"))}
-                          </strong>
-                          <small>15s visible + active interaction</small>
-                        </article>
-                        <article className="metric-highlight">
-                          <span>Demo requests {selected && "· filtered"}</span>
-                          <strong>
-                            {eventUnavailable ? "—" : number(demos)}
-                          </strong>
-                          <small>
-                            {!eventUnavailable && opened
-                              ? `${((demos / opened) * 100).toFixed(1)}% of tracked visits`
-                              : "Accepted by the email provider"}
-                          </small>
-                        </article>
-                      </section>
-                      <div className="overview-grid">
-                        <section className="report-card trend-card">
-                          <div className="card-heading">
-                            <div>
-                              <span className="eyebrow">MOMENTUM</span>
-                              <h2>Traffic over time</h2>
-                            </div>
-                            <span className="subtle-tag">ALL TRAFFIC</span>
-                          </div>
-                          <Trend
-                            result={report.trend}
-                            since={report.since}
-                            until={report.until}
-                          />
-                        </section>
-                        <section className="report-card">
-                          <div className="card-heading">
-                            <div>
-                              <span className="eyebrow">
-                                FROM VISIT TO CONVERSATION
-                              </span>
-                              <h2>Walkthrough funnel</h2>
-                            </div>
-                          </div>
-                          {report.events.error ? (
-                            <Empty result={report.events} />
-                          ) : (
-                            <div className="funnel">
-                              {[
-                                ["visit_started", "Visit opened"],
-                                ["demo_viewed", "Walkthrough page"],
-                                ["demo_form_started", "Form started"],
-                                ["demo_submitted", "Request accepted"],
-                              ].map(([event, text], i) => (
-                                <div key={event}>
-                                  <span className="step-number">0{i + 1}</span>
-                                  <div>
-                                    <div className="funnel-label">
-                                      <span>{text}</span>
-                                      <strong>
-                                        {number(eventCount(event))}
-                                      </strong>
-                                    </div>
-                                    <Meter
-                                      current={eventCount(event)}
-                                      max={Math.max(opened, eventCount(event))}
-                                    />
-                                  </div>
+                  {report.events.error && <Empty result={report.events} />}
+                  <section className="metric-grid" aria-label="Key metrics">
+                    {[
+                      [
+                        "Sessions",
+                        number(sessions),
+                        "Neon · anonymous tab visits with activity",
+                      ],
+                      [
+                        "Engaged sessions",
+                        number(eventCount("engaged_visit")),
+                        "Neon · 15 focused seconds + interaction",
+                      ],
+                      [
+                        "Demo requests",
+                        number(demos),
+                        "Neon · accepted submissions, deduplicated",
+                      ],
+                      [
+                        "Demo conversion",
+                        rate(converted, sessions),
+                        "Neon · sessions with an accepted request",
+                      ],
+                    ].map(([title, note, detail]) => (
+                      <article
+                        key={title}
+                        className={
+                          title === "Demo requests" ? "metric-highlight" : ""
+                        }
+                      >
+                        <span>
+                          {title}
+                          {selected && " · filtered"}
+                        </span>
+                        <strong>{unavailable ? "—" : note}</strong>
+                        <small>{detail}</small>
+                      </article>
+                    ))}
+                  </section>
+                  <div className="table-note">
+                    General campaigns, referral links, and direct visits are
+                    included. Attribution starts with this release; older
+                    referral events retain unknown campaign dimensions. Opt-outs
+                    and blockers can reduce counts.
+                  </div>
+                  <div className="overview-grid">
+                    <section className="report-card trend-card">
+                      <div className="card-heading">
+                        <h2>Activity over time</h2>
+                        <span className="subtle-tag">NEON</span>
+                      </div>
+                      <Trend
+                        result={report.firstParty.trend}
+                        since={report.since}
+                        until={report.until}
+                        firstParty
+                      />
+                    </section>
+                    <section className="report-card">
+                      <div className="card-heading">
+                        <h2>Demo funnel</h2>
+                        <span className="subtle-tag">NEON</span>
+                      </div>
+                      {unavailable ? (
+                        <Empty result={report.events} />
+                      ) : (
+                        <div className="funnel">
+                          {[
+                            ["visit_started", "Session observed"],
+                            ["demo_cta_clicked", "Demo CTA"],
+                            ["demo_viewed", "Demo page"],
+                            ["demo_form_started", "Form started"],
+                            ["demo_submitted", "Request accepted"],
+                          ].map(([event, text], i) => (
+                            <div key={event}>
+                              <span className="step-number">0{i + 1}</span>
+                              <div>
+                                <div className="funnel-label">
+                                  <span>{text}</span>
+                                  <strong>{number(eventCount(event))}</strong>
                                 </div>
-                              ))}
-                              <p>
-                                Milestones counted once per tab visit. Counts
-                                can cross date boundaries; this is not a
-                                visitor-level cohort funnel.
-                              </p>
+                                <Meter
+                                  current={eventCount(event)}
+                                  max={Math.max(sessions, eventCount(event))}
+                                />
+                              </div>
                             </div>
-                          )}
-                        </section>
-                      </div>
-                      <div className="three-grid">
-                        <section className="report-card">
-                          <div className="card-heading">
-                            <div>
-                              <span className="eyebrow">WHAT RESONATES</span>
-                              <h2>Product interest</h2>
-                            </div>
-                          </div>
-                          <Breakdown
-                            result={report.products}
-                            dimension="eventData"
-                            unit="count"
-                          />
-                          <p className="card-footnote">
-                            Explicit product links, selected tabs, and product
-                            page arrivals. Once per product per visit.
+                          ))}
+                          <p>
+                            Distinct sessions at each milestone within the date
+                            range. This is an aggregate funnel, not an ordered
+                            cohort. Demo requests above count accepted
+                            submissions.
                           </p>
-                        </section>
-                        <section className="report-card">
-                          <div className="card-heading">
-                            <div>
-                              <span className="eyebrow">CONTENT</span>
-                              <h2>Top pages</h2>
-                            </div>
-                            <small>Views</small>
-                          </div>
-                          <Breakdown
-                            result={report.pages}
-                            dimension="requestPath"
-                            unit="pageviews"
-                          />
-                        </section>
-                        <section className="report-card">
-                          <div className="card-heading">
-                            <div>
-                              <span className="eyebrow">DISCOVERY</span>
-                              <h2>Referring sites</h2>
-                            </div>
-                            <small>Views</small>
-                          </div>
-                          <Breakdown
-                            result={report.referrers}
-                            dimension="referrerHostname"
-                            unit="pageviews"
-                          />
-                        </section>
-                      </div>
-                    </>
-                  )}
+                        </div>
+                      )}
+                    </section>
+                  </div>
                   <section className="report-card outreach-card">
                     <div className="card-heading">
                       <div>
-                        <span className="eyebrow">QUALITY OVER VOLUME</span>
                         <h2>Outreach performance</h2>
                         <p>
-                          Ranked by demo requests, then engaged visits. Select a
-                          row to inspect its event reports.
+                          Neon first-party data. Select a row to inspect its
+                          activity and attribution.
                         </p>
                       </div>
                       <label>
@@ -549,18 +489,23 @@ export function Dashboard({
                             setSelected("");
                           }}
                         >
-                          <option value="channel">By channel</option>
-                          <option value="campaign">By campaign</option>
-                          <option value="referral">By referral code</option>
+                          {[
+                            "channel",
+                            "source",
+                            "medium",
+                            "campaign",
+                            "content",
+                            "referral",
+                          ].map((d) => (
+                            <option key={d} value={d}>
+                              By {d === "referral" ? "referral code" : d}
+                            </option>
+                          ))}
                         </select>
                       </label>
                     </div>
                     {Object.values(report.quality).some((r) => r.error) ? (
-                      <Empty
-                        result={Object.values(report.quality).find(
-                          (r) => r.error,
-                        )}
-                      />
+                      <Empty result={report.events} />
                     ) : (
                       <div className="table-scroll">
                         <table>
@@ -569,120 +514,298 @@ export function Dashboard({
                               <th>
                                 {dimension === "referral"
                                   ? "Referral code"
-                                  : dimension === "campaign"
-                                    ? "Campaign"
-                                    : "Channel"}
+                                  : dimension}
                               </th>
-                              <th>Opened</th>
+                              <th>Sessions</th>
                               <th>Engaged</th>
+                              <th>Product interest</th>
+                              <th>CTA</th>
                               <th>Demo page</th>
+                              <th>Form started</th>
                               <th>Demo requests</th>
                               <th>Newsletter</th>
-                              <th>Engagement rate</th>
+                              <th>Engagement</th>
+                              <th>Demo conversion</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {qualityKeys.map((key) => {
-                              const visits = qCount("visit_started", key),
-                                engaged = qCount("engaged_visit", key);
-                              return (
-                                <tr key={key} data-selected={selected === key}>
-                                  <td>
-                                    <button
-                                      disabled={!/^[a-z0-9-]{1,64}$/.test(key)}
-                                      onClick={() => {
-                                        setSelected(key);
-                                        setTab("overview");
-                                      }}
-                                    >
-                                      {dimension === "referral"
-                                        ? key
-                                        : label(key)}{" "}
-                                      <span>↗</span>
-                                    </button>
-                                  </td>
-                                  <td>{number(visits)}</td>
-                                  <td>{number(engaged)}</td>
-                                  <td>{number(qCount("demo_viewed", key))}</td>
-                                  <td>
-                                    <strong>
-                                      {number(qCount("demo_submitted", key))}
-                                    </strong>
-                                  </td>
-                                  <td>
+                            {qualityKeys.map((key) => (
+                              <tr key={key} data-selected={selected === key}>
+                                <td>
+                                  <button onClick={() => setSelected(key)}>
+                                    {label(key)} ↗
+                                  </button>
+                                </td>
+                                <td>{number(qCount("visit_started", key))}</td>
+                                {[
+                                  "engaged_visit",
+                                  "product_interest",
+                                  "demo_cta_clicked",
+                                  "demo_viewed",
+                                  "demo_form_started",
+                                ].map((n) => (
+                                  <td key={n}>{number(qCount(n, key))}</td>
+                                ))}
+                                <td>
+                                  <strong>
                                     {number(
-                                      qCount("newsletter_submitted", key),
+                                      qCount("demo_submitted", key, "requests"),
                                     )}
-                                  </td>
-                                  <td>
-                                    {visits
-                                      ? `${((engaged / visits) * 100).toFixed(0)}%`
-                                      : "—"}
-                                  </td>
-                                </tr>
-                              );
-                            })}
+                                  </strong>
+                                </td>
+                                <td>
+                                  {number(
+                                    qCount(
+                                      "newsletter_submitted",
+                                      key,
+                                      "requests",
+                                    ),
+                                  )}
+                                </td>
+                                <td>
+                                  {rate(
+                                    qCount("engaged_visit", key),
+                                    qCount("visit_started", key),
+                                  )}
+                                </td>
+                                <td>
+                                  {rate(
+                                    qCount("demo_submitted", key),
+                                    qCount("visit_started", key),
+                                  )}
+                                </td>
+                              </tr>
+                            ))}
                           </tbody>
                         </table>
                         {!qualityKeys.length && (
-                          <Empty text="Share a campaign link to start comparing outreach." />
+                          <Empty text="No activity in this period. Share a campaign or referral link to begin." />
                         )}
                       </div>
                     )}
                     <div className="table-note">
-                      <span>ⓘ</span> A unique link identifies the link and
-                      attributed visit, not conclusively a person. Forwarded
-                      links and scanners can create opens. Engagement is a
-                      quality signal, not proof of a human.
+                      Engagement, product interest, CTA, and funnel counts
+                      represent distinct sessions. Links can be forwarded and
+                      scanners can create opens; activity does not conclusively
+                      identify a person.
                     </div>
                   </section>
-                  <div className="two-grid">
+                  {selected && (
+                    <section className="report-card">
+                      <div className="card-heading">
+                        <h2>Captured attribution</h2>
+                        <span className="subtle-tag">
+                          NEON · UP TO 100 COMBINATIONS
+                        </span>
+                      </div>
+                      {report.firstParty.attribution.error ? (
+                        <Empty result={report.firstParty.attribution} />
+                      ) : (
+                        <div className="table-scroll">
+                          <table>
+                            <thead>
+                              <tr>
+                                {[
+                                  "Source",
+                                  "Medium",
+                                  "Campaign",
+                                  "Content",
+                                  "Channel",
+                                  "Referral",
+                                  "Sessions",
+                                ].map((t) => (
+                                  <th key={t}>{t}</th>
+                                ))}
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {report.firstParty.attribution.rows.map(
+                                (r, i) => (
+                                  <tr key={i}>
+                                    {[
+                                      "source",
+                                      "medium",
+                                      "campaign",
+                                      "content",
+                                      "channel",
+                                      "referral",
+                                      "sessions",
+                                    ].map((k) => (
+                                      <td key={k}>{String(r[k])}</td>
+                                    ))}
+                                  </tr>
+                                ),
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+                    </section>
+                  )}
+                  <div className="three-grid">
+                    <section className="report-card">
+                      <div className="card-heading">
+                        <h2>Product interest</h2>
+                        <span className="subtle-tag">NEON</span>
+                      </div>
+                      <Breakdown
+                        result={report.products}
+                        dimension="eventData"
+                        unit="count"
+                      />
+                      <p className="card-footnote">
+                        Distinct sessions per product: links, selected tabs, and
+                        page arrivals.
+                      </p>
+                    </section>
+                    <section className="report-card">
+                      <div className="card-heading">
+                        <h2>Pages explored</h2>
+                        <span className="subtle-tag">NEON</span>
+                      </div>
+                      <Breakdown
+                        result={report.firstParty.pages}
+                        dimension="requestPath"
+                        unit="count"
+                      />
+                      <p className="card-footnote">
+                        Distinct sessions per page, captured from this release.
+                        Follows the selected outreach filter.
+                      </p>
+                    </section>
                     <section className="report-card">
                       <div className="card-heading">
                         <h2>Intent & friction</h2>
+                        <span className="subtle-tag">NEON</span>
                       </div>
-                      {eventUnavailable ? (
+                      {unavailable ? (
                         <Empty result={report.events} />
                       ) : (
                         <div className="action-metrics">
                           {[
-                            ["demo_cta_clicked", "Demo CTA engagement"],
+                            ["demo_cta_clicked", "Demo CTA sessions"],
                             ["email_intent", "Email intent"],
-                            ["newsletter_submitted", "Newsletter requests"],
-                            ["form_error", "Form failures"],
-                          ].map(([key, text]) => (
+                            ["newsletter_started", "Newsletter started"],
+                            ["newsletter_submitted", "Newsletter converted"],
+                            ["form_error", "Sessions with form failures"],
+                          ].map(([key, title]) => (
                             <div key={key}>
-                              <span>{text}</span>
+                              <span>{title}</span>
                               <strong>{number(eventCount(key))}</strong>
                             </div>
                           ))}
                         </div>
                       )}
-                      <p className="card-footnote">
-                        CTA counts are once per placement per visit. Form
-                        failures count once per form per visit; no field values
-                        or error messages are collected.
-                      </p>
-                    </section>
-                    <section className="clarity-card">
-                      <span className="eyebrow">
-                        THE STORY BEHIND THE NUMBERS
-                      </span>
-                      <h2>
-                        See where curiosity
-                        <br />
-                        turns into hesitation.
-                      </h2>
-                      <p>
-                        Use Clarity for consented session recordings and
-                        heatmaps. Filter by referral, campaign, source, or
-                        custom event to explore the behavior behind a signal.
-                      </p>
-                      <a href={clarityUrl} target="_blank" rel="noreferrer">
-                        Open Microsoft Clarity <span>↗</span>
-                      </a>
                     </section>
                   </div>
+                  <section className="report-card">
+                    <div className="card-heading">
+                      <h2>Site traffic</h2>
+                      <span className="subtle-tag">VERCEL · HOBBY</span>
+                    </div>
+                    {report.traffic.error ? (
+                      <Empty result={report.traffic} />
+                    ) : (
+                      <div className="action-metrics">
+                        <div>
+                          <span>Visitors · all traffic</span>
+                          <strong>
+                            {number(value(report.traffic.rows, "visitors"))}
+                          </strong>
+                        </div>
+                        <div>
+                          <span>Page views · all traffic</span>
+                          <strong>
+                            {number(value(report.traffic.rows, "pageviews"))}
+                          </strong>
+                        </div>
+                      </div>
+                    )}
+                    <Trend
+                      result={report.trend}
+                      since={report.since}
+                      until={report.until}
+                    />
+                    <p className="card-footnote">
+                      Vercel anonymous visitors differ from Neon sessions. These
+                      site-wide metrics do not follow outreach filters.
+                    </p>
+                  </section>
+                  <div className="two-grid">
+                    <section className="report-card">
+                      <div className="card-heading">
+                        <h2>Top pages</h2>
+                        <span className="subtle-tag">VERCEL · VIEWS</span>
+                      </div>
+                      <Breakdown
+                        result={report.pages}
+                        dimension="requestPath"
+                        unit="pageviews"
+                      />
+                    </section>
+                    <section className="report-card">
+                      <div className="card-heading">
+                        <h2>Referring sites</h2>
+                        <span className="subtle-tag">VERCEL · VIEWS</span>
+                      </div>
+                      <Breakdown
+                        result={report.referrers}
+                        dimension="referrerHostname"
+                        unit="pageviews"
+                      />
+                    </section>
+                  </div>
+                  <section className="clarity-card">
+                    <a href={clarityUrl} target="_blank" rel="noreferrer">
+                      Open Microsoft Clarity ↗
+                    </a>
+                    <p>
+                      Use Clarity for consented session recordings and heatmaps.
+                      Filter by referral, campaign, source, or custom event to
+                      explore the behavior behind a signal.
+                    </p>
+                  </section>
+                  <section className="report-card optional-pro">
+                    <div className="card-heading">
+                      <div>
+                        <h2>Optional Vercel Pro reports</h2>
+                        <p>
+                          Vendor comparisons only. All core outreach and
+                          conversion metrics above work on Hobby with Neon.
+                        </p>
+                      </div>
+                      <span className="subtle-tag">PRO / ENTERPRISE</span>
+                    </div>
+                    <div className="two-grid">
+                      {[
+                        ["engaged_visit", "Vercel engaged visits"],
+                        ["demo_submitted", "Vercel demo events"],
+                      ].map(([event, title]) => (
+                        <div key={event}>
+                          <h3>{title}</h3>
+                          {report.premium.error ? (
+                            <Empty result={report.premium} />
+                          ) : (
+                            <strong>
+                              {number(
+                                value(
+                                  report.premium.rows.filter(
+                                    (r) => r.eventName === event,
+                                  ),
+                                  "count",
+                                ),
+                              )}
+                            </strong>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <p className="card-footnote">
+                      Available automatically with an eligible Vercel plan and
+                      configured reporting token. Vendor event counts may differ
+                      from server-confirmed Neon conversions.
+                    </p>
+                  </section>
                 </div>
               )}
             </>
@@ -697,62 +820,36 @@ export function Dashboard({
             />
           )}
           {tab === "links" && (
-            <>
-              <div className="link-intro">
-                <span>01</span>
-                <p>
-                  <strong>
-                    Campaigns give you context. Codes give you continuity.
-                  </strong>
-                  <br />
-                  Use a general link for a post or campaign. Use one anonymous
-                  code per contact; manage the identity mapping and activity in
-                  the private Referral links workspace.
-                </p>
+            <section className="report-card">
+              <div className="card-heading">
+                <h1>Approved general campaign links</h1>
               </div>
-              <section className="report-card">
-                <div className="card-heading">
-                  <h2>General campaign links</h2>
-                  <span className="subtle-tag">
-                    {outreach.campaigns.length} CHANNELS
-                  </span>
-                </div>
-                <div className="link-grid">
-                  {outreach.campaigns.map((c) => (
-                    <article key={c.id}>
-                      <div>
-                        <h3>{c.label}</h3>
-                        <button onClick={() => copy(c.id, campaignUrl(c))}>
-                          {copied === c.id ? "Copied ✓" : "Copy link ↗"}
-                        </button>
-                      </div>
-                      <p>
-                        {c.source} · {c.medium} · {c.campaign}
-                      </p>
-                      <code>{campaignUrl(c)}</code>
-                    </article>
-                  ))}
-                </div>
-              </section>
-              <div className="methodology">
-                <h2>A few useful boundaries</h2>
-                <p>
-                  Use the approved UTM values in these links. Unknown values are
-                  discarded to keep names and email addresses out of analytics.
-                  To add general campaigns, update the approved campaign
-                  manifest. Individual codes are created in the Referral links
-                  workspace. Attribution lasts within a browser tab until 30
-                  minutes of inactivity, or a new explicit campaign link
-                  arrives.
-                </p>
+              <div className="link-grid">
+                {generalCampaigns.map((c) => (
+                  <article key={c.id}>
+                    <div>
+                      <h3>{c.label}</h3>
+                      <button onClick={() => copy(c.id, campaignUrl(c))}>
+                        {copied === c.id ? "Copied ✓" : "Copy link ↗"}
+                      </button>
+                    </div>
+                    <p>
+                      {c.source} · {c.medium} · {c.campaign}
+                    </p>
+                    <code>{campaignUrl(c)}</code>
+                  </article>
+                ))}
               </div>
-            </>
+              <p className="card-footnote">
+                Use these for broad outreach. For an individual introduction,
+                create a private record in Referral links. Never add contact
+                information to a URL.
+              </p>
+            </section>
           )}
           <footer className="workspace-footer">
-            <span>Audentra · Outreach intelligence</span>
-            <span>
-              Vercel quantitative analytics + Clarity behavioral analytics
-            </span>
+            <span>Audentra website analytics</span>
+            <span>Neon outreach · Vercel traffic · Clarity behavior</span>
           </footer>
         </main>
       </div>

@@ -1,6 +1,6 @@
 import ExcelJS from "exceljs";
-import outreach from "@/lib/analytics/outreach.json";
-import { campaignUrl } from "@/lib/analytics/schema";
+
+import { campaignUrl, generalCampaigns } from "@/lib/analytics/schema";
 import { referralUrl, safeSpreadsheetCell, type Referral } from "./shared";
 export const exportHeaders = [
   "Referral code",
@@ -96,7 +96,7 @@ export async function xlsxExport(referrals: Referral[]) {
     ],
     [28, 110, 24, 24, 28, 24],
   );
-  for (const c of outreach.campaigns)
+  for (const c of generalCampaigns)
     campaigns.addRow([
       c.label,
       { text: campaignUrl(c), hyperlink: campaignUrl(c) },

@@ -75,7 +75,6 @@ test("database-backed referral CRUD, opaque public metadata, durable deduplicati
       "visit_started",
       "engaged_visit",
       "product_interest",
-      "demo_submitted",
     ]) {
       const response = await request.post(
         "http://localhost:3100/api/analytics/event",
@@ -93,6 +92,7 @@ test("database-backed referral CRUD, opaque public metadata, durable deduplicati
       expect(response.status()).toBe(204);
     }
     await page.getByRole("button", { name: "Refresh", exact: false }).click();
+    await expect(row.locator("td").nth(4)).toHaveText("1");
     await row.getByRole("button", { name: "Edit", exact: true }).click();
     await expect(page.getByText("1 visits", { exact: true })).toBeVisible();
     await expect(page.getByText("Products explored: edward")).toBeVisible();

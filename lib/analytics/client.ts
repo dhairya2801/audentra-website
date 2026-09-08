@@ -1,5 +1,5 @@
 "use client";
-import outreach from "./outreach.json";
+import { channelFor, conversions } from "./collection";
 import { track } from "@vercel/analytics";
 import {
   attributionFromUrl,
@@ -109,6 +109,20 @@ export function attributionForForm(): string {
     return "";
   }
 }
+export function analyticsForForm(): string {
+  try {
+    if (!enabled || privacyOptOut()) return "";
+    const v = visit();
+    return JSON.stringify({
+      tracking: true,
+      page: safePath(location.pathname),
+      visit_id: v.id,
+      attribution: v.attribution,
+    });
+  } catch {
+    return "";
+  }
+}
 export function emit(name: EventName, detail = "", once = true) {
   try {
     if (
@@ -132,7 +146,12 @@ export function emit(name: EventName, detail = "", once = true) {
       "link",
       "email",
     ];
-    const safeDetail = allowedDetails.includes(detail) ? detail : "none";
+    const safeDetail =
+      name === "page_viewed"
+        ? safePath(location.pathname)!
+        : allowedDetails.includes(detail)
+          ? detail
+          : "none";
     const v = visit();
     if (name !== "visit_started" && !v.seen.includes("visit_started:none"))
       emit("visit_started");
@@ -142,29 +161,23 @@ export function emit(name: EventName, detail = "", once = true) {
     if (once && v.seen.includes(key)) return;
     v.seen.push(key);
     save();
-    const channel =
-      outreach.campaigns.find(
-        (c) =>
-          c.source === v.attribution.source &&
-          c.medium === v.attribution.medium &&
-          c.content === v.attribution.content,
-      )?.id || v.attribution.source;
-    if (v.attribution.referral !== "none") {
-      // A separate first-party ledger powers referral activity. No private record
-      // fields or attribution metadata are accepted by this endpoint.
+    const channel = channelFor(v.attribution);
+    if (!conversions.includes(name)) {
       void fetch("/api/analytics/event", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         keepalive: true,
         body: JSON.stringify({
-          code: v.attribution.referral,
           visit_id: v.id,
           event_name: name,
           page: location.pathname,
           detail: safeDetail,
+          attribution: v.attribution,
         }),
       }).catch(() => {});
     }
+    // Page reach is first-party only; Vercel already collects automatic page views.
+    if (name === "page_viewed") return;
     track(name, {
       ...v.attribution,
       channel,

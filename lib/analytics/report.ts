@@ -1,5 +1,5 @@
 import "server-only";
-import { events } from "./schema";
+import { firstPartyReport } from "./first-party-report";
 export type Row = Record<string, string | number | null>;
 export type QueryResult = { rows: Row[]; error?: string };
 export type Report = {
@@ -9,15 +9,20 @@ export type Report = {
   dimension: string;
   selected: string;
   traffic: QueryResult;
-  previous: QueryResult;
   trend: QueryResult;
   pages: QueryResult;
   referrers: QueryResult;
   events: QueryResult;
   products: QueryResult;
   quality: Record<string, QueryResult>;
+  premium: QueryResult;
+  firstParty: {
+    summary: QueryResult;
+    trend: QueryResult;
+    pages: QueryResult;
+    attribution: QueryResult;
+  };
 };
-const quote = (s: string) => `'${s.replaceAll("'", "''")}'`;
 export function parseRows(payload: unknown): Row[] {
   if (!payload || typeof payload !== "object" || !("data" in payload))
     throw new Error("Unexpected API response");
@@ -106,60 +111,20 @@ export async function getReport(
 ): Promise<Report> {
   const now = new Date(),
     end = new Date(now);
-  end.setUTCHours(23, 59, 59, 999);
+
   const start = new Date(now);
   start.setUTCHours(0, 0, 0, 0);
   start.setUTCDate(start.getUTCDate() - days + 1);
-  const previousEnd = new Date(start.getTime() - 1),
-    previousStart = new Date(start.getTime() - days * 86400000);
   const since = start.toISOString(),
     until = end.toISOString();
-  const segment = selected
-    ? `eventData/${dimension} eq ${quote(selected)}`
-    : "";
-  const eventFilter = (name: string) =>
-    `eventName eq ${quote(name)}${segment ? ` and ${segment}` : ""}`;
-  const qualityEvents = [
-    "visit_started",
-    "engaged_visit",
-    "demo_viewed",
-    "demo_submitted",
-    "newsletter_submitted",
-  ];
-  const queries = await Promise.all([
+  const [neon, traffic, trend, pages, referrers, premium] = await Promise.all([
+    firstPartyReport(since, until, dimension, selected),
     query("visits", since, until, "environment"),
-    query(
-      "visits",
-      previousStart.toISOString(),
-      previousEnd.toISOString(),
-      "environment",
-    ),
     query("visits", since, until, "day"),
     query("visits", since, until, "requestPath"),
     query("visits", since, until, "referrerHostname"),
-    query(
-      "events",
-      since,
-      until,
-      "eventName",
-      `eventName in (${events.map(quote).join(",")})${segment ? ` and ${segment}` : ""}`,
-    ),
-    query(
-      "events",
-      since,
-      until,
-      "eventData/detail",
-      eventFilter("product_interest"),
-    ),
-    ...qualityEvents.map((name) =>
-      query(
-        "events",
-        since,
-        until,
-        `eventData/${dimension}`,
-        `eventName eq ${quote(name)}`,
-      ),
-    ),
+    // Optional comparison only; no first-party card depends on this paid dataset.
+    query("events", since, until, "eventName"),
   ]);
   return {
     since,
@@ -167,15 +132,11 @@ export async function getReport(
     fetchedAt: now.toISOString(),
     dimension,
     selected,
-    traffic: queries[0],
-    previous: queries[1],
-    trend: queries[2],
-    pages: queries[3],
-    referrers: queries[4],
-    events: queries[5],
-    products: queries[6],
-    quality: Object.fromEntries(
-      qualityEvents.map((e, i) => [e, queries[7 + i]]),
-    ),
+    traffic,
+    trend,
+    pages,
+    referrers,
+    premium,
+    ...neon,
   };
 }

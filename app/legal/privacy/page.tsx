@@ -4,7 +4,8 @@ import { Btn, PageHero, Section } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Privacy",
-  description: "How Audentra approaches privacy, and how to reach us with questions.",
+  description:
+    "How Audentra approaches privacy, and how to reach us with questions.",
 };
 
 export default function PrivacyPage() {
@@ -20,74 +21,93 @@ export default function PrivacyPage() {
         <div className="au-container--narrow">
           <div
             className="au-card"
-            style={{ padding: "1.25rem 1.5rem", background: "var(--au-paper)", marginBottom: "2.5rem" }}
+            style={{
+              padding: "1.25rem 1.5rem",
+              background: "var(--au-paper)",
+              marginBottom: "2.5rem",
+            }}
           >
             <strong style={{ fontSize: "0.9375rem" }}>Placeholder page.</strong>
             <p className="au-body" style={{ marginTop: "0.35rem" }}>
-              Audentra&rsquo;s full privacy policy is being finalized with counsel. This page states
-              our approach; it is not the binding policy and should be replaced before launch.
+              Audentra&rsquo;s full privacy policy is being finalized with
+              counsel. This page states our approach; it is not the binding
+              policy and should be replaced before launch.
             </p>
           </div>
 
           <h2 className="au-h3">Our approach</h2>
           <p className="au-body">
-            Audentra processes institutional information on behalf of the colleges and universities we
-            work with. Institutions remain the controllers of their data; Audentra acts as a processor
-            under the terms of the agreement with each institution.
+            Audentra processes institutional information on behalf of the
+            colleges and universities we work with. Institutions remain the
+            controllers of their data; Audentra acts as a processor under the
+            terms of the agreement with each institution.
           </p>
 
           <h2 className="au-h3" style={{ marginTop: "2rem" }}>
             Institutional data
           </h2>
           <p className="au-body">
-            Each institution&rsquo;s information remains logically separated. Access within the
-            platform is role-based, and relevant actions can be tracked and reviewed. Audentra does not
-            sell institutional or student information.
+            Each institution&rsquo;s information remains logically separated.
+            Access within the platform is role-based, and relevant actions can
+            be tracked and reviewed. Audentra does not sell institutional or
+            student information.
           </p>
 
           <h2 className="au-h3" style={{ marginTop: "2rem" }}>
             Website information
           </h2>
           <p className="au-body">
-            Information submitted through forms on this website is used to respond to your inquiry and
-            to communicate about Audentra. You can ask us to remove it at any time.
+            Information submitted through forms on this website is used to
+            respond to your inquiry and to communicate about Audentra. You can
+            ask us to remove it at any time.
           </p>
 
-          <h2 className="au-h3" style={{ marginTop: "2rem" }}>Marketing website analytics</h2>
+          <h2 className="au-h3" style={{ marginTop: "2rem" }}>
+            Marketing website analytics
+          </h2>
           <p className="au-body">
-            On our public marketing website, we use Vercel Web Analytics to measure page visits,
-            referral sources, product interest, and walkthrough or newsletter requests. Approved
-            campaign labels and anonymous referral codes help us understand outreach. A referral
-            code identifies a link, not necessarily the person using it. We do not include names,
-            email addresses, institution names, or form text in analytics events.
+            On our public marketing website, we use Vercel Web Analytics for
+            aggregate traffic, and our own database for outreach, product
+            interest, and walkthrough or newsletter requests. Approved campaign
+            labels and anonymous referral codes help us understand outreach. A
+            referral code identifies a link, not necessarily the person using
+            it. We do not include names, email addresses, institution names, or
+            form text in analytics events.
           </p>
           <p className="au-body" style={{ marginTop: "1rem" }}>
-            With your permission, Microsoft Clarity collects behavioral information such as clicks,
-            scrolling, heatmaps, and masked session recordings. Forms are masked. Clarity may use
-            analytics cookies after consent; advertising storage is denied. Use Analytics preferences
-            in the footer to allow or decline analytics and withdraw recording consent. We also
-            honor Do Not Track and Global Privacy Control browser signals. Basic traffic analytics
-            can operate before a choice is made; declining disables our analytics integration.
+            With your permission, Microsoft Clarity collects behavioral
+            information such as clicks, scrolling, heatmaps, and masked session
+            recordings. Forms are masked. Clarity may use analytics cookies
+            after consent; advertising storage is denied. Use Analytics
+            preferences in the footer to allow or decline analytics and withdraw
+            recording consent. We also honor Do Not Track and Global Privacy
+            Control browser signals. Basic traffic analytics can operate before
+            a choice is made; declining disables our analytics integration.
           </p>
           <p className="au-body" style={{ marginTop: "1rem" }}>
-            Outreach attribution is kept in browser-tab storage and resets after 30 minutes of
-            inactivity or a new campaign link. Your analytics preference is stored in your browser.
-            For referral links, we also keep anonymous visit milestones and server-recorded activity
-            times in our own database. The random browser-tab visit identifier is not sent to Vercel
-            or Clarity. Private outreach contact details, notes, and statuses remain in our
-            password-protected team workspace and its database.
-            Attribution may accompany your contact request so our team can understand its context.
-            We do not create a persistent marketing identity or connect this tracking to university
-            student or staff portals. Analytics reporting and retention follow the active Vercel
-            and Microsoft Clarity service settings. Contact hello@audentra.ai with privacy questions.
+            Outreach attribution is kept in browser-tab storage and resets after
+            30 minutes of inactivity or a new campaign link. Your analytics
+            preference is stored in your browser. For campaign, referral, and
+            direct visits, we keep approved source, medium, campaign,
+            content/channel, anonymous visit milestones, and activity times in
+            our own database. Accepted form requests are recorded server-side
+            when analytics is enabled. The random browser-tab visit identifier
+            is not sent to Vercel or Clarity. Private outreach contact details,
+            notes, and statuses remain in our password-protected team workspace
+            and its database. Attribution may accompany your contact request so
+            our team can understand its context. We do not create a persistent
+            marketing identity or connect this tracking to university student or
+            staff portals. Analytics reporting and retention follow the active
+            Vercel and Microsoft Clarity service settings. Contact
+            hello@audentra.ai with privacy questions.
           </p>
 
           <h2 className="au-h3" style={{ marginTop: "2rem" }}>
             Questions
           </h2>
           <p className="au-body">
-            For data protection agreements, subprocessor lists, or a specific privacy questionnaire,
-            contact us and we will respond in writing.
+            For data protection agreements, subprocessor lists, or a specific
+            privacy questionnaire, contact us and we will respond in writing.
           </p>
 
           <div className="au-btn-row">

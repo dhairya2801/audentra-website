@@ -26,6 +26,7 @@ export const products = [
   "enrollment-readiness",
 ];
 export const events = [
+  "page_viewed",
   "visit_started",
   "engaged_visit",
   "product_interest",
@@ -172,3 +173,22 @@ export function campaignUrl(
     url.searchParams.set("r", referral);
   return url.href;
 }
+
+// Keep historical conventions recognized, while offering only four current links.
+export const generalCampaigns = outreach.campaigns
+  .filter((c) =>
+    ["linkedin-post", "whatsapp", "email-outreach", "founder-network"].includes(
+      c.id,
+    ),
+  )
+  .map((c) => ({
+    ...c,
+    label:
+      c.id === "linkedin-post"
+        ? "LinkedIn"
+        : c.id === "email-outreach"
+          ? "Email"
+          : c.id === "founder-network"
+            ? "Founder Network"
+            : c.label,
+  }));

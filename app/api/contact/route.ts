@@ -1,4 +1,10 @@
-import { sanitizeAttribution } from "@/lib/analytics/schema";
+import {
+  safeSnapshot,
+  formAnalytics,
+  botPattern,
+} from "@/lib/analytics/collection";
+import { after } from "next/server";
+import { randomUUID } from "node:crypto";
 
 const CONTACT_EMAIL = "hello@audentra.ai";
 
@@ -97,7 +103,7 @@ export async function POST(request: Request) {
     if (raw)
       attributionText =
         "\n\nOutreach attribution (link context, not identity):\n" +
-        Object.entries({ ...sanitizeAttribution(JSON.parse(raw)), referral: /^[a-f0-9]{6,10}$/.test(JSON.parse(raw).referral || "") ? JSON.parse(raw).referral : "none" })
+        Object.entries(safeSnapshot(JSON.parse(raw)))
           .map(([key, value]) => `${key}: ${value}`)
           .join("\n");
   } catch {
@@ -162,5 +168,37 @@ export async function POST(request: Request) {
     );
   }
 
+  // The accepted provider response is the conversion authority. Analytics stays
+  // outside the delivery response, receives no form values, and honors opt-out.
+  try {
+    const context = formAnalytics(
+      JSON.parse(readField(formData, "analytics", 1200) || "null"),
+    );
+    if (
+      context &&
+      request.headers.get("dnt") !== "1" &&
+      request.headers.get("sec-gpc") !== "1" &&
+      !botPattern.test(request.headers.get("user-agent") || "")
+    ) {
+      after(async () => {
+        try {
+          const { recordEvent } = await import("@/lib/analytics/ledger");
+          await recordEvent({
+            ...context,
+            event_name: isNewsletter
+              ? "newsletter_submitted"
+              : "demo_submitted",
+            page: context.page || (isNewsletter ? "/" : "/demo"),
+            detail: "none",
+            submission_id: validId ? submissionId : randomUUID(),
+          });
+        } catch {
+          console.error("Accepted contact analytics could not be recorded.");
+        }
+      });
+    }
+  } catch {
+    /* Optional analytics must not affect an accepted contact request. */
+  }
   return Response.json({ ok: true, accepted: true });
 }

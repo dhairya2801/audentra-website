@@ -60,6 +60,7 @@ export function MarketingAnalytics({
     function view() {
       if (document.visibilityState !== "visible") return;
       emit("visit_started");
+      emit("page_viewed");
       if (path === "/demo") emit("demo_viewed");
       const product = path?.split("/").at(-1);
       if (product && products.includes(product))
