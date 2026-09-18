@@ -173,19 +173,16 @@ export default function HomePage() {
           <div className="au-hero__inner">
             <div>
               <span className="au-eyebrow au-eyebrow--light">
-                Institutional Intelligence for Higher Education
+                Purpose-built for higher education
               </span>
               <h1 className="au-display">
-                Turn student intent
-                <br />
-                into <span className="au-gradient-text">enrollment.</span>
+                Institutional Intelligence for{" "}
+                <span className="au-gradient-text">What&rsquo;s Next.</span>
               </h1>
               <p className="au-lede">
-                Audentra gives enrollment teams one current view of each student&rsquo;s progress,
-                highlights where timely support can strengthen momentum, and coordinates the next
-                action across Admissions, Financial Aid and Student Accounts.
+                Your institution already has the answers. We connect the knowledge across your campus
+                to uncover insights, increase capacity, and empower intelligent action.
               </p>
-              <p className="au-hero__tagline">Institutional intelligence for what&rsquo;s next.</p>
               <div className="au-btn-row">
                 <Btn href="/demo" icon={<ArrowRight />}>
                   See Audentra in Action

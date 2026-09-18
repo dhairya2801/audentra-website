@@ -2227,16 +2227,6 @@ a.au-list__row:hover .au-list__go {
    ========================================================================== */
 
 /* Three understated confidence lines under the hero copy. */
-/* The category line, stated once under the hero paragraph. */
-.au-hero__tagline {
-  margin: 1.25rem 0 0;
-  color: #fff;
-  font-family: var(--au-font-display);
-  font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-}
-
 .au-hero__points {
   display: flex;
   flex-wrap: wrap;
