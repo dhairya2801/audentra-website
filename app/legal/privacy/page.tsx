@@ -58,8 +58,11 @@ export default function PrivacyPage() {
           </h2>
           <p className="au-body">
             Information submitted through forms on this website is used to
-            respond to your inquiry and to communicate about Audentra. You can
-            ask us to remove it at any time.
+            respond to your inquiry. Demo and pilot requests are stored securely
+            and, when our HubSpot integration is enabled, sent to HubSpot for
+            follow-up. A demo request does not subscribe you to marketing
+            emails. Newsletter requests are handled separately. You can ask us
+            to remove your information at any time.
           </p>
 
           <h2 className="au-h3" style={{ marginTop: "2rem" }}>
@@ -85,6 +88,15 @@ export default function PrivacyPage() {
             a choice is made; declining disables our analytics integration.
           </p>
           <p className="au-body" style={{ marginTop: "1rem" }}>
+            When enabled, HubSpot website tracking also requires your
+            permission. Its cookie can connect your website visits with a demo
+            request. With that permission, campaign labels, the referring site,
+            and the link that led to the form may accompany your request.
+            Declining or withdrawing analytics disables this tracking; you can
+            still submit a request. We do not send your form entries to general
+            analytics.
+          </p>
+          <p className="au-body" style={{ marginTop: "1rem" }}>
             Outreach attribution is kept in browser-tab storage and resets after
             30 minutes of inactivity or a new campaign link. Your analytics
             preference is stored in your browser. For campaign, referral, and
@@ -95,11 +107,12 @@ export default function PrivacyPage() {
             is not sent to Vercel or Clarity. Private outreach contact details,
             notes, and statuses remain in our password-protected team workspace
             and its database. Attribution may accompany your contact request so
-            our team can understand its context. We do not create a persistent
-            marketing identity or connect this tracking to university student or
-            staff portals. Analytics reporting and retention follow the active
-            Vercel and Microsoft Clarity service settings. Contact
-            hello@audentra.ai with privacy questions.
+            our team can understand its context. Consented HubSpot tracking may
+            connect website activity to your contact record. We do not connect
+            website tracking to university student or staff portals. Analytics
+            reporting and retention follow the active Vercel, Microsoft Clarity,
+            and HubSpot service settings. Contact hello@audentra.ai with privacy
+            questions.
           </p>
 
           <h2 className="au-h3" style={{ marginTop: "2rem" }}>

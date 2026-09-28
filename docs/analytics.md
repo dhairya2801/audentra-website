@@ -30,9 +30,9 @@ Vercel automatically records page views with device/browser/country and native r
 | `demo_cta_clicked` | Internal link to `/demo`; once per placement per visit (`header`, `footer`, `hero`, `body`) | Compare where walkthrough intent is generated |
 | `demo_viewed` | `/demo` visible; once per visit | Walkthrough funnel milestone |
 | `demo_form_started` | First form change; once per visit | Distinguish viewing from beginning a request |
-| `demo_submitted` | Contact API receives successful Resend acceptance; `after()` records a first-party event deduplicated by submission ID | Count accepted requests without relying on a follow-up browser event |
+| `demo_submitted` | In durable mode, private request + delivery jobs + conversion commit in one Postgres transaction, deduplicated by submission ID. Legacy mode counts Resend acceptance. | Count accepted requests without claiming HubSpot delivery or a booked meeting |
 | `newsletter_started` | First newsletter form change; once per visit | Newsletter intent |
-| `newsletter_submitted` | Same server-side acceptance and submission-ID deduplication as demos | Lower-intent conversion, separate from demo requests |
+| `newsletter_submitted` | Same server-side acceptance and submission-ID deduplication as demos; email-only delivery | Lower-intent conversion, separate from demo requests |
 | `form_error` | Contact API/network failure; once per form type per visit | Detect funnel friction without transmitting error text |
 | `email_intent` | A `mailto:` link selected; once per visit | Contact intent only, never presented as an email sent |
 
@@ -41,6 +41,15 @@ Each Vercel custom event has exactly these eight properties: `source`, `medium`,
 All eligible browser milestones are sent asynchronously to the first-party ledger with their random tab-visit ID and sanitized attribution snapshot, including visits with no referral code. Conversions are written by the contact handler instead of the public collector. The browser still mirrors accepted conversions to optional Vercel and consented Clarity; those mirrors are not the dashboard conversion authority. That ID never goes to Vercel or Clarity. The same event names are sent to Clarity only when its consented recorder is loaded. Clarity gets `source`, `medium`, `campaign`, `content`, and `referral` custom tags, plus `product` on interest. There is no `identify` call, email hash, IP-based identity, persistent person ID, or cross-device matching.
 
 ## Attribution and outreach links
+
+HubSpot integration details are in [hubspot.md](hubspot.md). HubSpot loads only
+after explicit analytics consent and verified account configuration. Existing
+Vercel/Clarity events retain their controlled vocabulary. Private lead campaign
+context and the consented HubSpot cookie never enter those events. The same
+submission UUID correlates the private outbox, accepted conversion, and HubSpot
+form submission. Delivery retries do not emit another conversion. No meeting
+booking event exists; the dashboard's manually maintained `meeting-booked`
+outreach status remains a separate operator-entered status.
 
 `lib/analytics/outreach.json` contains the one-time seed of 20 random six-character codes and the approved general campaign conventions. The database is the source of truth after migration. New codes are generated with cryptographic randomness by the authenticated dashboard (10 hexadecimal characters), with database uniqueness checks. Migration inserts missing seed codes only and never overwrites assigned records. Referral example: `https://audentra.ai/?r=CODE`. Newly generated codes are resolved against the database without redeploying. Unknown codes are ignored; initial seeded codes remain a safe fallback if metadata resolution is temporarily unavailable. Contacts belong in the dashboard; exports of them are sensitive.
 

@@ -8,11 +8,14 @@ import {
   emit,
 } from "@/lib/analytics/client";
 import { ArrowRight, Check } from "./icons";
+import { leadContextForForm } from "@/lib/contact/client";
 
 type SubmitState = "idle" | "submitting" | "success" | "error";
 
 export function DemoForm() {
   const submissionId = useRef<string | null>(null);
+  const busy = useRef(false);
+  const [queued, setQueued] = useState(false);
   const [state, setState] = useState<SubmitState>("idle");
   const [error, setError] = useState("");
   const confirmationRef = useRef<HTMLDivElement>(null);
@@ -23,10 +26,12 @@ export function DemoForm() {
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (state === "submitting" || state === "success") return;
+    if (busy.current || state === "success") return;
+    busy.current = true;
     const payload = new FormData(event.currentTarget);
     payload.set("attribution", attributionForForm());
     payload.set("analytics", analyticsForForm());
+    payload.set("leadContext", leadContextForForm());
     payload.set("submissionId", (submissionId.current ||= crypto.randomUUID()));
     setState("submitting");
     setError("");
@@ -39,11 +44,13 @@ export function DemoForm() {
       const result = (await response.json()) as {
         error?: string;
         accepted?: boolean;
+        delivery?: string;
       };
 
       if (!response.ok) throw new Error(result.error);
 
       setState("success");
+      setQueued(result.delivery === "queued");
       if (result.accepted) emit("demo_submitted");
     } catch (submissionError) {
       setState("error");
@@ -53,6 +60,8 @@ export function DemoForm() {
           ? submissionError.message
           : "We could not send your request. Email us at hello@audentra.ai.",
       );
+    } finally {
+      busy.current = false;
     }
   }
 
@@ -73,8 +82,9 @@ export function DemoForm() {
         </span>
         <h2 className="au-h3">Thanks — we&rsquo;ll be in touch.</h2>
         <p className="au-body">
-          A member of the Audentra team will follow up within one business day
-          to schedule a conversation around your institution&rsquo;s workflows.
+          {queued
+            ? "Your request has been saved and is awaiting delivery to our team. You do not need to submit it again."
+            : "A member of the Audentra team will follow up to schedule a conversation around your institution’s workflows."}
         </p>
       </div>
     );
@@ -88,6 +98,7 @@ export function DemoForm() {
       method="post"
       onSubmit={submit}
       data-clarity-mask="true"
+      data-hs-do-not-collect="true"
       onChange={() => {
         submissionId.current = null;
         emit("demo_form_started");

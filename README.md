@@ -232,6 +232,10 @@ the production domain differs from `www.audentra.ai`; it feeds metadata,
 
 ## Marketing analytics and team dashboard
 
+Demo/pilot HubSpot delivery, private durable storage, retry operations, and the
+remaining administrator setup are documented in [docs/hubspot.md](docs/hubspot.md).
+The integration is disabled until its server-side configuration is complete.
+
 See [docs/analytics.md](docs/analytics.md) for the architecture, exact events, privacy/attribution rules, environment variables, account prerequisites, and verification commands. The `audentra-website` and `audentra-analytics` Vercel projects use this repository; only the latter sets `AUDENTRA_APP=analytics`.
 
 The private dashboard and its Postgres database are the source of truth for individual referral codes, contacts, organizations, notes, statuses, and activity. Run `npm run outreach:migrate` once to initialize the database and seed 20 unassigned codes. Run `npm run outreach:workbook` to export the current database to `deliverables/audentra-outreach-links.xlsx`, or use the authenticated dashboard CSV/Excel export buttons. Exports are snapshots; editing an export does not update the database.

@@ -7,20 +7,24 @@ import {
   emit,
 } from "@/lib/analytics/client";
 import { ArrowRight } from "./icons";
+import { leadContextForForm } from "@/lib/contact/client";
 
 type SubmitState = "idle" | "submitting" | "success" | "error";
 
 export function NewsletterForm() {
   const submissionId = useRef<string | null>(null);
+  const busy = useRef(false);
   const [state, setState] = useState<SubmitState>("idle");
   const [message, setMessage] = useState("");
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (state === "submitting" || state === "success") return;
+    if (busy.current || state === "success") return;
+    busy.current = true;
     const payload = new FormData(event.currentTarget);
     payload.set("attribution", attributionForForm());
     payload.set("analytics", analyticsForForm());
+    payload.set("leadContext", leadContextForForm());
     payload.set("submissionId", (submissionId.current ||= crypto.randomUUID()));
     const form = event.currentTarget;
     setState("submitting");
@@ -34,6 +38,7 @@ export function NewsletterForm() {
       const result = (await response.json()) as {
         error?: string;
         accepted?: boolean;
+        delivery?: string;
       };
 
       if (!response.ok) throw new Error(result.error);
@@ -41,7 +46,11 @@ export function NewsletterForm() {
       form.reset();
       setState("success");
       if (result.accepted) emit("newsletter_submitted");
-      setMessage("Thanks — we'll keep you posted.");
+      setMessage(
+        result.delivery === "queued"
+          ? "Thanks — your newsletter request is saved and awaiting delivery to our team."
+          : "Thanks — we'll keep you posted.",
+      );
     } catch (error) {
       setState("error");
       emit("form_error", "newsletter");
@@ -50,6 +59,8 @@ export function NewsletterForm() {
           ? error.message
           : "We could not send your request. Email us at hello@audentra.ai.",
       );
+    } finally {
+      busy.current = false;
     }
   }
 
@@ -57,6 +68,7 @@ export function NewsletterForm() {
     <div className="au-newsform-wrap">
       <form
         data-clarity-mask="true"
+        data-hs-do-not-collect="true"
         onChange={() => {
           submissionId.current = null;
           emit("newsletter_started");
