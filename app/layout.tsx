@@ -1,3 +1,4 @@
+import { MarketingOnly } from "@/components/marketing-only";
 import { MarketingAnalytics } from "@/components/analytics/marketing-analytics";
 import "./dashboard.css";
 import type { Metadata } from "next";
@@ -77,9 +78,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <a className="au-skip" href="#main">
               Skip to main content
             </a>
-            <SiteHeader />
+            <MarketingOnly>
+              <SiteHeader />
+            </MarketingOnly>
             <main id="main">{children}</main>
-            <SiteFooter />
+            <MarketingOnly>
+              <SiteFooter />
+            </MarketingOnly>
             <MarketingAnalytics
               production={
                 process.env.VERCEL_ENV === "production" ||

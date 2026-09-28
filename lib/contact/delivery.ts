@@ -1,3 +1,4 @@
+import { conference } from "../conference/config";
 import type { Lead } from "./model";
 import {
   assignOwner,
@@ -10,26 +11,37 @@ import type { ContactStore, Job } from "./store";
 
 export function emailPayload(lead: Lead) {
   const newsletter = lead.source === "newsletter";
-  const text = newsletter
-    ? `Newsletter request\nEmail: ${lead.email}`
-    : [
-        lead.pilot ? "Pilot request" : "Demo request",
+  const text = lead.conference
+    ? [
+        `Conference signup: ${conference.name}`,
         `Name: ${lead.firstName} ${lead.lastName}`,
-        `Work email: ${lead.email}`,
+        `Email: ${lead.email}`,
         `Institution: ${lead.institution}`,
-        `Job title: ${lead.title || "Not provided"}`,
-        `Primary interest: ${lead.interest}`,
-        `Interested in a pilot: ${lead.pilot ? "Yes" : "No"}`,
-        "What they would like to improve:",
-        lead.goal || "Not provided",
-      ].join("\n");
+        `Giveaway interest: ${lead.conference.offer}`,
+        `Demo requested on this submission: ${lead.conference.demoRequested ? "Yes — please follow up" : "No"}`,
+      ].join("\n")
+    : newsletter
+      ? `Newsletter request\nEmail: ${lead.email}`
+      : [
+          lead.pilot ? "Pilot request" : "Demo request",
+          `Name: ${lead.firstName} ${lead.lastName}`,
+          `Work email: ${lead.email}`,
+          `Institution: ${lead.institution}`,
+          `Job title: ${lead.title || "Not provided"}`,
+          `Primary interest: ${lead.interest}`,
+          `Interested in a pilot: ${lead.pilot ? "Yes" : "No"}`,
+          "What they would like to improve:",
+          lead.goal || "Not provided",
+        ].join("\n");
   return {
     from: process.env.CONTACT_FROM_EMAIL,
     to: ["hello@audentra.ai"],
     reply_to: lead.email,
-    subject: newsletter
-      ? "New Audentra newsletter request"
-      : `New Audentra ${lead.pilot ? "pilot" : "demo"} request`,
+    subject: lead.conference
+      ? `Audentra — ${conference.name}${lead.conference.demoRequested ? " — Demo requested" : " — Coffee / swag signup"}`
+      : newsletter
+        ? "New Audentra newsletter request"
+        : `New Audentra ${lead.pilot ? "pilot" : "demo"} request`,
     text: `${text}\n\nSubmission ID: ${lead.id}\nSubmission page: ${lead.page}\n${lead.attribution ? `Request attribution: ${JSON.stringify(lead.attribution)}\n` : ""}${newsletter ? "" : "Follow-up: Dr. Zaibis (zaibis.munozisme@vekend.com).\n"}Website acceptance confirmed. HubSpot delivery is tracked separately.`,
   };
 }

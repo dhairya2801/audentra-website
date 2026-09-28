@@ -141,6 +141,7 @@ export function emit(name: EventName, detail = "", once = true) {
       "body",
       "demo",
       "newsletter",
+      "conference",
       "tab",
       "page",
       "link",

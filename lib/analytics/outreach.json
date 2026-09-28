@@ -109,6 +109,22 @@
       "medium": "social",
       "campaign": "founder-outreach",
       "content": "post"
+    },
+    {
+      "id": "aacrao-booth-signage",
+      "label": "AACRAO Baltimore booth signage",
+      "source": "aacrao",
+      "medium": "qr",
+      "campaign": "aacrao-baltimore",
+      "content": "booth-signage"
+    },
+    {
+      "id": "aacrao-handout",
+      "label": "AACRAO Baltimore handout",
+      "source": "aacrao",
+      "medium": "qr",
+      "campaign": "aacrao-baltimore",
+      "content": "handout"
     }
   ]
 }

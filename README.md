@@ -241,3 +241,5 @@ See [docs/analytics.md](docs/analytics.md) for the architecture, exact events, p
 The private dashboard and its Postgres database are the source of truth for individual referral codes, contacts, organizations, notes, statuses, and activity. Run `npm run outreach:migrate` once to initialize the database and seed 20 unassigned codes. Run `npm run outreach:workbook` to export the current database to `deliverables/audentra-outreach-links.xlsx`, or use the authenticated dashboard CSV/Excel export buttons. Exports are snapshots; editing an export does not update the database.
 
 Core outreach, session, product-interest, and conversion reports use Neon on Hobby. Only site-wide traffic metrics use Vercel; optional Pro comparisons stay at the bottom. See the analytics guide for historical coverage and the additive `scripts/migrations/002-first-party-analytics.sql` migration.
+
+Conference page, giveaway configuration, QR exports and operations: [AACRAO Baltimore](docs/conference.md).

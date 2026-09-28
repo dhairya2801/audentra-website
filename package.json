@@ -2,7 +2,7 @@
   "name": "audentra-landing-page",
   "version": "0.1.0",
   "private": true,
-  "description": "Audentra marketing website — the Higher Education Intelligence Platform.",
+  "description": "Audentra marketing website \u2014 the Higher Education Intelligence Platform.",
   "engines": {
     "node": ">=22.13.0 <23"
   },
@@ -18,7 +18,8 @@
     "outreach:migrate": "node scripts/migrate-outreach.mjs",
     "contact:migrate": "node scripts/migrate-contact.mjs",
     "contact:status": "node scripts/contact-ops.mjs",
-    "test:contact:db": "tsx --test tests/contact-db.test.ts"
+    "test:contact:db": "tsx --test tests/contact-db.test.ts",
+    "conference:qr": "tsx scripts/generate-conference-qr.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -33,13 +34,16 @@
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
     "@types/pg": "^8.23.1",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "eslint": "9.39.4",
     "eslint-config-next": "16.3.0",
+    "jsqr": "^1.4.0",
     "pg": "^8.23.0",
     "postcss": "8.5.25",
     "prettier": "^3.9.6",
+    "qrcode": "^1.5.4",
     "sharp": "0.35.3",
     "tailwindcss": "4.2.1",
     "tsx": "^4.23.13",

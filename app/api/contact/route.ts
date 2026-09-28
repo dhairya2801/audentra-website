@@ -99,7 +99,10 @@ export async function POST(request: Request) {
       const lead = parseLead(formData, request);
       if (botPattern.test(request.headers.get("user-agent") || ""))
         lead.analytics = null;
-      const config = lead.source === "newsletter" ? null : hubspotConfig();
+      const config =
+        lead.source === "newsletter" ? null : hubspotConfig(lead.source);
+      if (lead.source === "conference" && !config)
+        throw new Error("CONFERENCE_NOT_CONFIGURED");
       if (!process.env.RESEND_API_KEY || !process.env.CONTACT_FROM_EMAIL)
         throw new Error("EMAIL_NOT_CONFIGURED");
       const jobs: NewJob[] = [

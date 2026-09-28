@@ -55,9 +55,11 @@ export function contactStore(db: Database) {
             fingerprint,
             a.attribution.referral,
             a.visit_id,
-            lead.source === "newsletter"
-              ? "newsletter_submitted"
-              : "demo_submitted",
+            lead.source === "conference"
+              ? "conference_submitted"
+              : lead.source === "newsletter"
+                ? "newsletter_submitted"
+                : "demo_submitted",
             a.page || lead.page,
             a.attribution.source,
             a.attribution.medium,

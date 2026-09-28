@@ -58,11 +58,11 @@ export default function PrivacyPage() {
           </h2>
           <p className="au-body">
             Information submitted through forms on this website is used to
-            respond to your inquiry. Demo and pilot requests are stored securely
-            and, when our HubSpot integration is enabled, sent to HubSpot for
-            follow-up. A demo request does not subscribe you to marketing
-            emails. Newsletter requests are handled separately. You can ask us
-            to remove your information at any time.
+            respond to your inquiry. Demo, pilot, and event requests are stored
+            securely and, when our HubSpot integration is enabled, sent to
+            HubSpot for follow-up. A demo request does not subscribe you to
+            marketing emails. Newsletter requests are handled separately. You
+            can ask us to remove your information at any time.
           </p>
 
           <h2 className="au-h3" style={{ marginTop: "2rem" }}>

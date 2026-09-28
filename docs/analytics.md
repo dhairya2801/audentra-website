@@ -31,6 +31,8 @@ Vercel automatically records page views with device/browser/country and native r
 | `demo_viewed` | `/demo` visible; once per visit | Walkthrough funnel milestone |
 | `demo_form_started` | First form change; once per visit | Distinguish viewing from beginning a request |
 | `demo_submitted` | In durable mode, private request + delivery jobs + conversion commit in one Postgres transaction, deduplicated by submission ID. Legacy mode counts Resend acceptance. | Count accepted requests without claiming HubSpot delivery or a booked meeting |
+| `conference_started` | First conference form change | Booth signup intent, separate from demos |
+| `conference_submitted` | Conference acceptance commits with private delivery jobs; deduplicated by submission UUID | Conference signups; optional demo choice remains in HubSpot |
 | `newsletter_started` | First newsletter form change; once per visit | Newsletter intent |
 | `newsletter_submitted` | Same server-side acceptance and submission-ID deduplication as demos; email-only delivery | Lower-intent conversion, separate from demo requests |
 | `form_error` | Contact API/network failure; once per form type per visit | Detect funnel friction without transmitting error text |

@@ -9,7 +9,11 @@ import {
 import outreach from "./outreach.json";
 export const uuid =
   /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-export const conversions = ["demo_submitted", "newsletter_submitted"];
+export const conversions = [
+  "demo_submitted",
+  "newsletter_submitted",
+  "conference_submitted",
+];
 export const botPattern =
   /bot|crawler|spider|preview|headless|facebookexternalhit|slackbot|linkedinbot/i;
 export function channelFor(a: Attribution) {
@@ -66,7 +70,7 @@ export function browserEvent(raw: unknown): CollectedEvent | null {
         : name === "demo_cta_clicked"
           ? ["header", "footer", "hero", "body"]
           : name === "form_error"
-            ? ["demo", "newsletter"]
+            ? ["demo", "newsletter", "conference"]
             : name === "email_intent"
               ? ["email"]
               : ["none"];
