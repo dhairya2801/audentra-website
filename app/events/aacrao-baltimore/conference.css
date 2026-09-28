@@ -18,25 +18,13 @@
 .conference-brand {
   display: inline-flex;
   align-items: center;
-  font-family: var(--au-font-display);
-  font-size: 29px;
-  font-weight: 900;
-  letter-spacing: -1.3px;
+  flex-shrink: 0;
+  width: 220px;
 }
-.conference-brand-mark {
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  margin-right: 9px;
-  border-radius: 10px 10px 10px 2px;
-  background: var(--au-purple);
-  color: #fff;
-  font-size: 28px;
-  line-height: 1;
-}
-.conference-brand-dot {
-  color: var(--au-purple);
+.conference-brand img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 .conference-location {
   font-size: 12px;
@@ -354,12 +342,7 @@ body:has(.conference-page) .au-consent {
     padding: 20px 0 27px;
   }
   .conference-brand {
-    font-size: 25px;
-  }
-  .conference-brand-mark {
-    width: 28px;
-    height: 28px;
-    font-size: 24px;
+    width: clamp(160px, 46vw, 180px);
   }
   .conference-location {
     font-size: 10px;

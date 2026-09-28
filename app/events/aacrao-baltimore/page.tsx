@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ConferenceForm } from "@/components/conference-form";
 import { PrivacySettings } from "@/components/analytics/marketing-analytics";
 import { conference, conferenceOffer, offers } from "@/lib/conference/config";
@@ -28,10 +29,14 @@ export default function ConferencePage() {
             href="/"
             aria-label="Audentra home"
           >
-            <span className="conference-brand-mark" aria-hidden="true">
-              a
-            </span>
-            audentra<span className="conference-brand-dot">.</span>
+            <Image
+              src="/audentra-main-logo.png"
+              alt="Audentra"
+              width={1177}
+              height={287}
+              sizes="(max-width: 760px) 180px, 220px"
+              preload
+            />
           </Link>
           <span className="conference-location">
             Hello, Baltimore <span aria-hidden="true">↗</span>
@@ -103,17 +108,21 @@ export default function ConferencePage() {
                   d="M137 153h133l-7 59c-3 22-23 37-64 37s-63-15-66-37z"
                   fill="#0a1f44"
                 />
-                <text
-                  x="199"
-                  y="186"
-                  textAnchor="middle"
-                  fill="white"
-                  fontFamily="Arial,sans-serif"
-                  fontSize="16"
-                  fontWeight="600"
-                >
-                  audentra.
-                </text>
+                <rect
+                  x="140"
+                  y="164"
+                  width="116"
+                  height="34"
+                  rx="4"
+                  fill="#fffdf8"
+                />
+                <image
+                  href="/audentra-main-logo.png"
+                  x="145"
+                  y="168"
+                  width="106"
+                  height="26"
+                />
                 <text
                   x="199"
                   y="207"
