@@ -48,8 +48,9 @@ test(
       id: string,
       state: string,
       destination = "hubspot",
+      polls = 50,
     ) {
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < polls; i++) {
         const r = await pool.query(
           "SELECT state FROM contact_deliveries WHERE submission_id=$1 AND destination=$2",
           [id, destination],
@@ -111,6 +112,20 @@ test(
         [JSON.stringify([{ name: "test_submission", value: timeout }])],
       );
       assert.equal(Number(ambiguous.rows[0].count), 1);
+      const slow = randomUUID();
+      ids.push(slow);
+      assert.equal((await send(slow, "TEST_SLOW_DELIVERY")).status, 202);
+      await delivered(slow, "sent", "owner", 150);
+      const slowJobs = await pool.query(
+        "SELECT state,attempts FROM contact_deliveries WHERE submission_id=$1",
+        [slow],
+      );
+      assert.equal(slowJobs.rows.length, 3);
+      assert.ok(
+        slowJobs.rows.every(
+          (job) => job.state === "sent" && job.attempts === 1,
+        ),
+      );
     } finally {
       for (const id of ids) {
         await pool.query(

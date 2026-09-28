@@ -17,6 +17,7 @@ globalThis.fetch = async (input, init) => {
         : input.url,
   );
   if (url.hostname.endsWith(".neon.tech")) {
+    init?.signal?.throwIfAborted();
     const headers = new Headers(init?.headers);
     if (
       !headers.get("Neon-Connection-String")?.includes("contact-test.neon.tech")
@@ -91,6 +92,15 @@ globalThis.fetch = async (input, init) => {
     }
     const payload = JSON.parse(init.body),
       destination = url.hostname === "api.hsforms.com" ? "hubspot" : "email";
+    if (
+      payload.text?.includes("TEST_SLOW_DELIVERY") ||
+      payload.fields?.some((f) => f.value === "TEST_SLOW_DELIVERY")
+    ) {
+      // Each provider stays under its deadline, but the combined worker exceeds
+      // eight seconds. Database operations must not reuse an expired signal.
+      await new Promise((resolve) => setTimeout(resolve, 4500));
+      init?.signal?.throwIfAborted();
+    }
     await pool.query(
       "INSERT INTO test_provider_calls(destination,payload) VALUES($1,$2)",
       [destination, JSON.stringify(payload)],

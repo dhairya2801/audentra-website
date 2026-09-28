@@ -1,9 +1,10 @@
 # Audentra lead delivery: implementation and admin handoff
 
 Status, September 28, 2026: **deployed and verified on https://www.audentra.ai**.
-Production deployment: `dpl_FxWfJ8HXoGxf7QnGoJVLeoVhdtCY`. The marketing
-project was deployed through its existing Vercel connection; the analytics
-project was not redeployed. Both use the existing Neon analytics ledger.
+Initial verified production deployment: `dpl_FxWfJ8HXoGxf7QnGoJVLeoVhdtCY`.
+That rollout deployed the marketing project through its existing Vercel
+connection. Subsequent merges to main use the existing Git deployment triggers
+for both projects. Both use the existing Neon analytics ledger.
 
 ## Verified account configuration
 
@@ -304,6 +305,12 @@ Local automated checks include provider-response mocks and an isolated Postgres
 database, plus browser tests for consent, blocked scripts, attribution, retry
 IDs, double-clicks, queued messages and existing marketing behavior. These simulations alone do not verify remote delivery; the separate real
 HubSpot and notification checks are recorded above.
+
+Review regression: slow mocked email and HubSpot responses totaling nine seconds
+reproduced an expired database timeout in the original worker. Database deadlines
+are now renewed for each query/transaction; the same test verifies all three jobs
+finish once, without losing delivery status. This uses the real Next endpoint and
+a disposable Postgres database, with mocked provider delays.
 
 Recorded local results: **21 Node tests passed** with both database and full
 Next endpoint tests enabled; **10 Playwright tests passed** (four HubSpot and six
