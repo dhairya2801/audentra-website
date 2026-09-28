@@ -87,6 +87,8 @@ export function ConferenceForm({ offer }: { offer: ConferenceOffer }) {
   return (
     <form
       className="conference-form"
+      action="/api/contact"
+      method="post"
       onSubmit={submit}
       data-clarity-mask="true"
       data-hs-do-not-collect="true"

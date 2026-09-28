@@ -37,6 +37,8 @@ test("small phones: focused layout, accessible inputs and no horizontal overflow
     await expect(
       page.locator('form[data-hs-do-not-collect="true"]'),
     ).toHaveCount(1);
+    await expect(page.locator("form")).toHaveAttribute("method", "post");
+    await expect(page.locator("form")).toHaveAttribute("action", "/api/contact");
     await expect(page.getByRole("checkbox")).not.toBeChecked();
     await expect(
       page.getByLabel("Work email", { exact: true }),
