@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { conference, conferenceQrUrl } from "../../lib/conference/config";
-async function setup(page: Page, consent = "denied") {
+async function setup(page: Page, consent = "denied", path: string = conference.path) {
   await page.addInitScript(
     (choice) => localStorage.setItem("au-analytics-consent", choice),
     consent,
@@ -10,7 +10,7 @@ async function setup(page: Page, consent = "denied") {
     (r) => r.abort(),
   );
   await page.route("**/api/analytics/event", (r) => r.fulfill({ status: 204 }));
-  await page.goto(conference.path);
+  await page.goto(path);
 }
 async function fill(page: Page) {
   await page.getByLabel("First name", { exact: true }).fill("CONFERENCE TEST");
@@ -110,9 +110,9 @@ test("uncertain connection retry keeps ID; failure preserves entries; selected d
 test("QR context is private and retained with consent; legacy navigation returns", async ({
   page,
 }) => {
-  await setup(page, "granted");
   const u = new URL(conferenceQrUrl("booth-signage"));
-  await page.goto(u.pathname + u.search);
+  // A QR scan is the first visit: an earlier direct visit must retain its first touch.
+  await setup(page, "granted", u.pathname + u.search);
   await fill(page);
   let body = "";
   await page.route("**/api/contact", (r) => {
@@ -123,6 +123,7 @@ test("QR context is private and retained with consent; legacy navigation returns
     });
   });
   await page.getByRole("button", { name: "Join us for coffee" }).click();
+  await expect(page.getByRole("status")).toBeFocused();
   const ctx = JSON.parse(
     body.match(/name="leadContext"\r\n\r\n([^\r]+)/)?.[1] || "{}",
   );
