@@ -11,13 +11,27 @@ import {
   visit,
 } from "@/lib/analytics/client";
 import { products, sanitizedUrl } from "@/lib/analytics/schema";
+import { captureLeadContext, clearLeadContext } from "@/lib/contact/client";
+import { HubSpotTracking, revokeHubSpot } from "./hubspot-tracking";
+
+function placementFor(link: Element) {
+  return link.closest(".au-header")
+    ? "header"
+    : link.closest("footer")
+      ? "footer"
+      : link.closest(".au-hero, .au-pagehero")
+        ? "hero"
+        : "body";
+}
 
 export function MarketingAnalytics({
   production,
   clarityId,
+  hubspotVerified = false,
 }: {
   production: boolean;
   clarityId?: string;
+  hubspotVerified?: boolean;
 }) {
   const path = usePathname();
   const [active, setActive] = useState(false);
@@ -39,7 +53,23 @@ export function MarketingAnalytics({
     // Browser-only consent must be read after hydration.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setConsent(optedOut ? "denied" : choice);
+    if (optedOut) {
+      clearVisit();
+      clearLeadContext();
+      revokeHubSpot();
+    }
     let cancelled = false;
+    // Capture in the capture phase, before Next Link can change the URL. This
+    // does not wait for the asynchronous referral lookup or any vendor script.
+    const captureCta = (event: MouseEvent) => {
+      if (!eligible || !event.isTrusted) return;
+      const link = (event.target as Element).closest("a");
+      if (!link) return;
+      const url = new URL(link.href, location.origin);
+      if (url.origin === location.origin && url.pathname === "/demo")
+        captureLeadContext(placementFor(link));
+    };
+    document.addEventListener("click", captureCta, true);
     if (eligible && !optedOut)
       void resolveReferral().finally(() => {
         if (!cancelled) {
@@ -48,17 +78,35 @@ export function MarketingAnalytics({
         }
       });
     const open = () => setPreferences(true);
+    const syncPreferences = (event: StorageEvent) => {
+      if (event.key !== "au-analytics-consent") return;
+      if (privacyOptOut()) {
+        clearVisit();
+        clearLeadContext();
+        revokeHubSpot();
+        window.clarity?.("consentv2", {
+          analytics_Storage: "denied",
+          ad_Storage: "denied",
+        });
+      }
+      // Apply withdrawal in other tabs as well, unloading active recorders.
+      location.reload();
+    };
     window.addEventListener("au-privacy-settings", open);
+    window.addEventListener("storage", syncPreferences);
     return () => {
       cancelled = true;
+      document.removeEventListener("click", captureCta, true);
       enableTracking(false);
       window.removeEventListener("au-privacy-settings", open);
+      window.removeEventListener("storage", syncPreferences);
     };
   }, [production]);
   useEffect(() => {
     if (!active) return;
     function view() {
       if (document.visibilityState !== "visible") return;
+      captureLeadContext();
       emit("visit_started");
       emit("page_viewed");
       if (path === "/demo") emit("demo_viewed");
@@ -89,27 +137,23 @@ export function MarketingAnalytics({
       const a = (event.target as Element).closest("a");
       if (!a) return;
       const url = new URL(a.href, location.origin);
-      const placement = a.closest(".au-header")
-        ? "header"
-        : a.closest("footer")
-          ? "footer"
-          : a.closest(".au-hero, .au-pagehero")
-            ? "hero"
-            : "body";
+      const placement = placementFor(a);
       if (url.protocol === "mailto:") emit("email_intent", "email");
       if (url.origin !== location.origin) return;
-      if (url.pathname === "/demo") emit("demo_cta_clicked", placement);
+      if (url.pathname === "/demo") {
+        emit("demo_cta_clicked", placement);
+      }
       const product = url.pathname.split("/").at(-1);
       if (product && products.includes(product))
         emit("product_interest", product);
     }
-    document.addEventListener("click", click);
+    document.addEventListener("click", click, true);
     for (const e of ["pointerdown", "keydown", "scroll"])
       document.addEventListener(e, interaction, { passive: true });
     return () => {
       clearInterval(timer);
       document.removeEventListener("visibilitychange", view);
-      document.removeEventListener("click", click);
+      document.removeEventListener("click", click, true);
       for (const e of ["pointerdown", "keydown", "scroll"])
         document.removeEventListener(e, interaction);
     };
@@ -156,12 +200,15 @@ export function MarketingAnalytics({
       enableTracking(false);
       setActive(false);
       clearVisit();
+      clearLeadContext();
+      const hubspotLoaded = revokeHubSpot();
       window.clarity?.("consentv2", {
         analytics_Storage: "denied",
         ad_Storage: "denied",
       });
       // Unload an already running recorder and any queued scripts immediately.
-      if (document.querySelector("#audentra-clarity")) location.reload();
+      if (hubspotLoaded || document.querySelector("#audentra-clarity"))
+        location.reload();
     } else if (!privacyOptOut() && !active) {
       // Re-run hostname/bot eligibility and attribution resolution after opt-in.
       location.reload();
@@ -169,6 +216,9 @@ export function MarketingAnalytics({
   }
   return (
     <>
+      <HubSpotTracking
+        enabled={active && consent === "granted" && hubspotVerified}
+      />
       {active && (
         <Analytics
           beforeSend={(event) => {
@@ -178,14 +228,19 @@ export function MarketingAnalytics({
           }}
         />
       )}
-      {((active && clarityId && consent === null) || preferences) && (
+      {((active && (clarityId || hubspotVerified) && consent === null) ||
+        preferences) && (
         <aside className="au-consent" aria-label="Analytics preferences">
           <div>
             <strong>Help us make Audentra clearer.</strong>
             <p>
               We use basic traffic analytics. With your permission, we also use
               Microsoft Clarity to understand visits through masked session
-              recordings. Form entries are excluded.{" "}
+              recordings
+              {hubspotVerified
+                ? " and HubSpot to connect website visits with your demo request"
+                : ""}
+              . Form entries are excluded from general analytics.{" "}
               <a href="/legal/privacy">Privacy details</a>
             </p>
           </div>

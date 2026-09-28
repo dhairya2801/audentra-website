@@ -86,6 +86,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 process.env.NEXT_PUBLIC_ANALYTICS_TEST === "1"
               }
               clarityId={process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID}
+              hubspotVerified={
+                process.env.HUBSPOT_TRACKING_ENABLED === "1" &&
+                process.env.HUBSPOT_VERIFIED_PORTAL_ID === "52074694"
+              }
             />
           </>
         )}

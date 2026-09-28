@@ -5,6 +5,13 @@ import {
 } from "@/lib/analytics/collection";
 import { after } from "next/server";
 import { randomUUID } from "node:crypto";
+import { ContactError, parseLead } from "@/lib/contact/model";
+import { hubspotConfig, hubspotPayload } from "@/lib/contact/hubspot";
+import { drainDeliveries, emailPayload } from "@/lib/contact/delivery";
+import type { NewJob } from "@/lib/contact/store";
+
+export const maxDuration = 60;
+const contactLimits = new Map<string, { count: number; until: number }>();
 
 const CONTACT_EMAIL = "hello@audentra.ai";
 
@@ -39,9 +46,41 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid request origin." }, { status: 403 });
   }
 
+  const now = Date.now();
+  for (const [key, value] of contactLimits)
+    if (value.until < now) contactLimits.delete(key);
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0] || "local";
+  const limit = contactLimits.get(ip) || { count: 0, until: now + 60000 };
+  contactLimits.set(ip, limit);
+  if (++limit.count > 20 || contactLimits.size > 10000)
+    return Response.json(
+      { error: "Too many requests. Please try again in a minute." },
+      { status: 429, headers: { "Retry-After": "60" } },
+    );
+
   let formData: FormData;
   try {
-    formData = await request.formData();
+    // Bound the body before multipart parsing, including chunked requests.
+    const reader = request.body?.getReader();
+    if (!reader) throw new Error("empty");
+    const chunks: Uint8Array[] = [];
+    let length = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      length += value.byteLength;
+      if (length > 16000) {
+        await reader.cancel();
+        return Response.json(
+          { error: "Form submission is too large." },
+          { status: 413 },
+        );
+      }
+      chunks.push(value);
+    }
+    formData = await new Response(Buffer.concat(chunks), {
+      headers: { "Content-Type": request.headers.get("content-type") || "" },
+    }).formData();
   } catch {
     return Response.json(
       { error: "Invalid form submission." },
@@ -53,6 +92,64 @@ export async function POST(request: Request) {
   // they do not learn how the filter works.
   if (readField(formData, "website", 200)) {
     return Response.json({ ok: true });
+  }
+
+  if (process.env.CONTACT_DELIVERY_MODE === "durable") {
+    try {
+      const lead = parseLead(formData, request);
+      if (botPattern.test(request.headers.get("user-agent") || ""))
+        lead.analytics = null;
+      const config = lead.source === "newsletter" ? null : hubspotConfig();
+      if (!process.env.RESEND_API_KEY || !process.env.CONTACT_FROM_EMAIL)
+        throw new Error("EMAIL_NOT_CONFIGURED");
+      const jobs: NewJob[] = [
+        { destination: "email", payload: emailPayload(lead) },
+      ];
+      if (config) {
+        jobs.push({
+          destination: "hubspot",
+          config,
+          payload: hubspotPayload(lead, config, Date.now()),
+        });
+        jobs.push({
+          destination: "owner",
+          config,
+          payload: { email: lead.email },
+        });
+      }
+      const { getContactStore } = await import("@/lib/contact/db");
+      const store = getContactStore();
+      await store.accept(lead, jobs);
+      // Acceptance means the private DB committed, never a claim of CRM delivery.
+      after(async () => {
+        try {
+          await drainDeliveries(store, { id: lead.id, limit: 3 });
+        } catch {
+          console.error(
+            "Contact delivery worker interrupted; durable jobs retained.",
+          );
+        }
+      });
+      return Response.json(
+        { ok: true, accepted: true, submissionId: lead.id, delivery: "queued" },
+        { status: 202, headers: { "Cache-Control": "no-store" } },
+      );
+    } catch (error) {
+      if (error instanceof ContactError)
+        return Response.json(
+          { error: error.message },
+          { status: error.status },
+        );
+      console.error(
+        "Contact acceptance unavailable; no success confirmation issued.",
+      );
+      return Response.json(
+        {
+          error: `We could not save your request. Please try again, or email ${CONTACT_EMAIL}.`,
+        },
+        { status: 503 },
+      );
+    }
   }
 
   const source = readLine(formData, "source", 32);
@@ -144,6 +241,7 @@ export async function POST(request: Request) {
         subject,
         text: text + attributionText,
       }),
+      signal: AbortSignal.timeout(8000),
     });
 
     if (!response.ok) {
