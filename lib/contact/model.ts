@@ -1,3 +1,8 @@
+import {
+  conference,
+  conferenceOffer,
+  type ConferenceOffer,
+} from "../conference/config";
 import { createHash, randomUUID } from "node:crypto";
 import { formAnalytics, uuid } from "../analytics/collection";
 import { safePath } from "../analytics/schema";
@@ -11,11 +16,15 @@ export const interests = [
   "leadership",
   "student-experience",
 ];
-export const processingConsent =
-  "By submitting this form, you agree that Audentra may use your information to respond to your request.";
+export { processingConsent } from "./model-copy";
 export type Lead = {
   id: string;
-  source: "newsletter" | "product-walkthrough";
+  source: "newsletter" | "product-walkthrough" | "conference";
+  conference?: {
+    event: string;
+    offer: ConferenceOffer;
+    demoRequested: boolean;
+  };
   email: string;
   firstName: string;
   lastName: string;
@@ -58,7 +67,7 @@ export function parseLead(data: FormData, request: Request): Lead {
     return multiline ? text : text.replace(/\s+/g, " ");
   };
   const source = field("source", 32);
-  if (source !== "newsletter" && source !== "product-walkthrough")
+  if (!["newsletter", "product-walkthrough", "conference"].includes(source))
     throw new ContactError("Invalid form.");
   const email = field("email", 254).toLowerCase();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
@@ -69,7 +78,7 @@ export function parseLead(data: FormData, request: Request): Lead {
   if (source !== "newsletter" && (!firstName || !lastName || !institution))
     throw new ContactError("Complete all required fields.");
   const interest = field("interest", 80);
-  if (source !== "newsletter" && !interests.includes(interest))
+  if (source === "product-walkthrough" && !interests.includes(interest))
     throw new ContactError("Select a valid area of interest.");
   const id = field("submissionId", 36);
   if (id && !uuid.test(id))
@@ -121,7 +130,16 @@ export function parseLead(data: FormData, request: Request): Lead {
         : "/demo";
   return {
     id: id || randomUUID(),
-    source,
+    source: source as Lead["source"],
+    ...(source === "conference"
+      ? {
+          conference: {
+            event: conference.slug,
+            offer: conferenceOffer(),
+            demoRequested: data.get("demoRequested") === "on",
+          },
+        }
+      : {}),
     email,
     firstName,
     lastName,
@@ -130,7 +148,7 @@ export function parseLead(data: FormData, request: Request): Lead {
     interest,
     goal: field("goal", 2000, true),
     pilot: data.get("pilot") === "on",
-    page,
+    page: source === "conference" ? conference.path : page,
     ...(Object.keys(attribution).length ? { attribution } : {}),
     ...(allowed &&
     typeof context.hutk === "string" &&
@@ -165,6 +183,7 @@ export function leadFingerprint(lead: Lead) {
         interest,
         goal,
         pilot,
+        ...(lead.conference ? { conference: lead.conference } : {}),
       }),
     )
     .digest("hex");

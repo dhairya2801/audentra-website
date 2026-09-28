@@ -1,0 +1,23 @@
+{
+  "fallbackUrl": "https://www.audentra.ai/events/aacrao-baltimore",
+  "codes": [
+    {
+      "placement": "booth-signage",
+      "url": "https://www.audentra.ai/events/aacrao-baltimore?utm_source=aacrao&utm_medium=qr&utm_campaign=aacrao-baltimore&utm_content=booth-signage",
+      "width": 1560,
+      "height": 1560,
+      "quietZoneModules": 4,
+      "errorCorrection": "Q",
+      "decodedSvgAndPng": true
+    },
+    {
+      "placement": "handout",
+      "url": "https://www.audentra.ai/events/aacrao-baltimore?utm_source=aacrao&utm_medium=qr&utm_campaign=aacrao-baltimore&utm_content=handout",
+      "width": 1464,
+      "height": 1464,
+      "quietZoneModules": 4,
+      "errorCorrection": "Q",
+      "decodedSvgAndPng": true
+    }
+  ]
+}

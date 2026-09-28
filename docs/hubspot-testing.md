@@ -37,6 +37,8 @@ CREATE TABLE test_provider_calls(destination text,payload jsonb);
 SQL
 psql postgresql://postgres@127.0.0.1:55439/postgres \
   -f scripts/migrations/003-contact-delivery.sql
+psql postgresql://postgres@127.0.0.1:55439/postgres \
+  -f scripts/migrations/004-conference-leads.sql
 ```
 
 Start a test Next server in another terminal. All credentials below are dummy
@@ -51,6 +53,8 @@ CONTACT_DELIVERY_MODE=durable \
 RESEND_API_KEY=local-test-only CONTACT_FROM_EMAIL=test@example.com \
 HUBSPOT_ENABLED=1 HUBSPOT_VERIFIED_PORTAL_ID=52074694 \
 HUBSPOT_DEMO_FORM_ID=11111111-1111-4111-8111-111111111111 \
+HUBSPOT_CONFERENCE_FORM_ID=22222222-2222-4222-8222-222222222222 \
+HUBSPOT_CONFERENCE_PROPERTY_MAP='{"event":"test_event","giveaway":"test_giveaway","demoRequested":"test_demo","submissionId":"test_submission","attribution":"test_attribution"}' \
 HUBSPOT_OWNER_ID=123 HUBSPOT_ACCESS_TOKEN=local-test-only \
 HUBSPOT_PROPERTY_MAP='{"interest":"test_interest","goal":"test_goal","pilot":"test_pilot","submissionId":"test_submission","attribution":"test_attribution"}' \
 CRON_SECRET=local-cron-test-only NEXT_BUILD_DIR=.next-contact-api \

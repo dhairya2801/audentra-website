@@ -94,6 +94,9 @@ test(
       await query(
         await readFile("scripts/migrations/003-contact-delivery.sql", "utf8"),
       );
+      await query(
+        await readFile("scripts/migrations/004-conference-leads.sql", "utf8"),
+      );
       const store = contactStore(db);
       const jobs = [
         {

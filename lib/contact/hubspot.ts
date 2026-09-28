@@ -1,3 +1,4 @@
+import { conference } from "../conference/config";
 import { processingConsent, type Lead } from "./model";
 
 export const intendedPortal = "52074694";
@@ -7,26 +8,32 @@ export type HubSpotConfig = {
   owner: string;
   properties: Record<string, string>;
 };
-export function hubspotConfig(): HubSpotConfig | null {
+export function hubspotConfig(
+  source: Lead["source"] = "product-walkthrough",
+): HubSpotConfig | null {
   if (process.env.HUBSPOT_ENABLED !== "1") return null;
   if (
     process.env.HUBSPOT_VERIFIED_PORTAL_ID !== intendedPortal ||
     !process.env.HUBSPOT_ACCESS_TOKEN
   )
     throw new Error("HUBSPOT_ACCOUNT_NOT_VERIFIED");
-  const form = process.env.HUBSPOT_DEMO_FORM_ID || "";
+  const event = source === "conference";
+  const form =
+    (event
+      ? process.env.HUBSPOT_CONFERENCE_FORM_ID
+      : process.env.HUBSPOT_DEMO_FORM_ID) || "";
   if (!/^[a-f0-9-]{36}$/i.test(form))
     throw new Error("HUBSPOT_FORM_NOT_CONFIGURED");
   const owner = process.env.HUBSPOT_OWNER_ID || "";
   if (!/^\d+$/.test(owner)) throw new Error("HUBSPOT_OWNER_NOT_CONFIGURED");
-  const properties = JSON.parse(process.env.HUBSPOT_PROPERTY_MAP || "{}");
-  for (const key of [
-    "interest",
-    "goal",
-    "pilot",
-    "submissionId",
-    "attribution",
-  ]) {
+  const properties = JSON.parse(
+    (event
+      ? process.env.HUBSPOT_CONFERENCE_PROPERTY_MAP
+      : process.env.HUBSPOT_PROPERTY_MAP) || "{}",
+  );
+  for (const key of event
+    ? ["event", "giveaway", "demoRequested", "submissionId", "attribution"]
+    : ["interest", "goal", "pilot", "submissionId", "attribution"]) {
     if (
       typeof properties[key] !== "string" ||
       !/^[a-z][a-z0-9_]{0,99}$/.test(properties[key])
@@ -55,20 +62,40 @@ export function hubspotPayload(
   config: HubSpotConfig,
   submittedAt: number,
 ) {
-  const values: Record<string, string> = {
-    email: lead.email,
-    firstname: lead.firstName,
-    lastname: lead.lastName,
-    company: lead.institution,
-    jobtitle: lead.title,
-    [config.properties.interest]: lead.interest,
-    [config.properties.goal]: lead.goal,
-    [config.properties.pilot]: String(lead.pilot),
-    [config.properties.submissionId]: lead.id,
-    [config.properties.attribution]: lead.attribution
-      ? JSON.stringify(lead.attribution)
-      : "",
-  };
+  const values: Record<string, string> = lead.conference
+    ? {
+        email: lead.email,
+        firstname: lead.firstName,
+        lastname: lead.lastName,
+        company: lead.institution,
+        [config.properties.event]: conference.name,
+        [config.properties.giveaway]: lead.conference.offer,
+        // Never clear a previous demo request on an unchecked giveaway submission.
+        ...(lead.conference.demoRequested
+          ? { [config.properties.demoRequested]: "true" }
+          : {}),
+        [config.properties.submissionId]: lead.id,
+        [config.properties.attribution]: JSON.stringify({
+          event: lead.conference.event,
+          giveaway: lead.conference.offer,
+          demo_requested_this_submission: lead.conference.demoRequested,
+          ...lead.attribution,
+        }),
+      }
+    : {
+        email: lead.email,
+        firstname: lead.firstName,
+        lastname: lead.lastName,
+        company: lead.institution,
+        jobtitle: lead.title,
+        [config.properties.interest]: lead.interest,
+        [config.properties.goal]: lead.goal,
+        [config.properties.pilot]: String(lead.pilot),
+        [config.properties.submissionId]: lead.id,
+        [config.properties.attribution]: lead.attribution
+          ? JSON.stringify(lead.attribution)
+          : "",
+      };
   return {
     submittedAt: String(submittedAt),
     fields: Object.entries(values)
@@ -76,7 +103,9 @@ export function hubspotPayload(
       .map(([name, value]) => ({ objectTypeId: "0-1", name, value })),
     context: {
       pageUri: `https://www.audentra.ai${lead.page}`,
-      pageName: "Audentra demo request",
+      pageName: lead.conference
+        ? `Audentra — ${conference.name}`
+        : "Audentra demo request",
       ...(lead.hutk ? { hutk: lead.hutk } : {}),
     },
     // Responding to this request is separate from subscribing to marketing.

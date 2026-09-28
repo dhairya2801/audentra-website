@@ -7,7 +7,9 @@ if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL required");
 const sql = neon(process.env.DATABASE_URL);
 try {
   const statements = (
-    await readFile("scripts/migrations/003-contact-delivery.sql", "utf8")
+    (await readFile("scripts/migrations/003-contact-delivery.sql", "utf8")) +
+    "\n" +
+    (await readFile("scripts/migrations/004-conference-leads.sql", "utf8"))
   )
     .split(";")
     .map((s) => s.trim())

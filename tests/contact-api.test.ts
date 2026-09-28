@@ -17,11 +17,13 @@ test(
       id: string,
       goal = "TEST",
       email = "hubspot-test@example.com",
+      source = "product-walkthrough",
+      demoRequested = false,
     ) {
       const f = new FormData();
       for (const [k, v] of Object.entries({
         submissionId: id,
-        source: "product-walkthrough",
+        source,
         firstName: "HUBSPOT TEST",
         lastName: "Do not contact",
         institution: "TEST",
@@ -38,6 +40,7 @@ test(
         }),
       }))
         f.set(k, v);
+      if (demoRequested) f.set("demoRequested", "on");
       return fetch(`${base}/api/contact`, {
         method: "POST",
         body: f,
@@ -112,6 +115,54 @@ test(
         [JSON.stringify([{ name: "test_submission", value: timeout }])],
       );
       assert.equal(Number(ambiguous.rows[0].count), 1);
+      const conference = randomUUID();
+      ids.push(conference);
+      assert.equal(
+        (
+          await send(
+            conference,
+            "",
+            "conference-test@example.com",
+            "conference",
+          )
+        ).status,
+        202,
+      );
+      await delivered(conference, "sent", "owner");
+      assert.equal(
+        (
+          await send(
+            conference,
+            "",
+            "conference-test@example.com",
+            "conference",
+          )
+        ).status,
+        202,
+      );
+      const event = await pool.query(
+        "SELECT event_name FROM outreach_events WHERE submission_id=$1",
+        [conference],
+      );
+      assert.deepEqual(event.rows, [{ event_name: "conference_submitted" }]);
+      const conferenceCalls = await pool.query(
+        "SELECT payload FROM test_provider_calls WHERE destination='hubspot' AND payload->'fields' @> $1::jsonb",
+        [JSON.stringify([{ name: "test_submission", value: conference }])],
+      );
+      assert.equal(conferenceCalls.rows.length, 1);
+      const conferenceFields = Object.fromEntries(
+        conferenceCalls.rows[0].payload.fields.map(
+          (f: { name: string; value: string }) => [f.name, f.value],
+        ),
+      );
+      assert.equal(conferenceFields.test_event, "AACRAO Baltimore");
+      assert.equal(conferenceFields.test_demo, undefined);
+      assert.equal(conferenceFields.test_pilot, undefined);
+      assert.equal(
+        JSON.parse(conferenceFields.test_attribution as string)
+          .demo_requested_this_submission,
+        false,
+      );
       const slow = randomUUID();
       ids.push(slow);
       assert.equal((await send(slow, "TEST_SLOW_DELIVERY")).status, 202);
