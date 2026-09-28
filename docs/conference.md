@@ -139,9 +139,9 @@ Real verification, September 28, 2026:
 - Real HubSpot tracking emitted exactly one conference pageview after opt-in;
   withdrawal removed its cookie and stopped script loading. The live demo page
   still showed both existing forms and navigation.
-- Internal recipient configuration is verified and Resend accepted notifications;
-  Dr. Zaibis inbox confirmation for this new conference form is pending. Previous
-  demo-form inbox confirmation does not substitute for this event-form check.
+- The user confirmed Dr. Zaibis received the new conference-form notification.
+  Existing Resend notification acceptance was also verified (provider acceptance,
+  not a claim of access to the hello@ inbox).
 - Provider outage behavior is mocked; no real provider outage was induced.
   Physical paper/camera testing remains the printer's final proof check.
 
