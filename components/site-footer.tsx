@@ -13,7 +13,7 @@ export function SiteFooter() {
         <div className="au-footer__top">
           <div className="au-footer__brand">
             <Image
-              src="/aud_logo_pri_pos_4c.svg"
+              src="/aud_logo_pri_rev_4c.svg"
               alt="Audentra"
               width={477}
               height={128}
