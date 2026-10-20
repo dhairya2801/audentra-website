@@ -30,10 +30,10 @@ export default function ConferencePage() {
             aria-label="Audentra home"
           >
             <Image
-              src="/audentra-main-logo.png"
+              src="/aud_logo_pri_pos_4c.svg"
               alt="Audentra"
-              width={1177}
-              height={287}
+              width={477}
+              height={128}
               sizes="(max-width: 760px) 180px, 220px"
               preload
             />
@@ -117,7 +117,7 @@ export default function ConferencePage() {
                   fill="#fffdf8"
                 />
                 <image
-                  href="/audentra-main-logo.png"
+                  href="/aud_logo_pri_pos_4c.svg"
                   x="145"
                   y="168"
                   width="106"
