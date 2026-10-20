@@ -1919,12 +1919,8 @@ a.au-list__row:hover .au-list__go {
 }
 
 .au-footer__brand img {
-  box-sizing: content-box;
   width: auto;
   height: 3rem;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  background: #fff;
 }
 
 .au-footer__brand p {
