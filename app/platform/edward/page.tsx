@@ -191,7 +191,7 @@ export default function EdwardPage() {
         <Cols items={trust} />
         <Container>
           <p className="au-body" style={{ marginTop: "2rem", textAlign: "center" }}>
-            <Btn href="/trust" variant="outline" icon={<ArrowRight />}>
+            <Btn href="https://trust.audentra.ai/" variant="outline" icon={<ArrowRight />}>
               How Audentra handles trust and governance
             </Btn>
           </p>

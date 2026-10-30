@@ -75,7 +75,7 @@ export const nav: NavItem[] = [
     ],
   },
   { label: "Why Audentra", href: "/why-audentra" },
-  { label: "Trust", href: "/trust" },
+  { label: "Trust", href: "https://trust.audentra.ai/" },
   {
     label: "Company",
     columns: [
@@ -124,7 +124,7 @@ export const footerColumns: { title: string; links: NavLink[] }[] = [
       { label: "Privacy", href: "/legal/privacy" },
       { label: "Terms", href: "/legal/terms" },
       { label: "Accessibility", href: "/accessibility" },
-      { label: "Trust & Security", href: "/trust" },
+      { label: "Trust & Security", href: "https://trust.audentra.ai/" },
     ],
   },
 ];

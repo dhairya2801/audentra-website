@@ -68,7 +68,7 @@ export function SiteFooter() {
             <Link href="/legal/privacy">Privacy</Link>
             <Link href="/legal/terms">Terms</Link>
             <Link href="/accessibility">Accessibility</Link>
-            <Link href="/trust">Trust</Link>
+            <Link href="https://trust.audentra.ai/">Trust</Link>
             <a href={site.url}>{site.domain}</a>
           </nav>
         </div>

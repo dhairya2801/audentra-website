@@ -347,7 +347,7 @@ export default function HomePage() {
         />
         <Cols items={trust} />
         <div className="au-btn-row" style={{ justifyContent: "center" }}>
-          <Btn href="/trust" variant="outline" icon={<ArrowRight />}>
+          <Btn href="https://trust.audentra.ai/" variant="outline" icon={<ArrowRight />}>
             Visit the Trust Center
           </Btn>
         </div>

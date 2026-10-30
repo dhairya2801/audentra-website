@@ -155,7 +155,7 @@ export default function WhyAudentraPage() {
         title="Bring an enrollment workflow you want to strengthen."
         lede="We'll connect the people, signals, actions, and measures that shape it."
         primary={{ href: "/demo", label: "See Audentra in Action" }}
-        secondary={{ href: "/trust", label: "How we handle trust" }}
+        secondary={{ href: "https://trust.audentra.ai/", label: "How we handle trust" }}
       />
     </>
   );

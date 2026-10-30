@@ -99,7 +99,7 @@ export default function AccessibilityPage() {
       <CtaBand
         title="Accessibility questions belong in the first conversation."
         lede="Bring your requirements early and we'll answer them in writing."
-        secondary={{ href: "/trust", label: "Trust & security" }}
+        secondary={{ href: "https://trust.audentra.ai/", label: "Trust & security" }}
       />
     </>
   );
