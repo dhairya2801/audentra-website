@@ -6,6 +6,7 @@ import {
 } from "@/lib/support/inbox";
 export const maxDuration = 60;
 export async function GET(request: Request) {
+  if (process.env.VERCEL === "1") return new Response(null, { status: 404 });
   const secret = process.env.CRON_SECRET;
   const actual = Buffer.from(request.headers.get("authorization") || "");
   const expected = Buffer.from("Bearer " + secret);

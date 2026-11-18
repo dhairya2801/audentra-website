@@ -1,7 +1,9 @@
+import { isIP } from "node:net";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { parseSubmission, supportService } from "@/lib/support/intake";
 import { accept, deliver } from "@/lib/support/inbox";
 import { runSubmission } from "@/lib/support/concurrency";
+import { relaySupportSubmission } from "@/lib/support/cloud-run";
 
 export const config = {
   api: { bodyParser: { sizeLimit: "4250kb" } },
@@ -36,12 +38,30 @@ export default async function handler(
       .json({ state: fieldsValid ? "invalid_evidence" : "invalid" });
   }
   const unavailable = { state: report.checkOnly ? "unknown" : "retry" };
-  const forwarded = req.headers["x-vercel-forwarded-for"];
-  const ip =
-    process.env.VERCEL && typeof forwarded === "string"
-      ? forwarded.split(",")[0]?.trim()
-      : undefined;
   try {
+    if (process.env.VERCEL === "1") {
+      const oidc = req.headers["x-vercel-oidc-token"];
+      const forwarded = req.headers["x-vercel-forwarded-for"];
+      const ip = typeof forwarded === "string" && isIP(forwarded) ? forwarded : undefined;
+      if (!ip) return res.status(503).json(unavailable);
+      const upstream = await relaySupportSubmission(
+        typeof oidc === "string" ? oidc : "",
+        ip,
+        req.body,
+      );
+      if (!upstream.headers.get("content-type")?.startsWith("application/json")) {
+        return res.status(503).json(unavailable);
+      }
+      return res.status(upstream.status).json(await upstream.json());
+    }
+
+    // Enable only on the IAM-protected Cloud Run service, with invoker access scoped to the relay.
+    const fromRelay = req.headers["x-audentra-support-origin-ip"];
+    const ip = process.env.SUPPORT_TRUST_RELAY_IP === "1" &&
+      typeof fromRelay === "string" && isIP(fromRelay) ? fromRelay : undefined;
+    if (process.env.SUPPORT_TRUST_RELAY_IP === "1" && !ip) {
+      return res.status(503).json(unavailable);
+    }
     const saved = await accept(report, ip);
     if (!saved) {
       const old = await supportService().submit({ ...report, checkOnly: true });
