@@ -4,7 +4,7 @@ import { accept, deliver } from "@/lib/support/inbox";
 import { runSubmission } from "@/lib/support/concurrency";
 
 export const config = {
-  api: { bodyParser: { sizeLimit: "32kb" } },
+  api: { bodyParser: { sizeLimit: "4250kb" } },
   maxDuration: 60,
 };
 export default async function handler(
@@ -27,7 +27,14 @@ export default async function handler(
   if (!req.headers["content-type"]?.startsWith("application/json"))
     return res.status(415).end();
   const report = parseSubmission(req.body);
-  if (!report) return res.status(400).json({ state: "invalid" });
+  if (!report) {
+    const fieldsValid =
+      req.body?.evidence !== undefined &&
+      parseSubmission({ ...req.body, evidence: undefined }) !== null;
+    return res
+      .status(400)
+      .json({ state: fieldsValid ? "invalid_evidence" : "invalid" });
+  }
   const unavailable = { state: report.checkOnly ? "unknown" : "retry" };
   const forwarded = req.headers["x-vercel-forwarded-for"];
   const ip =

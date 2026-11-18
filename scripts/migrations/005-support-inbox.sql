@@ -12,3 +12,9 @@ CREATE TABLE IF NOT EXISTS audentra_support_clock (id integer PRIMARY KEY CHECK(
 INSERT INTO audentra_support_clock VALUES (1,now()) ON CONFLICT DO NOTHING;
 
 CREATE INDEX IF NOT EXISTS support_notify_due ON audentra_support_inbox(due) WHERE jira_key IS NOT NULL AND NOT notified;
+
+-- Idempotent upgrade for inboxes created before attachment delivery was tracked.
+ALTER TABLE audentra_support_inbox
+  ADD COLUMN IF NOT EXISTS attachment_jira_key text,
+  ADD COLUMN IF NOT EXISTS attachment_attempts integer NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS unconfirmed_attachments smallint[] NOT NULL DEFAULT '{}';

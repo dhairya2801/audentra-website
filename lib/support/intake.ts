@@ -1,8 +1,10 @@
 import { createHash, createHmac } from "node:crypto";
 
+import { parseEvidence, attachEvidence, type Evidence } from "./evidence";
 const pending = "audentra-support-slack-pending";
 const source = "audentra-web-support";
 export type Report = {
+  evidence?: Evidence[];
   portal: string;
   email: string;
   subject: string;
@@ -18,6 +20,8 @@ export function parseSubmission(value: unknown): Submission | null {
     email = field("email"),
     subject = field("subject"),
     description = field("description");
+  const evidence = parseEvidence(v.evidence);
+  if (!evidence) return null;
   const reference = field("reference");
   if (
     [email, subject, description].some(
@@ -43,6 +47,7 @@ export function parseSubmission(value: unknown): Submission | null {
     subject,
     description,
     reference,
+    ...(evidence.length ? { evidence } : {}),
     checkOnly: v.checkOnly,
   };
 }
@@ -122,7 +127,10 @@ export function supportService(
       return issue.key;
     }) as string[];
   }
-  async function notify(key: string): Promise<boolean> {
+  async function notify(
+    key: string,
+    unconfirmed: number[] = [],
+  ): Promise<boolean> {
     try {
       const webhook = env.SLACK_WEBHOOK_URL;
       if (
@@ -148,7 +156,12 @@ export function supportService(
               key +
               "|" +
               key +
-              ">",
+              ">" +
+              (unconfirmed.length
+                ? " — Could not confirm attachment upload (file " +
+                  unconfirmed.join(", ") +
+                  "). Recover the retained evidence using the support runbook."
+                : ""),
             unfurl_links: false,
             unfurl_media: false,
           }),
@@ -191,7 +204,14 @@ export function supportService(
       "support-" +
       createHash("sha256")
         .update(
-          JSON.stringify([reference, portal, email, subject, description]),
+          JSON.stringify([
+            reference,
+            portal,
+            email,
+            subject,
+            description,
+            ...(report.evidence ?? []),
+          ]),
         )
         .digest("hex");
     let matches: string[];
@@ -207,7 +227,10 @@ export function supportService(
       return { status: 200, body: { state: "received", key: matches[0] } };
     if (report.checkOnly || matches.length > 1)
       return { status: 409, body: { state: "unknown" } };
-    const labels = [source, marker, pending];
+    // Evidence reports use the inbox notification worker after uploads finish.
+    const labels = report.evidence?.length
+      ? [source, marker]
+      : [source, marker, pending];
     if (clientIp) {
       const ipLabel =
         "support-origin-" +
@@ -263,7 +286,7 @@ export function supportService(
       if (result.status !== 201) throw Error();
       const { key } = await result.json();
       if (!validKey(key)) throw Error();
-      if (!journal) await notify(key);
+      if (!journal && !report.evidence?.length) await notify(key);
       return { status: 201, body: { state: "received", key } };
     } catch {
       return { status: 503, body: { state: "unknown" } };
@@ -282,5 +305,11 @@ export function supportService(
     }
     return { found: keys.length, delivered };
   }
-  return { submit, notify, retryNotifications };
+  return {
+    submit,
+    notify,
+    retryNotifications,
+    attach: (key: string, files: Evidence[]) =>
+      attachEvidence(site!, auth, key, files, send),
+  };
 }

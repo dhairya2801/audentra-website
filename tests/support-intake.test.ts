@@ -161,3 +161,19 @@ test("rejects text PostgreSQL cannot store while accepting emoji", () => {
   );
   assert.ok(parseSubmission({ ...report, subject: "Course 📚" }));
 });
+
+test("notification recovery leaves evidence delivery to the durable inbox", async () => {
+  const { state, service } = fixture();
+  state.slackDown = true;
+  await service().submit({
+    ...report,
+    evidence: [{ name: "screen.png", mime: "image/png", data: "iVBORw0KGgo=" }],
+  });
+  state.slackDown = false;
+  assert.equal(state.creates, 1);
+  assert.deepEqual(await service().retryNotifications(), {
+    found: 0,
+    delivered: 0,
+  });
+  assert.equal(state.sends, 0);
+});

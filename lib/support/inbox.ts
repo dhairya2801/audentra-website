@@ -1,4 +1,5 @@
 import { Pool } from "pg";
+import { AttachmentFailure } from "./evidence";
 import { createHash, createHmac, randomUUID } from "node:crypto";
 import { supportService, type Submission } from "./intake";
 let pool: Pool | undefined;
@@ -30,7 +31,15 @@ const received = (key: string) => ({
 export async function accept(report: Submission, ip?: string) {
   const { reference, portal, email, subject, description } = report;
   const fingerprint = createHash("sha256")
-    .update(JSON.stringify([portal, email, subject, description]))
+    .update(
+      JSON.stringify([
+        portal,
+        email,
+        subject,
+        description,
+        ...(report.evidence ?? []),
+      ]),
+    )
     .digest("hex");
   const origin = ip
     ? createHmac(
@@ -160,29 +169,59 @@ export async function deliver(reference?: string, send: typeof fetch = fetch) {
   const owner = randomUUID();
   const row = (
     await db().query(
-      `WITH next AS (SELECT reference FROM audentra_support_inbox WHERE jira_key IS NULL AND due<=now() AND ($1::uuid IS NULL OR reference=$1) ORDER BY due LIMIT 1 FOR UPDATE SKIP LOCKED) UPDATE audentra_support_inbox i SET owner=$2,due=now()+interval '2 minutes' FROM next WHERE i.reference=next.reference RETURNING i.report,i.intent`,
+      `WITH next AS (SELECT reference FROM audentra_support_inbox WHERE jira_key IS NULL AND due<=now() AND ($1::uuid IS NULL OR reference=$1) ORDER BY due LIMIT 1 FOR UPDATE SKIP LOCKED) UPDATE audentra_support_inbox i SET owner=$2,due=now()+interval '2 minutes' FROM next WHERE i.reference=next.reference RETURNING i.report,i.intent,i.attachment_attempts,i.attachment_jira_key`,
       [reference ?? null, owner],
     )
   ).rows[0];
   if (!row) return null;
   const report = row.report as Submission;
-  const result = await service.submit(
-    { ...report, checkOnly: row.intent },
-    undefined,
-    async () => {
-      const changed = await db().query(
-        "UPDATE audentra_support_inbox SET intent=true WHERE reference=$1 AND owner=$2 AND NOT intent RETURNING reference",
-        [report.reference, owner],
+  const result = row.attachment_jira_key
+    ? { ...received(row.attachment_jira_key), delay: undefined }
+    : await service.submit(
+        { ...report, checkOnly: row.intent },
+        undefined,
+        async () => {
+          const changed = await db().query(
+            "UPDATE audentra_support_inbox SET intent=true WHERE reference=$1 AND owner=$2 AND NOT intent RETURNING reference",
+            [report.reference, owner],
+          );
+          if (!changed.rowCount) throw Error("Stale claim");
+        },
       );
-      if (!changed.rowCount) throw Error("Stale claim");
-    },
-  );
   const key = result.body.key;
   if (key) {
-    await db().query(
-      "UPDATE audentra_support_inbox SET jira_key=$3,report=NULL,owner=NULL,due=now() WHERE reference=$1 AND owner=$2",
-      [report.reference, owner, key],
+    let unconfirmed: number[] = [];
+    if (report.evidence?.length) {
+      if (!row.attachment_jira_key) {
+        const claimed = await db().query(
+          "UPDATE audentra_support_inbox SET attachment_jira_key=$3 WHERE reference=$1 AND owner=$2",
+          [report.reference, owner, key],
+        );
+        if (!claimed.rowCount) return queued(report.reference);
+      }
+      try {
+        await service.attach(key, report.evidence);
+      } catch (error) {
+        const failure =
+          error instanceof AttachmentFailure
+            ? error
+            : new AttachmentFailure(report.evidence.map((_, i) => i + 1));
+        const attempts = row.attachment_attempts + 1;
+        if (!failure.permanent && attempts < 5) {
+          await db().query(
+            "UPDATE audentra_support_inbox SET attachment_attempts=$3,owner=NULL,due=now()+interval '2 minutes' WHERE reference=$1 AND owner=$2",
+            [report.reference, owner, attempts],
+          );
+          return queued(report.reference);
+        }
+        unconfirmed = failure.unconfirmed;
+      }
+    }
+    const completed = await db().query(
+      "UPDATE audentra_support_inbox SET jira_key=$3,attachment_jira_key=NULL,unconfirmed_attachments=$4::smallint[],report=CASE WHEN cardinality($4::smallint[])>0 THEN report ELSE NULL END,owner=NULL,due=now() WHERE reference=$1 AND owner=$2",
+      [report.reference, owner, key, unconfirmed],
     );
+    if (!completed.rowCount) return queued(report.reference);
     await deliverNotification(report.reference, send).catch(() => {});
     return received(key);
   }
@@ -204,12 +243,15 @@ export async function deliverNotification(
 ) {
   const row = (
     await db().query(
-      "WITH next AS (SELECT reference FROM audentra_support_inbox WHERE jira_key IS NOT NULL AND NOT notified AND due<=now() AND ($1::uuid IS NULL OR reference=$1) ORDER BY due LIMIT 1 FOR UPDATE SKIP LOCKED) UPDATE audentra_support_inbox i SET due=now()+interval '2 minutes' FROM next WHERE i.reference=next.reference RETURNING i.reference,i.jira_key",
+      "WITH next AS (SELECT reference FROM audentra_support_inbox WHERE jira_key IS NOT NULL AND NOT notified AND due<=now() AND ($1::uuid IS NULL OR reference=$1) ORDER BY due LIMIT 1 FOR UPDATE SKIP LOCKED) UPDATE audentra_support_inbox i SET due=now()+interval '2 minutes' FROM next WHERE i.reference=next.reference RETURNING i.reference,i.jira_key,i.unconfirmed_attachments",
       [reference ?? null],
     )
   ).rows[0];
   if (!row) return null;
-  const done = await deliveryService(send).notify(row.jira_key);
+  const done = await deliveryService(send).notify(
+    row.jira_key,
+    row.unconfirmed_attachments,
+  );
   if (done)
     await db().query(
       "UPDATE audentra_support_inbox SET notified=true WHERE reference=$1",
