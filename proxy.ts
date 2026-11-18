@@ -45,4 +45,4 @@ export function proxy(request: NextRequest) {
   response.headers.set("Referrer-Policy", "same-origin");
   return response;
 }
-export const config = { matcher: ["/((?!_next/image).*)"] };
+export const config = { matcher: ["/((?!_next/image|api/support/?$).*)"] };
