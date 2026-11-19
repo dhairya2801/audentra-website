@@ -15,7 +15,7 @@ Production uses dhairya2801/audentra-website and Vercel project dhairya5/audentr
 Before production, assign an owner to review terminal Jira attachment failures and approve how long to keep unconfirmed evidence. Preserve pending receipts, restrict review to authorized operators and confirm the database backup policy. Failed evidence remains available for recovery.
 If a frontend rollback is needed after intake opens, restore the previous Vercel deployment and disable portal entry links. Leave the production database and retry job running so accepted reports can drain.
 
-After a minute-scheduled delivery execution succeeds, set server-side SUPPORT_DELIVERY_MODE=scheduled on the private Cloud Run backend for fast receipts. The form gets its reference after PostgreSQL commits the report, and the scheduled worker handles Jira and Slack delivery. The default inline mode attempts delivery during intake.
+With a working scheduled delivery job, use `SUPPORT_DELIVERY_MODE=background` and instance-based billing (`--no-cpu-throttling`) on private Cloud Run. Intake returns a receipt after PostgreSQL commits the report. The backend starts delivery after sending the response, and the scheduled job recovers work that is still due. Both use the same PostgreSQL claims. The `scheduled` mode leaves delivery to the job, and the default mode tries delivery during intake.
 
 ## Receipts and recovery
 

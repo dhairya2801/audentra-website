@@ -37,7 +37,7 @@ export function SupportForm({ portal }: { portal: string }) {
   const focusReceipt = useCallback((heading: HTMLHeadingElement | null) => {
     if (!heading) return;
     heading.focus({ preventScroll: true });
-    heading.scrollIntoView({ block: "start", behavior: "instant" });
+    window.scrollTo({ top: 0, behavior: "instant" });
   }, []);
   const [message, setMessage] = useState("");
   const form = useRef<HTMLFormElement>(null);

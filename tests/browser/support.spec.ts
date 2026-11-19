@@ -217,7 +217,7 @@ async function openReport(page: import("@playwright/test").Page) {
     .fill("The attached files describe this problem.");
 }
 
-test("a saved report brings its confirmation above the fold and focuses it", async ({ page }) => {
+test("a saved report scrolls all the way to the top and focuses its confirmation", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 700 });
   await page.goto("/support?portal=staff");
   const form = page.locator("form").filter({ has: page.getByRole("heading", { name: "Report an issue" }) });
@@ -235,13 +235,7 @@ test("a saved report brings its confirmation above the fold and focuses it", asy
   await submit.click();
   const receipt = page.getByRole("heading", { name: "Report received" });
   await expect(receipt).toBeFocused();
-  await expect(receipt).toBeInViewport();
-  const bounds = await receipt.evaluate((heading) => ({
-    top: heading.getBoundingClientRect().top,
-    headerBottom: document.querySelector(".au-header")?.getBoundingClientRect().bottom ?? 0,
-  }));
-  expect(bounds.top).toBeGreaterThanOrEqual(bounds.headerBottom - 1);
-  expect(bounds.top).toBeLessThan(250);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
 });
 
 for (const state of ["invalid", "invalid_evidence"]) {
