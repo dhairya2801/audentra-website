@@ -272,8 +272,8 @@ export function SupportForm({ portal }: { portal: string }) {
           Report received
         </h2>
         <p>
-          Your support reference is <strong>{receipt}</strong>. Include it if
-          you follow up with Audentra Support.
+          Your support ID is <strong>{receipt}</strong>. You can use it for
+          reference when following up.
         </p>
       </div>
     );
