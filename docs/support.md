@@ -15,6 +15,8 @@ Production uses dhairya2801/audentra-website and Vercel project dhairya5/audentr
 Before production, assign an owner to review terminal Jira attachment failures and approve how long to keep unconfirmed evidence. Preserve pending receipts, restrict review to authorized operators and confirm the database backup policy. Failed evidence remains available for recovery.
 If a frontend rollback is needed after intake opens, restore the previous Vercel deployment and disable portal entry links. Leave the production database and retry job running so accepted reports can drain.
 
+After a minute-scheduled delivery execution succeeds, set server-side SUPPORT_DELIVERY_MODE=scheduled on the private Cloud Run backend for fast receipts. The form gets its reference after PostgreSQL commits the report, and the scheduled worker handles Jira and Slack delivery. The default inline mode attempts delivery during intake.
+
 ## Receipts and recovery
 
 A 202 with a UUID means the report is committed to PostgreSQL. A Jira key means Jira has confirmed creation; Slack can still be pending. An HTTP failure is not a receipt: retry the same report with its original reference. Reusing a reference with changed content is rejected. On Vercel, up to ten new submissions per originating network are accepted per ten minutes. Form drafts are kept in session storage until receipt. Closing the browser before acceptance can lose an unsubmitted draft.
