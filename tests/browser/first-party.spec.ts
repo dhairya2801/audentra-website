@@ -170,8 +170,9 @@ test("Neon records general UTM, opaque referral and direct journeys, server conv
             .submission_id,
         ).toBeTruthy();
         expect(JSON.stringify(saved)).not.toMatch(/PRIVATE_TEST|private-test@/);
-        const dimension = referral ? "referral" : "source",
-          selected = referral || expectedSource;
+        const dimension = referral ? "referral" : "channel",
+          selected =
+            referral || (expectedSource === "email" ? c.id : expectedSource);
         const report = await (
           await dashboard.request.get(
             `/api/dashboard?days=7&dimension=${dimension}&selected=${selected}`,
@@ -209,8 +210,19 @@ test("Neon records general UTM, opaque referral and direct journeys, server conv
     }
     await login.reload();
     await expect(login.locator(".report-status")).toContainText("Updated");
-    await login.getByLabel("Group outreach by").selectOption("referral");
-    await login.getByRole("button", { name: `${code} ↗`, exact: true }).click();
+    await login
+      .getByRole("button", { name: "Referral links", exact: false })
+      .click();
+    const referralRow = login
+      .locator(".referral-table tbody tr")
+      .filter({ has: login.getByText(code, { exact: true }) });
+    await referralRow
+      .getByRole("button", { name: "Edit", exact: true })
+      .click();
+    await login
+      .getByRole("button", { name: /Inspect product interest/ })
+      .click();
+    await expect(login.locator(".filter-notice")).toContainText(code);
     await expect(
       login.getByRole("heading", { name: "Captured attribution" }),
     ).toBeVisible();

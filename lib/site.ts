@@ -88,6 +88,7 @@ export const nav: NavItem[] = [
       },
     ],
   },
+  { label: "Help", href: "/support" },
 ];
 
 export const footerColumns: { title: string; links: NavLink[] }[] = [
@@ -116,6 +117,7 @@ export const footerColumns: { title: string; links: NavLink[] }[] = [
       { label: "Pilot Program", href: "/pilot" },
       { label: "Pricing", href: "/pricing" },
       { label: "Contact", href: "/demo" },
+      { label: "Help", href: "/support" },
     ],
   },
   {
