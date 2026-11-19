@@ -56,7 +56,7 @@ export function supportService(
   env: Record<string, string | undefined> = process.env,
   send: typeof fetch = fetch,
   journal?: {
-    claimSlack(key: string): Promise<"send" | "sent" | "wait">;
+    claimSlack(key: string): Promise<"send" | "sent" | "wait" | number>;
     slackResult(key: string, sent: boolean, delay: number): Promise<void>;
   },
 ) {
@@ -140,8 +140,14 @@ export function supportService(
         )
       )
         throw Error();
-      const action = await journal?.claimSlack(key);
-      if (action === "wait") return false;
+      let action = await journal?.claimSlack(key);
+      // Give the current one-second channel slot time to clear before deferring.
+      for (let retry = 0; typeof action === "number" && retry < 2; retry++) {
+        const delay = action;
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        action = await journal?.claimSlack(key);
+      }
+      if (action === "wait" || typeof action === "number") return false;
       if (action !== "sent") {
         const result = await send(webhook, {
           method: "POST",
@@ -309,7 +315,7 @@ export function supportService(
     submit,
     notify,
     retryNotifications,
-    attach: (key: string, files: Evidence[]) =>
-      attachEvidence(site!, auth, key, files, send),
+    attach: (key: string, files: Evidence[], newlyCreated?: boolean) =>
+      attachEvidence(site!, auth, key, files, send, newlyCreated),
   };
 }

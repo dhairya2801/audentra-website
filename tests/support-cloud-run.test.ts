@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import type { NextApiRequest, NextApiResponse } from "next";
 import handler from "../pages/api/support";
+import { relaySupportSubmission } from "../lib/support/cloud-run";
 
 const reference = "450132e2-1360-437a-ab40-462137cfd772";
 const report = {
@@ -91,4 +92,58 @@ test("Vercel authenticates the support relay and preserves the backend receipt",
   rejectExchange = true;
   assert.deepEqual(await request({}, { ...report, checkOnly: true }), { status: 503, result: { state: "unknown" } });
   assert.equal(calls.length, 4);
+});
+
+
+test("warm relays reuse only the matching unexpired identity and evict rejected tokens", async (t) => {
+  const config = {
+    SUPPORT_CLOUD_RUN_URL: "https://support-cache-example.run.app",
+    SUPPORT_GCP_WIF_PROVIDER: "//iam.googleapis.com/projects/123/locations/global/workloadIdentityPools/vercel/providers/website",
+    SUPPORT_GCP_INVOKER_EMAIL: "invoker@example-project.iam.gserviceaccount.com",
+  };
+  const previous = Object.fromEntries(Object.keys(config).map((key) => [key, process.env[key]]));
+  Object.assign(process.env, config);
+  t.after(() => {
+    for (const [key, value] of Object.entries(previous)) {
+      if (value === undefined) delete process.env[key];
+      else process.env[key] = value;
+    }
+  });
+  let now = Date.now();
+  t.mock.method(Date, "now", () => now);
+  function jwt(name: string, ttl = 300_000) {
+    return "header." + Buffer.from(JSON.stringify({ exp: Math.floor((now + ttl) / 1000) })).toString("base64url") + "." + name;
+  }
+  const oidc = jwt("caller");
+  let exchanged = 0, minted = 0, posted = 0, reject = false;
+  t.mock.method(globalThis, "fetch", async (url: URL | string, init: RequestInit) => {
+    const host = new URL(url).hostname;
+    if (host === "sts.googleapis.com") {
+      exchanged++;
+      return Response.json({ access_token: "test-sts" });
+    }
+    if (host === "iamcredentials.googleapis.com") {
+      minted++;
+      return Response.json({ token: jwt("identity-" + minted) });
+    }
+    posted++;
+    assert.equal(new Headers(init.headers).get("x-audentra-support-origin-ip"), "192.0.2.10");
+    return new Response(null, { status: reject ? 403 : 202 });
+  });
+  const relay = (token = oidc) => relaySupportSubmission(token, "192.0.2.10", report);
+  assert.equal((await relay()).status, 202);
+  assert.equal((await relay()).status, 202);
+  assert.deepEqual([exchanged, minted, posted], [1, 1, 2]);
+  reject = true;
+  assert.equal((await relay()).status, 403);
+  assert.deepEqual([exchanged, minted, posted], [1, 1, 3]);
+  reject = false;
+  await relay();
+  now += 61_000;
+  await relay();
+  const nearExpiry = jwt("different-caller", 8_000);
+  await relay(nearExpiry);
+  now += 4_000;
+  await relay(nearExpiry);
+  assert.deepEqual([exchanged, minted, posted], [5, 5, 7]);
 });
