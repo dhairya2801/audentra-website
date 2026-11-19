@@ -2,14 +2,18 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { spawnSync } from "node:child_process";
+import { EventEmitter } from "node:events";
+import { setTimeout as delay } from "node:timers/promises";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { Pool } from "pg";
+import handler from "../pages/api/support";
 import { readFile } from "node:fs/promises";
 import { accept, deliver, deliverNotification } from "../lib/support/inbox";
 // Point SUPPORT_TEST_DATABASE_URL at a disposable PostgreSQL database; isolate every run.
 test(
   "committed receipts survive process exit and ambiguous provider responses",
   { skip: !process.env.SUPPORT_TEST_DATABASE_URL },
-  async () => {
+  async (t) => {
     const url = new URL(process.env.SUPPORT_TEST_DATABASE_URL!);
     const admin = new Pool({ connectionString: url.href });
     const schema = "test_support_" + randomUUID().replaceAll("-", "");
@@ -177,6 +181,82 @@ test(
       );
       assert.equal(burst.filter((x) => x?.status === 202).length, 10);
       assert.equal(burst.filter((x) => x?.status === 429).length, 4);
+
+      await t.test("background delivery sends the receipt before contacting providers", async (t) => {
+        const background = { ...report, reference: randomUUID() };
+        const previousMode = process.env.SUPPORT_DELIVERY_MODE;
+        process.env.SUPPORT_DELIVERY_MODE = "background";
+        let releaseJira: () => void;
+        const jiraBarrier = new Promise<void>((resolve) => { releaseJira = resolve; });
+        let creates = 0;
+        let slackPosts = 0;
+        t.mock.method(globalThis, "fetch", async (url: string, init?: RequestInit) => {
+          if (url.endsWith("/search/jql")) return Response.json({ issues: [] });
+          if (url.endsWith("/issue")) {
+            creates++;
+            await jiraBarrier;
+            return Response.json({ key: "TECH-999" }, { status: 201 });
+          }
+          if (url.startsWith("https://hooks.slack.com/")) {
+            slackPosts++;
+            return new Response("ok");
+          }
+          assert.ok(url.endsWith("/issue/TECH-999") && init?.method === "PUT");
+          return new Response(null, { status: 204 });
+        });
+        const request = {
+          method: "POST",
+          headers: { host: "localhost", origin: "http://localhost", "content-type": "application/json" },
+          body: background,
+        };
+        async function respond(checkOnly = false) {
+          let status: number | undefined;
+          let response: unknown;
+          const res = Object.assign(new EventEmitter(), {
+            setHeader() {},
+            status(value: number) { status = value; return this; },
+            json(value: unknown) { response = value; },
+            end() {},
+          });
+          await handler(
+            { ...request, body: { ...background, checkOnly } } as unknown as NextApiRequest,
+            res as unknown as NextApiResponse,
+          );
+          assert.equal(status, 202);
+          assert.deepEqual(response, { state: "queued", reference: background.reference });
+          return res;
+        }
+        try {
+          await db.query("UPDATE audentra_support_clock SET due=now() WHERE id=1");
+          const saved = await respond();
+          const repeat = await respond();
+          const checkOnly = await respond(true);
+          assert.equal(checkOnly.listenerCount("finish"), 0);
+          assert.equal(creates, 0);
+          const row = () => db.query(
+            "SELECT jira_key,notified FROM audentra_support_inbox WHERE reference=$1",
+            [background.reference],
+          );
+          assert.deepEqual((await row()).rows, [{ jira_key: null, notified: false }]);
+          saved.emit("finish");
+          for (let attempt = 0; creates === 0 && attempt < 200; attempt++) await delay(10);
+          assert.equal(creates, 1);
+          repeat.emit("finish");
+          assert.equal(await deliver(background.reference), null);
+          assert.equal(slackPosts, 0);
+          releaseJira!();
+          const wanted = { jira_key: "TECH-999", notified: true };
+          for (let attempt = 0; !(await row()).rows[0].notified && attempt < 200; attempt++) await delay(10);
+          assert.deepEqual((await row()).rows, [wanted]);
+          assert.equal(await deliverNotification(background.reference), null);
+          assert.equal(creates, 1);
+          assert.equal(slackPosts, 1);
+        } finally {
+          releaseJira!();
+          if (previousMode === undefined) delete process.env.SUPPORT_DELIVERY_MODE;
+          else process.env.SUPPORT_DELIVERY_MODE = previousMode;
+        }
+      });
     } finally {
       await db.end();
       await admin.query("DROP SCHEMA " + schema + " CASCADE");
