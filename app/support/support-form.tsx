@@ -272,8 +272,9 @@ export function SupportForm({ portal }: { portal: string }) {
           Report received
         </h2>
         <p>
-          Your support ID is <strong>{receipt}</strong>. You can use it for
-          reference when following up.
+          Your support ID is <strong>{receipt}</strong>.
+          <br />
+          You can use it for reference when following up.
         </p>
       </div>
     );
