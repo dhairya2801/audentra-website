@@ -155,6 +155,59 @@ const webmUpload = {
   buffer: Buffer.from("1a45dfa37765626d", "hex"),
 };
 
+test("the upload dropzone opens the picker, highlights a drag, and submits both files", async ({ page }) => {
+  await page.goto("/support?portal=staff");
+  const dropzone = page.locator(".au-support-dropzone");
+  const form = page.locator("form").filter({ has: dropzone });
+  await expect(form).not.toHaveAttribute("inert", "");
+  await page.getByLabel("Email address").fill("vm@example.test");
+  await page.getByLabel("Issue summary").fill("Dragged evidence");
+  await page.getByLabel("Details").fill("Both files were dropped onto the support form.");
+  const picker = page.waitForEvent("filechooser");
+  await dropzone.click();
+  await (await picker).setFiles(pngUpload);
+  await expect(form.getByRole("status").getByText(pngUpload.name, { exact: true })).toBeVisible();
+
+  const uploads = [pngUpload, webmUpload];
+  const dataTransfer = await page.evaluateHandle((files) => {
+    const transfer = new DataTransfer();
+    for (const { name, mimeType, bytes } of files) {
+      transfer.items.add(new File([new Uint8Array(bytes)], name, { type: mimeType }));
+    }
+    return transfer;
+  }, uploads.map(({ name, mimeType, buffer }) => ({ name, mimeType, bytes: [...buffer] })));
+
+  const readShadow = () => dropzone.evaluate((element) => getComputedStyle(element).boxShadow);
+  const restingShadow = await readShadow();
+  await dropzone.dispatchEvent("dragenter", { dataTransfer });
+  await dropzone.dispatchEvent("dragover", { dataTransfer });
+  await expect(dropzone.getByText("Drop files here")).toBeVisible();
+  await expect.poll(readShadow).not.toBe(restingShadow);
+  await expect.poll(readShadow).toContain("inset");
+  await dropzone.dispatchEvent("dragleave", { dataTransfer });
+  await expect(dropzone.getByText("Upload a file")).toBeVisible();
+  await dropzone.dispatchEvent("dragover", { dataTransfer });
+  await dropzone.dispatchEvent("drop", { dataTransfer });
+  await expect(dropzone).toHaveAttribute("data-dragging", "false");
+  for (const { name } of uploads) {
+    await expect(form.getByRole("status").getByText(name, { exact: true })).toBeVisible();
+  }
+
+  const request = page.waitForRequest("**/api/support");
+  await page.route("**/api/support", (route) => route.fulfill({
+    status: 202,
+    json: { state: "queued", reference: route.request().postDataJSON().reference },
+  }));
+  await form.getByRole("button", { name: "Submit report" }).click();
+  expect((await request).postDataJSON().evidence).toEqual(uploads.map(({ name, mimeType, buffer }) => ({
+    name,
+    mime: mimeType,
+    data: buffer.toString("base64"),
+  })));
+  await expect(page.getByRole("heading", { name: "Report received" })).toBeVisible();
+  await dataTransfer.dispose();
+});
+
 async function openReport(page: import("@playwright/test").Page) {
   await page.goto("/support?portal=staff");
   await page.getByLabel("Email address").fill("vm@example.test");
@@ -163,6 +216,33 @@ async function openReport(page: import("@playwright/test").Page) {
     .getByLabel("Details")
     .fill("The attached files describe this problem.");
 }
+
+test("a saved report brings its confirmation above the fold and focuses it", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 700 });
+  await page.goto("/support?portal=staff");
+  const form = page.locator("form").filter({ has: page.getByRole("heading", { name: "Report an issue" }) });
+  await expect(form).not.toHaveAttribute("inert", "");
+  await form.getByLabel("Email address").fill("vm@example.test");
+  await form.getByLabel("Issue summary").fill("Confirmation position");
+  await form.getByLabel("Details").fill("The confirmation should appear after submitting from the bottom of the form.");
+  await page.route("**/api/support", (route) => route.fulfill({
+    status: 202,
+    json: { state: "queued", reference: route.request().postDataJSON().reference },
+  }));
+  const submit = form.getByRole("button", { name: "Submit report" });
+  await submit.scrollIntoViewIfNeeded();
+  expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(300);
+  await submit.click();
+  const receipt = page.getByRole("heading", { name: "Report received" });
+  await expect(receipt).toBeFocused();
+  await expect(receipt).toBeInViewport();
+  const bounds = await receipt.evaluate((heading) => ({
+    top: heading.getBoundingClientRect().top,
+    headerBottom: document.querySelector(".au-header")?.getBoundingClientRect().bottom ?? 0,
+  }));
+  expect(bounds.top).toBeGreaterThanOrEqual(bounds.headerBottom - 1);
+  expect(bounds.top).toBeLessThan(250);
+});
 
 for (const state of ["invalid", "invalid_evidence"]) {
   test("correcting a rejected report after " + state, async ({ page }) => {

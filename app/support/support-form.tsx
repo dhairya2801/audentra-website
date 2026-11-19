@@ -1,5 +1,11 @@
 "use client";
-import { useCallback, useRef, useState, type FormEvent } from "react";
+import {
+  useCallback,
+  useRef,
+  useState,
+  type DragEvent,
+  type FormEvent,
+} from "react";
 
 type Attempt = {
   fingerprint: string;
@@ -28,8 +34,40 @@ export function SupportForm({ portal }: { portal: string }) {
   const submitting = useRef(false);
   const [busy, setBusy] = useState(false);
   const [receipt, setReceipt] = useState("");
+  const focusReceipt = useCallback((heading: HTMLHeadingElement | null) => {
+    if (!heading) return;
+    heading.focus({ preventScroll: true });
+    heading.scrollIntoView({ block: "start", behavior: "instant" });
+  }, []);
   const [message, setMessage] = useState("");
   const form = useRef<HTMLFormElement>(null);
+  const evidenceInput = useRef<HTMLInputElement>(null);
+  const [evidenceNames, setEvidenceNames] = useState<string[]>([]);
+  const [draggingEvidence, setDraggingEvidence] = useState(false);
+  const dropActive = draggingEvidence && !busy;
+
+  function updateEvidence(files: FileList | null) {
+    setEvidenceNames(Array.from(files ?? [], (file) => file.name));
+  }
+
+  function highlightEvidenceDrop(event: DragEvent<HTMLLabelElement>) {
+    if (!event.dataTransfer.types.includes("Files")) return;
+    event.preventDefault();
+    event.dataTransfer.dropEffect = busy ? "none" : "copy";
+    if (!busy) setDraggingEvidence(true);
+  }
+
+  function dropEvidence(event: DragEvent<HTMLLabelElement>) {
+    setDraggingEvidence(false);
+    const files = event.dataTransfer.files;
+    if (!files.length) return;
+    event.preventDefault();
+    const input = evidenceInput.current;
+    if (busy || !input) return;
+    input.files = files;
+    updateEvidence(input.files);
+    setEditedFingerprint("");
+  }
   const restoreForm = useCallback((element: HTMLFormElement | null) => {
     form.current = element;
     if (!element) return;
@@ -87,10 +125,7 @@ export function SupportForm({ portal }: { portal: string }) {
     setBusy(true);
     setMessage("");
     const data = Object.fromEntries(new FormData(event.currentTarget));
-    const files = Array.from(
-      event.currentTarget.querySelector<HTMLInputElement>("input[type=file]")
-        ?.files ?? [],
-    );
+    const files = Array.from(evidenceInput.current?.files ?? []);
     function forget() {
       attempt.current = null;
       try {
@@ -233,7 +268,9 @@ export function SupportForm({ portal }: { portal: string }) {
   if (receipt)
     return (
       <div className="au-card" role="status">
-        <h2 className="au-h3">Report received</h2>
+        <h2 className="au-h3 au-support-receipt" ref={focusReceipt} tabIndex={-1}>
+          Report received
+        </h2>
         <p>
           Your support reference is <strong>{receipt}</strong>.
           {receipt.includes("-") && receipt.length === 36
@@ -249,30 +286,32 @@ export function SupportForm({ portal }: { portal: string }) {
       onChange={() => setEditedFingerprint("")}
       ref={restoreForm}
       inert={!ready}
-      className="au-card"
+      className="au-card au-support-form"
       onSubmit={submit}
     >
       <h2 className="au-h3">Report an issue</h2>
       <div className="au-form">
         <label className="au-field">
-          Portal
-          <select
-            name="portal"
-            defaultValue={
-              ["admin-it", "student", "staff"].includes(portal) ? portal : ""
-            }
-            required
-          >
-            <option value="" disabled>
-              Select your portal
-            </option>
-            <option value="admin-it">Admin / IT</option>
-            <option value="staff">Staff</option>
-            <option value="student">Student</option>
-          </select>
+          <span className="au-support-field-label">Portal</span>
+          <span className="au-support-select">
+            <select
+              name="portal"
+              defaultValue={
+                ["admin-it", "student", "staff"].includes(portal) ? portal : ""
+              }
+              required
+            >
+              <option value="" disabled>
+                Select your portal
+              </option>
+              <option value="admin-it">Admin / IT</option>
+              <option value="staff">Staff</option>
+              <option value="student">Student</option>
+            </select>
+          </span>
         </label>
         <label className="au-field">
-          Email address
+          <span className="au-support-field-label">Email address</span>
           <input
             name="email"
             type="email"
@@ -282,27 +321,60 @@ export function SupportForm({ portal }: { portal: string }) {
           />
         </label>
         <label className="au-field au-field--full">
-          Issue summary
+          <span className="au-support-field-label">Issue summary</span>
           <input name="subject" maxLength={160} required />
         </label>
         <label className="au-field au-field--full">
-          Details
+          <span className="au-support-field-label">Details</span>
           <textarea name="description" rows={5} maxLength={5000} required />
         </label>
       </div>
-      <label className="au-field au-field--full">
-        Attach evidence (optional)
-        <input
-          type="file"
-          multiple
-          accept="image/png,image/jpeg,image/webp,video/mp4,video/webm"
-          aria-describedby="evidence-help"
-        />
+      <div className="au-field au-field--full au-support-evidence">
+        <span id="evidence-label" className="au-support-field-label">
+          Attach evidence (optional)
+        </span>
+        <label
+          className="au-support-dropzone"
+          data-dragging={dropActive}
+          data-busy={busy}
+          onDragEnter={highlightEvidenceDrop}
+          onDragOver={highlightEvidenceDrop}
+          onDragLeave={() => setDraggingEvidence(false)}
+          onDrop={dropEvidence}
+        >
+          <input
+            ref={evidenceInput}
+            className="au-support-dropzone__input"
+            type="file"
+            multiple
+            accept="image/png,image/jpeg,image/webp,video/mp4,video/webm"
+            aria-labelledby="evidence-label"
+            aria-describedby="evidence-help"
+            disabled={busy}
+            onChange={(event) => updateEvidence(event.currentTarget.files)}
+          />
+          <span className="au-support-dropzone__icon" aria-hidden="true">
+            <span className="au-support-dropzone__stem" />
+          </span>
+          <span className="au-support-dropzone__copy">
+            <strong>{dropActive ? "Drop files here" : "Upload a file"}</strong>
+            <span>{dropActive ? "Up to 2 files" : "or drag and drop"}</span>
+          </span>
+        </label>
+        <div role="status" className="au-support-dropzone__selection">
+          {evidenceNames.length > 0 && (
+            <ul>
+              {evidenceNames.map((name, index) => (
+                <li key={index}>{name}</li>
+              ))}
+            </ul>
+          )}
+        </div>
         <small id="evidence-help">
           Choose up to two images or short videos, 3 MiB combined. Crop or blur
           student information before attaching files.
         </small>
-      </label>
+      </div>
       <p className="au-form-note">Leave out passwords and student records.</p>
       {message && (
         <p role="alert" className="au-form-message au-form-message--error">

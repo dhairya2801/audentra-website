@@ -67,7 +67,12 @@ export default async function handler(
       const old = await supportService().submit({ ...report, checkOnly: true });
       return res.status(old.status).json(old.body);
     }
-    if (saved.body.state === "queued" && !report.checkOnly) {
+    // A scheduled worker owns provider delivery when fast receipts are enabled.
+    if (
+      process.env.SUPPORT_DELIVERY_MODE !== "scheduled" &&
+      saved.body.state === "queued" &&
+      !report.checkOnly
+    ) {
       const result = await runSubmission(() => deliver(report.reference)).catch(
         () => null,
       );
