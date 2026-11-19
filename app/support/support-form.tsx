@@ -272,10 +272,8 @@ export function SupportForm({ portal }: { portal: string }) {
           Report received
         </h2>
         <p>
-          Your support reference is <strong>{receipt}</strong>.
-          {receipt.includes("-") && receipt.length === 36
-            ? " Your report is saved for delivery to Jira."
-            : ""}
+          Your support reference is <strong>{receipt}</strong>. Include it if
+          you follow up with Audentra Support.
         </p>
       </div>
     );
