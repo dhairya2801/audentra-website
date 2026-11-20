@@ -76,6 +76,7 @@ export async function attachEvidence(
   key: string,
   files: Evidence[],
   send: typeof fetch,
+  newlyCreated = false,
 ) {
   if (!files.length) return;
   const url = site + "/rest/api/3/issue/" + encodeURIComponent(key);
@@ -83,15 +84,55 @@ export async function attachEvidence(
     headers: { Authorization: auth },
     redirect: "error" as const,
   };
+  const attachments = files.map((file, index) => {
+    const bytes = Buffer.from(file.data, "base64");
+    const number = index + 1;
+    const hash = createHash("sha256").update(bytes).digest("hex").slice(0, 16);
+    return {
+      number,
+      name: number + "-" + hash + "-" + file.name,
+      blob: new Blob([new Uint8Array(bytes)], { type: file.mime }),
+    };
+  });
+  const positions = attachments.map(({ number }) => number);
+  function upload(batch: typeof attachments) {
+    const body = new FormData();
+    for (const { blob, name } of batch) body.append("file", blob, name);
+    return send(url + "/attachments", {
+      ...options,
+      method: "POST",
+      headers: { ...options.headers, "X-Atlassian-Token": "no-check" },
+      body,
+      signal: AbortSignal.timeout(15000),
+    });
+  }
+
+  if (newlyCreated) {
+    // This request created the Jira issue and durably recorded its key.
+    // Recovery always lists attachments first if this upload's outcome is uncertain.
+    const result = await upload(attachments);
+    if (result.ok) {
+      const uploaded: { filename: string }[] = await result.json();
+      if (!Array.isArray(uploaded)) throw new AttachmentFailure(positions);
+      const confirmed = new Set(uploaded.map(({ filename }) => filename));
+      const unconfirmed = attachments.filter(({ name }) => !confirmed.has(name));
+      if (unconfirmed.length)
+        throw new AttachmentFailure(unconfirmed.map(({ number }) => number));
+      return;
+    }
+    const permanent = terminalRejection(result.status);
+    if (!permanent || attachments.length === 1)
+      throw new AttachmentFailure(positions, permanent);
+    // A definitive batch rejection may be file-specific. Reconcile any saved files
+    // before trying individual uploads so a bad file cannot block valid evidence.
+  }
+
   const existing = await send(url + "?fields=attachment", {
     ...options,
     signal: AbortSignal.timeout(6000),
   });
   if (!existing.ok)
-    throw new AttachmentFailure(
-      files.map((_, i) => i + 1),
-      terminalRejection(existing.status),
-    );
+    throw new AttachmentFailure(positions, terminalRejection(existing.status));
   const saved = new Set(
     (await existing.json()).fields.attachment.map(
       (a: { filename: string }) => a.filename,
@@ -99,38 +140,17 @@ export async function attachEvidence(
   );
   const unconfirmed: number[] = [];
   let transient = false;
-
-  for (const [i, file] of files.entries()) {
-    const bytes = Buffer.from(file.data, "base64");
-    const name =
-      i +
-      1 +
-      "-" +
-      createHash("sha256").update(bytes).digest("hex").slice(0, 16) +
-      "-" +
-      file.name;
-    if (saved.has(name)) continue;
-    const body = new FormData();
-    body.append(
-      "file",
-      new Blob([new Uint8Array(bytes)], { type: file.mime }),
-      name,
-    );
+  for (const entry of attachments) {
+    if (saved.has(entry.name)) continue;
     try {
-      const r = await send(url + "/attachments", {
-        ...options,
-        method: "POST",
-        headers: { ...options.headers, "X-Atlassian-Token": "no-check" },
-        body,
-        signal: AbortSignal.timeout(15000),
-      });
-      if (r.ok) continue;
-      if (!terminalRejection(r.status)) transient = true;
+      const result = await upload([entry]);
+      if (result.ok) continue;
+      if (!terminalRejection(result.status)) transient = true;
     } catch {
       transient = true;
       // An upload can succeed before the response is lost. The next pass lists Jira files first.
     }
-    unconfirmed.push(i + 1);
+    unconfirmed.push(entry.number);
   }
   if (unconfirmed.length) throw new AttachmentFailure(unconfirmed, !transient);
 }

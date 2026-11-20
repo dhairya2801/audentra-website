@@ -272,10 +272,9 @@ export function SupportForm({ portal }: { portal: string }) {
           Report received
         </h2>
         <p>
-          Your support reference is <strong>{receipt}</strong>.
-          {receipt.includes("-") && receipt.length === 36
-            ? " Your report is saved for delivery to Jira."
-            : ""}
+          Your support ID is <strong>{receipt}</strong>.
+          <br />
+          You can use it for reference when following up.
         </p>
       </div>
     );

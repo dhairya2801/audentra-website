@@ -135,8 +135,14 @@ export function deliveryService(send: typeof fetch = fetch) {
           "UPDATE audentra_support_clock SET due=clock_timestamp()+interval '1 second' WHERE id=1 AND due<=clock_timestamp() RETURNING id",
         );
         if (!slot.rowCount) {
+          const { rows: [clock] } = await c.query(
+            "SELECT extract(epoch FROM due-clock_timestamp())*1000 AS ms FROM audentra_support_clock WHERE id=1",
+          );
           await c.query("COMMIT");
-          return "wait";
+          const ms = Number(clock?.ms);
+          return Number.isFinite(ms) && ms <= 1000
+            ? Math.max(0, Math.ceil(ms)) + 10
+            : "wait";
         }
         const claim = await c.query(
           "INSERT INTO audentra_support_slack(jira_key,state) VALUES($1,'sending') ON CONFLICT(jira_key) DO UPDATE SET state='sending',due=now() WHERE audentra_support_slack.state='retry' AND audentra_support_slack.due<=now() RETURNING jira_key",
@@ -200,7 +206,7 @@ export async function deliver(reference?: string, send: typeof fetch = fetch) {
         if (!claimed.rowCount) return queued(report.reference);
       }
       try {
-        await service.attach(key, report.evidence);
+        await service.attach(key, report.evidence, result.status === 201);
       } catch (error) {
         const failure =
           error instanceof AttachmentFailure

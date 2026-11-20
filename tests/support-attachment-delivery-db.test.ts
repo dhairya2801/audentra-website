@@ -32,6 +32,14 @@ test(
       );
       const cases = [
         {
+          name: "healthy delivery batches both files and waits briefly for the Slack channel",
+          status: 200,
+          failures: 0,
+          attempts: 1,
+          failed: false,
+          paced: true,
+        },
+        {
           name: "temporary 503 retries only the missing file",
           status: 503,
           failures: 1,
@@ -74,6 +82,8 @@ test(
             posts: string[] = [],
             slack: string[] = [];
           let created = 0,
+            lookups = 0,
+            batches = 0,
             remaining = c.failures;
           const send: typeof fetch = async (input, init) => {
             const url = String(input);
@@ -89,17 +99,22 @@ test(
               created++;
               return Response.json({ key }, { status: 201 });
             }
-            if (url.endsWith("?fields=attachment"))
+            if (url.endsWith("?fields=attachment")) {
+              lookups++;
               return Response.json({
                 fields: { attachment: saved.map((filename) => ({ filename })) },
               });
+            }
             if (url.endsWith("/attachments")) {
-              const name = ((init!.body as FormData).get("file") as File).name;
-              posts.push(name);
-              if (name.endsWith("webm") && remaining-- > 0)
-                return new Response(null, { status: c.status });
-              saved.push(name);
-              return Response.json([]);
+              batches++;
+              const names = ((init!.body as FormData).getAll("file") as File[]).map((file) => file.name);
+              for (const name of names) {
+                posts.push(name);
+                if (name.endsWith("webm") && remaining-- > 0)
+                  return new Response(null, { status: c.status });
+                saved.push(name);
+              }
+              return Response.json(names.map((filename) => ({ filename })));
             }
             if (url.includes("hooks.slack.com")) {
               slack.push(JSON.parse(String(init?.body)).text);
@@ -113,7 +128,9 @@ test(
           await db.query(
             c.failed
               ? "UPDATE audentra_support_clock SET due=now()+interval '10 minutes'"
-              : "UPDATE audentra_support_clock SET due=now()",
+              : c.paced
+                ? "UPDATE audentra_support_clock SET due=now()+interval '300 milliseconds'"
+                : "UPDATE audentra_support_clock SET due=now()",
           );
           for (let i = 1; i <= c.attempts; i++) {
             await db.query(
@@ -133,6 +150,11 @@ test(
               assert.equal(pending.jira_key, null);
               assert.equal(pending.attachment_jira_key, key);
             }
+          }
+          if (c.paced) {
+            assert.equal(batches, 1);
+            assert.equal(lookups, 0);
+            assert.equal(slack.length, 1, "the short pacing delay must not wait for a scheduled retry");
           }
           if (c.failed) {
             assert.deepEqual(slack, []);
@@ -162,7 +184,7 @@ test(
           assert.equal(posts.filter((x) => x.endsWith(".png")).length, 1);
           assert.equal(
             posts.filter((x) => x.endsWith(".webm")).length,
-            c.attempts,
+            c.attempts + Number(c.status === 403),
           );
           const {
             rows: [row],
